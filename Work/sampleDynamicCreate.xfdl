@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="dynamicCreate" width="1280" height="1350" titletext="dynamicCreate">
+    <Layouts>
+      <Layout height="1350" width="1280">
+        <Button id="Button00" taborder="0" text="생성" left="36" top="11" width="68" height="48" onclick="Button00_onclick"/>
+        <Div id="divMain" taborder="1" text="Div00" left="10" top="60" width="1261" height="1267" background="mistyrose"/>
+      </Layout>
+    </Layouts>
+    <Script type="xscript5.1"><![CDATA[
+this.Button00_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	if(this.isValidObject(this.divMain))
+	{		
+		var objDivMain = this.removeChild("divMain"); 
+		objDivMain.destroy(); 
+		objDivMain = null;
+		
+		var objDivMain = new Div();  //내가 만들려고하는 오브젝트, 그리드를 만들고싶으면 new grid(); 콤보도 마찬가지로 표현.. 
+		objDivMain.init("divMain", 10, 60, 1260, 1024); // 컴포넌트에 대한 초기값, (아이디, left, top, width, height) 
+		this.addChild("divMain", objDivMain); // 생성했는데 화면에다가 붙여주는 것
+		objDivMain.show();  // 화면에보여줄려고 하는 메소드 show 
+	}	
+	
+	
+	var xPos = 0;  //left 
+	var yPos = 0;  //top
+	
+	for(var i=0; i<this.dsClass.getRowCount(); i++)
+	{
+		
+//		if(i==4)
+		if (((i)%4) == 0)
+		{
+			if(i == 0) yPos = 0;
+			else yPos = yPos+270;
+			
+			xPos = 0;	
+		}	else {
+trace(i + "== else ==" + xPos);		
+			xPos = xPos + 100;
+		}
+
+
+		var objDiv = "objDiv" + i;
+		objDiv = new Div();  //내가 만들려고하는 오브젝트, 그리드를 만들고싶으면 new grid(); 콤보도 마찬가지로 표현.. 
+		objDiv.init("div" + i, xPos, yPos, 200, 200); // 컴포넌트에 대한 초기값, (아이디, left, top, width, height) 
+		this.divMain.form.addChild("div" + i, objDiv); // 생성했는데 화면에다가 붙여주는 것
+		objDiv.set_border("1px solid red");  // 배경색깔 
+		objDiv.show();  // 화면에보여줄려고 하는 메소드 show 
+		
+		xPos  = xPos+220;	
+		
+		var objDivTmp = "div"+i;
+		objDivTmp = this.divMain.form.components[objDivTmp];
+		trace("@@@@@@@@@@"+objDivTmp);
+		
+// 		var objImageViewer0 = new ImageViewer();   
+// 		objImageViewer0.init("ima0", 10, 0, 200, 200); 
+// 		objDivTmp.form.addChild("ima0", objImageViewer0);
+// 		objImageViewer0.set_image(this.dsClass.getColumn(i, "fileimg"));
+// 		objImageViewer0.class_no = this.dsClass.getColumn(i, "class_no"); // 이미지뷰어에 class_no값 넣어주기 
+// 		objImageViewer0.set_stretch("fit");
+// 		//objImageViewer0.set_text( this.dsClass.getColumn(i, "class_no"));
+// 		//objImageViewer0.set_border("1px solid gray");
+// 		objImageViewer0.show();
+		
+//		objDivTmp.form.ima0.addEventHandler("onclick", this.fnClassNo, this);
+		
+			
+	}
+	  
+//	trace("yPos" + yPos); 
+};
+
+]]></Script>
+    <Objects>
+      <Dataset id="dsClass">
+        <ColumnInfo>
+          <Column id="fileimg" type="STRING" size="256"/>
+          <Column id="class_no" type="STRING" size="256"/>
+          <Column id="location_name" type="STRING" size="256"/>
+          <Column id="class_user_cnt" type="STRING" size="256"/>
+        </ColumnInfo>
+        <Rows>
+          <Row>
+            <Col id="fileimg">A</Col>
+            <Col id="class_no">1</Col>
+            <Col id="location_name">서울1</Col>
+            <Col id="class_user_cnt">10</Col>
+          </Row>
+          <Row>
+            <Col id="fileimg">B</Col>
+            <Col id="class_no">2</Col>
+            <Col id="location_name">서울1</Col>
+            <Col id="class_user_cnt">11</Col>
+          </Row>
+          <Row>
+            <Col id="fileimg">C</Col>
+            <Col id="class_no">3</Col>
+            <Col id="location_name">서울1</Col>
+            <Col id="class_user_cnt">12</Col>
+          </Row>
+          <Row>
+            <Col id="fileimg">D</Col>
+            <Col id="class_no">4</Col>
+            <Col id="location_name">서울1</Col>
+            <Col id="class_user_cnt">13</Col>
+          </Row>
+          <Row>
+            <Col id="fileimg">E</Col>
+            <Col id="class_no">5</Col>
+            <Col id="location_name">서울1</Col>
+            <Col id="class_user_cnt">14</Col>
+          </Row>
+          <Row>
+            <Col id="fileimg">F</Col>
+            <Col id="class_no">6</Col>
+            <Col id="location_name">서울1</Col>
+            <Col id="class_user_cnt">15</Col>
+          </Row>
+          <Row>
+            <Col id="fileimg">G</Col>
+            <Col id="class_no">7</Col>
+            <Col id="location_name">서울1</Col>
+            <Col id="class_user_cnt">17</Col>
+          </Row>
+          <Row>
+            <Col id="fileimg">H</Col>
+            <Col id="class_no">8</Col>
+            <Col id="location_name">서울1</Col>
+            <Col id="class_user_cnt">18</Col>
+          </Row>
+          <Row/>
+          <Row/>
+          <Row/>
+        </Rows>
+      </Dataset>
+    </Objects>
+  </Form>
+</FDL>

@@ -1,0 +1,243 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="frmProduct1230" width="580" height="630" titletext="팝업 화면(상품 디테일)" onload="frmProduct1230_onload">
+    <Layouts>
+      <Layout height="630" mobileorientation="landscape" width="580">
+        <Grid id="grdProducts" taborder="0" left="1067" top="58" width="507" height="393" binddataset="ds_prodDetail" autofittype="col" positionstep="0" visible="false">
+          <Formats>
+            <Format id="default">
+              <Columns>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+              </Columns>
+              <Rows>
+                <Row band="head" size="24"/>
+                <Row size="24"/>
+              </Rows>
+              <Band id="head">
+                <Cell text="PRODUCT_ID"/>
+                <Cell col="1" text="PRODUCT_NAME"/>
+                <Cell col="2" text="CATEGORY"/>
+                <Cell col="3" text="PRICE"/>
+                <Cell col="4" text="VOLUME"/>
+                <Cell col="5" text="KCAL"/>
+                <Cell col="6" text="SUGARS"/>
+                <Cell col="7" text="PROTEIN"/>
+                <Cell col="8" text="SODIUM"/>
+                <Cell col="9" text="SAT_FAT"/>
+                <Cell col="10" text="CAFFEINE"/>
+                <Cell col="11" text="IMAGE_FILE"/>
+              </Band>
+              <Band id="body">
+                <Cell text="bind:PRODUCT_ID"/>
+                <Cell col="1" text="bind:PRODUCT_NAME"/>
+                <Cell col="2" text="bind:CATEGORY"/>
+                <Cell col="3" text="bind:PRICE"/>
+                <Cell col="4" text="bind:VOLUME"/>
+                <Cell col="5" text="bind:KCAL"/>
+                <Cell col="6" text="bind:SUGARS"/>
+                <Cell col="7" text="bind:PROTEIN"/>
+                <Cell col="8" text="bind:SODIUM"/>
+                <Cell col="9" text="bind:SAT_FAT"/>
+                <Cell col="10" text="bind:CAFFEINE"/>
+                <Cell col="11" text="bind:IMAGE_FILE"/>
+              </Band>
+            </Format>
+          </Formats>
+        </Grid>
+        <Button id="Button00" taborder="1" text="조회" left="1084" top="476" width="212" height="90" onclick="Button00_onclick" positionstep="0" visible="false"/>
+        <Button id="Button01" taborder="2" text="CLOSE" left="1362" top="472" width="201" height="105" onclick="Button01_onclick" visible="false"/>
+        <ImageViewer id="imgvProd" taborder="3" left="21" top="110" width="260" height="260" text=""/>
+        <Static id="staName" taborder="4" text="Name" left="301" top="115" width="219" height="40" font="normal bold 13px/normal &quot;KopubWorld&quot;"/>
+        <Static id="staPrice" taborder="5" text="Price" left="301" top="145" width="219" height="40" font="normal 500 13px/normal &quot;KopubWorld&quot;" color="#ff5500"/>
+        <Static id="Static00" taborder="6" text="칼로리" left="21" top="407" width="20.517241379310345%" height="36" cssclass="sta_WF_DetailLabel" font="normal bold 13px/normal &quot;KopubWorld&quot;"/>
+        <Edit id="edtKcal" taborder="7" left="139" top="407" width="149" height="36" text="" font="normal 500 13px/normal &quot;KopubWorld&quot;"/>
+        <Static id="Static00_02" taborder="8" text="당류" left="287" top="407" width="20.517241379310345%" height="36" cssclass="sta_WF_DetailLabel" font="normal bold 13px/normal &quot;KopubWorld&quot;"/>
+        <Edit id="edt" taborder="9" left="405" top="407" width="149" height="36" text="" font="normal 500 13px/normal &quot;KopubWorld&quot;"/>
+        <Static id="Static00_00" taborder="10" text="단백질" left="21" top="442" width="20.517241379310345%" height="36" cssclass="sta_WF_DetailLabel" font="normal bold 13px/normal &quot;KopubWorld&quot;"/>
+        <Edit id="edtKcal01" taborder="11" left="139" top="442" width="149" height="36" text="" font="normal 500 13px/normal &quot;KopubWorld&quot;"/>
+        <Static id="Static00_02_00" taborder="12" text="나트륨" left="287" top="442" width="20.517241379310345%" height="36" cssclass="sta_WF_DetailLabel" font="normal bold 13px/normal &quot;KopubWorld&quot;"/>
+        <Edit id="edtKcal00_00" taborder="13" left="405" top="442" width="149" height="36" text="" font="normal 500 13px/normal &quot;KopubWorld&quot;"/>
+        <Static id="Static00_01" taborder="14" text="포화지방" left="21" top="477" width="20.517241379310345%" height="36" cssclass="sta_WF_DetailLabel" font="normal bold 13px/normal &quot;KopubWorld&quot;"/>
+        <Edit id="edtKcal02" taborder="15" left="139" top="477" width="149" height="36" text="" font="normal 500 13px/normal &quot;KopubWorld&quot;"/>
+        <Static id="Static00_02_01" taborder="16" text="카페인" left="287" top="477" width="20.517241379310345%" height="36" cssclass="sta_WF_DetailLabel" font="normal bold 13px/normal &quot;KopubWorld&quot;"/>
+        <Edit id="edtKcal00_01" taborder="17" left="405" top="477" width="149" height="36" text="" font="normal 500 13px/normal &quot;KopubWorld&quot;"/>
+        <Button id="btnAddToCart" taborder="18" text="장바구니에 추가" left="301" top="220" width="219" height="40" background="white" border="1px solid black" onclick="btnAddToCart_onclick"/>
+        <Static id="staAboutFood" taborder="19" text="*푸드 카테고리에 속한 상품의 경우, 영양정보가 제공되지 않습니다." left="21" top="513" width="534" height="43" font="normal 500 11px/normal &quot;KopubWorld&quot;" color="darkgray" visible="false"/>
+      </Layout>
+    </Layouts>
+    <Script type="xscript5.1"><![CDATA[/**
+*  Nexacro Professional Training Couse
+*  @MenuPath    개발가이드 > 표준 및 기본 정의 > 그리드 페이징
+*  @FileName 	SamplePaging.xfdl 
+*  @Creator 	TOBESOFT Education
+*  @CreateDate 	2025/01/03
+*  @Desction    
+************** 소스 수정 이력 ***********************************************
+*  date          		Modifier                Description
+*******************************************************************************
+*  2026/01/30      		 이아인	 	  	         최초 생성 
+*******************************************************************************
+*  2026/02/05      		 이아인	 	팝업창으로 용도 변경, 트랜잭션 변경
+*******************************************************************************
+*/
+
+// 1. 로그인 상태에 따라 장바구니에 추가할 것
+// 2. 파라미터인 prodType이 drink냐 food냐에 따라서 trans가 달라짐(후자는 영양정보 X)
+
+/************************************************************************************************
+ * FORM 변수 선언 영역
+ ************************************************************************************************/
+this.fvImgPath = "http://172.10.14.128:8088/edupack_egov/upload/p02/p024/";
+this.statusAuth = false;
+
+/************************************************************************************************
+ * FORM EVENT 영역(onload, onbeforeclose)
+ ************************************************************************************************/
+/**
+ * @description example: ~하는 부분
+*/
+
+this.frmProduct1230_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
+{
+	var prodId = this.getOwnerFrame().param;
+	//!chk -> prodType 따라 영양정보 가져올/말
+	var type = this.getOwnerFrame().prodType;
+	
+	if(type == "drink")
+		this.getProdDetail(prodId);
+	else if(type == "food"){
+		this.getProdDetailNoNut(prodId);	
+		this.staAboutFood.visible = true;
+	}
+	
+};
+
+/************************************************************************************************
+ * CALLBACK 콜백 처리부분(Transaction, Popup)
+ ************************************************************************************************/
+this.fn_callback = function(svcId, errCd, errMsg)
+{
+	if(errCd < 0){ alert("에러 : " + errMsg); }
+	if(svcId == "svcGetProdDetail"){
+		var imgPath = this.fvImgPath + this.ds_prodDetail.getColumn(0, "IMAGE_FILE");
+		this.imgvProd.set_image(imgPath);
+		this.imgvProd.set_stretch("contain");
+	}
+	
+	if(svcId == "svcGetProdDetailNoNut"){
+		var imgPath = this.fvImgPath + this.ds_prodDetail.getColumn(0, "IMAGE_FILE");
+		this.imgvProd.set_image(imgPath);
+		this.imgvProd.set_stretch("contain");
+	}
+	
+	if(svcId == "svcAddToCart"){
+		alert("장바구니에 담겼습니다.");
+	}
+}
+
+/************************************************************************************************
+ * CRUD 및 TRANSACTION 서비스 호출 처리
+ ************************************************************************************************/
+
+
+/************************************************************************************************
+ * 사용자 FUNCTION 영역
+ ************************************************************************************************/
+this.getProdDetail = function (prodId)
+{
+	var sSvcId  = "svcGetProdDetail";
+	var sUrl    = "p024/getProdDetail.do";
+	var inData  = "";
+	var outData = "ds_prodDetail=out_products";
+	var sParam  = "prodId="+prodId;
+	this.gfnTransaction(sSvcId, sUrl, inData, outData, sParam, "fn_callback");
+};
+
+this.getProdDetailNoNut = function (prodId)
+{
+	var sSvcId  = "svcGetProdDetailNoNut";
+	var sUrl    = "p024/getProdDetailNoNut.do";
+	var inData  = "";
+	var outData = "ds_prodDetail=out_products";
+	var sParam  = "prodId="+prodId;
+	this.gfnTransaction(sSvcId, sUrl, inData, outData, sParam, "fn_callback");
+};
+
+/************************************************************************************************
+ * 각 COMPONENT 별 EVENT 영역
+ ************************************************************************************************/
+
+this.Button00_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+// 	var sSvcId  = "svcGetDrinkInfo";
+// 	var sUrl    = "p024/getDrinkInfo.do";
+// 	var inData  = "";
+// 	var outData = "ds_drinkInfo=out_products";
+// 	var sParam  = "";
+// 	this.gfnTransaction(sSvcId, sUrl, inData, outData, sParam, "fn_callback");
+	
+};
+
+this.Button01_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	var rtnVal = this.getOwnerFrame().param;
+	this.gfnClosePopup(rtnVal);
+};
+this.btnAddToCart_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	if(nexacro.getApplication().appStatusAuth=="false"){ 
+		alert("로그인해야 사용할 수 있습니다.");
+		return;
+	}
+	
+	userId = nexacro.getApplication().gdsAuth.getColumn(0, "LOGIN_EMAIL");
+	var prodId = this.getOwnerFrame().param;
+	
+	var sSvcId  = "svcAddToCart";
+	var sUrl    = "p024/addToCart.do";
+	var inData  = "";
+	var outData = "";
+	var sParam  = "userId="+userId+" prodId="+prodId;
+	this.gfnTransaction(sSvcId, sUrl, inData, outData, sParam, "fn_callback");
+};]]></Script>
+    <Objects>
+      <Dataset id="ds_prodDetail">
+        <ColumnInfo>
+          <Column id="PRODUCT_ID" type="STRING" size="256"/>
+          <Column id="PRODUCT_NAME" type="STRING" size="256"/>
+          <Column id="CATEGORY" type="STRING" size="256"/>
+          <Column id="PRICE" type="INT" size="256"/>
+          <Column id="VOLUME" type="STRING" size="256"/>
+          <Column id="KCAL" type="INT" size="256"/>
+          <Column id="SUGARS" type="INT" size="256"/>
+          <Column id="PROTEIN" type="INT" size="256"/>
+          <Column id="SODIUM" type="INT" size="256"/>
+          <Column id="SAT_FAT" type="INT" size="256"/>
+          <Column id="CAFFEINE" type="INT" size="256"/>
+          <Column id="IMAGE_FILE" type="STRING" size="500"/>
+        </ColumnInfo>
+      </Dataset>
+    </Objects>
+    <Bind>
+      <BindItem id="item1" compid="staName" propid="text" datasetid="ds_prodDetail" columnid="PRODUCT_NAME"/>
+      <BindItem id="item0" compid="staPrice" propid="text" datasetid="ds_prodDetail" columnid="PRICE"/>
+      <BindItem id="item2" compid="edtKcal" propid="value" datasetid="ds_prodDetail" columnid="KCAL"/>
+      <BindItem id="item3" compid="edt" propid="value" datasetid="ds_prodDetail" columnid="SUGARS"/>
+      <BindItem id="item4" compid="edtKcal01" propid="value" datasetid="ds_prodDetail" columnid="PROTEIN"/>
+      <BindItem id="item5" compid="edtKcal00_00" propid="value" datasetid="ds_prodDetail" columnid="SODIUM"/>
+      <BindItem id="item6" compid="edtKcal02" propid="value" datasetid="ds_prodDetail" columnid="SAT_FAT"/>
+      <BindItem id="item7" compid="edtKcal00_01" propid="value" datasetid="ds_prodDetail" columnid="CAFFEINE"/>
+    </Bind>
+  </Form>
+</FDL>

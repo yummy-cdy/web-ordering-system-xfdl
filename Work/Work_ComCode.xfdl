@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="Work_ComCode" width="1280" height="720" titletext="New Form" onload="Work_ComCode_onload">
+    <Layouts>
+      <Layout height="720" mobileorientation="landscape" width="1280">
+        <Grid id="grd00" taborder="0" left="158" top="56" width="432" height="334" binddataset="gdsComCode">
+          <Formats>
+            <Format id="default">
+              <Columns>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+              </Columns>
+              <Rows>
+                <Row band="head" size="24"/>
+                <Row size="24"/>
+              </Rows>
+              <Band id="head">
+                <Cell text="MST_CODE"/>
+                <Cell col="1" text="MST_NAME"/>
+                <Cell col="2" text="CODE"/>
+                <Cell col="3" text="NAME"/>
+                <Cell col="4" text="USE_FLAG"/>
+              </Band>
+              <Band id="body">
+                <Cell text="bind:MST_CODE"/>
+                <Cell col="1" text="bind:MST_NAME"/>
+                <Cell col="2" text="bind:CODE"/>
+                <Cell col="3" text="bind:NAME"/>
+                <Cell col="4" text="bind:USE_FLAG"/>
+              </Band>
+            </Format>
+          </Formats>
+        </Grid>
+        <Combo id="cboPos" taborder="1" text="" left="633" top="130" width="134" height="52" innerdataset="dsPos" codecolumn="CODE" datacolumn="NAME"/>
+        <Button id="btn00" taborder="2" text="btn00" left="630" top="39" width="158" height="61" onclick="btn00_onclick"/>
+        <Radio id="rdoStatus" taborder="3" left="612" top="220" width="390" height="129" innerdataset="dsStatus" codecolumn="CODE" datacolumn="NAME"/>
+        <Combo id="cbo00" taborder="4" text="cbo00" left="622" top="366" width="277" height="69" innerdataset="dsHobby" codecolumn="CODE" datacolumn="NAME"/>
+        <Grid id="row" taborder="5" left="1002" top="134" width="173" height="205" binddataset="dsHobby">
+          <Formats>
+            <Format id="default">
+              <Columns>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+              </Columns>
+              <Rows>
+                <Row band="head" size="24"/>
+                <Row size="24"/>
+              </Rows>
+              <Band id="head">
+                <Cell text="MST_CODE"/>
+                <Cell col="1" text="MST_NAME"/>
+                <Cell col="2" text="CODE"/>
+                <Cell col="3" text="NAME"/>
+                <Cell col="4" text="USE_FLAG"/>
+              </Band>
+              <Band id="body">
+                <Cell text="bind:MST_CODE"/>
+                <Cell col="1" text="bind:MST_NAME"/>
+                <Cell col="2" text="bind:CODE"/>
+                <Cell col="3" text="bind:NAME"/>
+                <Cell col="4" text="bind:USE_FLAG"/>
+              </Band>
+            </Format>
+          </Formats>
+        </Grid>
+      </Layout>
+    </Layouts>
+    <Objects>
+      <Dataset id="dsPos">
+        <ColumnInfo>
+          <Column id="MST_CODE" type="STRING" size="256"/>
+          <Column id="MST_NAME" type="STRING" size="256"/>
+          <Column id="CODE" type="STRING" size="256"/>
+          <Column id="NAME" type="STRING" size="256"/>
+          <Column id="USE_FLAG" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+      <Dataset id="dsStatus">
+        <ColumnInfo>
+          <Column id="MST_CODE" type="STRING" size="256"/>
+          <Column id="MST_NAME" type="STRING" size="256"/>
+          <Column id="CODE" type="STRING" size="256"/>
+          <Column id="NAME" type="STRING" size="256"/>
+          <Column id="USE_FLAG" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+      <Dataset id="dsCorp">
+        <ColumnInfo>
+          <Column id="MST_CODE" type="STRING" size="256"/>
+          <Column id="MST_NAME" type="STRING" size="256"/>
+          <Column id="CODE" type="STRING" size="256"/>
+          <Column id="NAME" type="STRING" size="256"/>
+          <Column id="USE_FLAG" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+      <Dataset id="dsHobby">
+        <ColumnInfo>
+          <Column id="MST_CODE" type="STRING" size="256"/>
+          <Column id="MST_NAME" type="STRING" size="256"/>
+          <Column id="CODE" type="STRING" size="256"/>
+          <Column id="NAME" type="STRING" size="256"/>
+          <Column id="USE_FLAG" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+    </Objects>
+    <Script type="xscript5.1"><![CDATA[
+this.Work_ComCode_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
+{
+	this.gfnFormOnLoad(this);
+	this.fn_GetComCode(); // 공통 코드 가져오기
+};
+
+this.fn_GetComCode = function ()
+{
+	var arrCode = new Array();
+	arrCode.push({mstCode:"POSITION", obj:this.dsPos}); // push는 js 
+	arrCode.push({mstCode:"STATUS", obj:this.dsStatus, first:"0"});
+	arrCode.push({mstCode:"CORP", obj:this.dsCorp, first:"1"});
+	arrCode.push({mstCode:"HOBBY", obj:this.dsHobby, first:"2:0:댄스"});
+	this.gfnGetCommonCode(arrCode);
+};
+
+]]></Script>
+  </Form>
+</FDL>

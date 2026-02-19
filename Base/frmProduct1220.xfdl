@@ -1,0 +1,441 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="frmProduct1220" width="1600" height="770" titletext="메뉴(푸드)" onload="frmProduct1220_onload" background="white">
+    <Layouts>
+      <Layout height="770" mobileorientation="landscape" width="1600">
+        <Static id="Static01_00_00_00_00" taborder="0" text="FRAME" left="0" top="0" width="250" background="red" opacity="40%" textAlign="center" visible="false" bottom="0"/>
+        <Static id="Static01_00_00_00" taborder="1" text="FRAME" left="1350" top="0" width="250" background="red" opacity="40%" textAlign="center" visible="false" bottom="0"/>
+        <Grid id="grdProducts" taborder="2" left="1670" top="107" width="815" height="247" binddataset="ds_foodInfo" autofittype="col" positionstep="0" visible="false">
+          <Formats>
+            <Format id="default">
+              <Columns>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+              </Columns>
+              <Rows>
+                <Row band="head" size="24"/>
+                <Row size="24"/>
+              </Rows>
+              <Band id="head">
+                <Cell text="PRODUCT_ID"/>
+                <Cell col="1" text="PRODUCT_NAME"/>
+                <Cell col="2" text="CATEGORY"/>
+                <Cell col="3" text="PRICE"/>
+                <Cell col="4" text="IMAGE_FILE"/>
+              </Band>
+              <Band id="body">
+                <Cell text="bind:PRODUCT_ID"/>
+                <Cell col="1" text="bind:PRODUCT_NAME"/>
+                <Cell col="2" text="bind:CATEGORY"/>
+                <Cell col="3" text="bind:PRICE"/>
+                <Cell col="4" text="bind:IMAGE_FILE"/>
+              </Band>
+            </Format>
+          </Formats>
+        </Grid>
+        <Button id="Button00" taborder="3" text="조회" left="1960" top="464" width="384" height="90" onclick="getFoodInfo" positionstep="0" visible="false"/>
+        <Div id="divChkboxset" taborder="4" text="Div00" left="250" top="0" width="1100" height="278">
+          <Layouts>
+            <Layout>
+              <Static id="Static00" taborder="1" text="카테고리" left="0" top="24" width="260" height="76" font="normal 700 21px/normal &quot;KopubWorld&quot;"/>
+              <CheckBoxSet id="chbsChkCate" taborder="1" left="0" top="133" innerdataset="ds_category" codecolumn="CATEGORY" datacolumn="CATEGORY" index="0,1,2,3,4,5,6,7,8,9" text="브레드,케이크,제주 전용 상품,온라인 홀케익 예약,2026 New Year 1,샌드위치&amp;샐러드,과일&amp;요거트,스낵&amp;미니디저트,아이스크림,undefined" value="브레드,케이크,제주 전용 상품,온라인 홀케익 예약,2026 New Year 1,샌드위치&amp;샐러드,과일&amp;요거트,스낵&amp;미니디저트,아이스크림,undefined" right="0" bottom="25" border="1px solid black" columncount="4" padding="15px" font="13px/normal &quot;KopubWorld&quot;" onitemchanged="divChkboxset_chbsChkCate_onitemchanged"/>
+            </Layout>
+          </Layouts>
+        </Div>
+      </Layout>
+    </Layouts>
+    <Script type="xscript5.1"><![CDATA[/**
+* Nexacro Professional Training Course
+* @MenuPath     개발가이드 > 표준 및 기본 정의 > 그리드 페이징
+* @FileName     SamplePaging.xfdl 
+* @Creator      TOBESOFT Education
+* @CreateDate   2025/01/03
+* @Desction     
+************** 소스 수정 이력 ***********************************************
+* date          Modifier                Description
+*******************************************************************************
+* 2026/01/30             이아인                  최초 생성 
+*******************************************************************************
+* 2026/02/08             이아인             DB 연결, div 자동 생성 
+*******************************************************************************
+*/
+
+/************************************************************************************************
+ * FORM 변수 선언 영역
+ ************************************************************************************************/
+this.fvImgPath = "http://172.10.14.128:8088/edupack_egov/upload/p02/p024/";
+//this.fvImgPath = "http://localhost:8088/edupack_egov/upload/p02/p024/";
+this.divCount = 0;
+
+this.exceptCategory = "웹사이트 비노출 메뉴(사이렌오더 영양정보 연동)"
+this.categoryOrder = ["브레드", "케이크", "제주 전용 상품", "온라인 홀케익 예약",
+					"2026 New Year 1", "샌드위치&샐러드", "과일&요거트", "스낵&미니디저트",
+					"아이스크림", "웹사이트 비노출 메뉴(사이렌오더 영양정보 연동)", "브런치유어웨이"];
+
+/************************************************************************************************
+ * FORM EVENT 영역(onload, onbeforeclose)
+ ************************************************************************************************/
+this.frmProduct1220_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
+{
+    this.ds_foodInfo.addRow();
+    this.getFoodInfo();
+    this.ds_selectedCate.addRow();
+};
+
+/************************************************************************************************
+ * CALLBACK 콜백 처리부분(Transaction, Popup)
+ ************************************************************************************************/
+this.fn_callback = function(svcId, errCd, errMsg)
+{
+    if(errCd < 0){
+        alert("에러 : " + errMsg);
+        return;
+    }
+    if(svcId == "svcGetFoodInfo"){
+		this.ds_foodInfo.set_keystring("S:U+" + "fn_categorySort"); // 카테고리 기준으로 정렬
+		
+        this.divChkboxset.form.chbsChkCate.index = "0,1,2,3,4,5,6,7,8,9";
+		
+		this.setProdList();
+		this.divCount = this.ds_foodInfo.rowcount;
+    }
+    
+    if(svcId == "svcAddToCart"){
+        alert("장바구니에 담겼습니다.");
+    }
+};
+
+/************************************************************************************************
+ * CRUD 및 TRANSACTION 서비스 호출 처리
+ ************************************************************************************************/
+this.getFoodInfo = function ()
+{
+	var sSvcId  = "svcGetFoodInfo";
+	var sUrl    = "p024/getFoodInfo.do";
+	var inData  = "";
+	var outData = "ds_foodInfo=out_products";
+	var sParam  = "";
+	this.gfnTransaction(sSvcId, sUrl, inData, outData, sParam, "fn_callback");
+};
+
+this.fn_addToCart = function (obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+    if(nexacro.getApplication().appStatusAuth=="false"){
+        alert("로그인해야 사용할 수 있습니다.");
+        return;
+    }
+    
+    var userId = nexacro.getApplication().gdsAuth.getColumn(0, "LOGIN_EMAIL");
+    
+    var sSvcId = "svcAddToCart";
+    var sUrl = "p024/addToCart.do";
+    var inData = "";
+    var outData = "";
+    var sParam = "userId="+userId+" prodId="+obj.prodId;
+    this.gfnTransaction(sSvcId, sUrl, inData, outData, sParam, "fn_callback");
+};
+
+/************************************************************************************************
+ * 사용자 FUNCTION 영역
+ ************************************************************************************************/
+this.fn_categorySort = function(fRow, sRow, fColumnID, sColumnID, objDs) {
+    var fVal = objDs.getColumn(fRow, "CATEGORY");
+    var sVal = objDs.getColumn(sRow, "CATEGORY");
+    
+    var fIdx = this.categoryOrder.indexOf(fVal);
+    var sIdx = this.categoryOrder.indexOf(sVal);
+    
+    // 배열에 없는 카테고리는 맨 뒤로 보냄
+    if(fIdx == -1) fIdx = 999;
+    if(sIdx == -1) sIdx = 999;
+    
+    return fIdx - sIdx; // 오름차순 정렬
+};
+
+this.makeTitle = function (objDs, i, nTop)
+{
+	var staTitle = new Static();
+	var sStaId = "staProdTitle" + i;
+	staTitle.init(sStaId, 250, nTop, 1100, 60);
+       
+    var nCategory = objDs.getColumn(i, "CATEGORY");
+    staTitle.set_text("  "+nCategory);
+    staTitle.set_textAlign("left");
+    staTitle.set_font("normal bold 17px/normal 'KopubWorld'");
+	staTitle.set_background("#f4f4f2");
+    
+    this.addChild(sStaId, staTitle);
+    staTitle.show();
+};
+
+this.makeImgv = function(sDivId, objDs, i)
+{   
+    var objImg = new ImageViewer();
+    var sName = this.ds_foodInfo.getColumn(i, "PRODUCT_ID");
+    objImg.init(sName, 0, 0, 260, 260); 
+    
+    var imgPath = this.fvImgPath + objDs.getColumn(i, "IMAGE_FILE");
+    objImg.set_image(imgPath);
+    objImg.set_stretch("contain");
+    objImg.set_border("0px none");
+    
+    objImg.prodId = this.ds_foodInfo.getColumn(i, "PRODUCT_ID");
+    objImg.addEventHandler("onclick", this.fn_showDetail, this);
+    
+    var objDiv = this.components[sDivId];
+    objDiv.form.addChild(sName, objImg);
+    objImg.show();
+};
+
+this.makeStaName = function (sDivId, objDs, i)
+{
+    var staProdName = new Static();
+    staProdName.init("staProdName", 0, 260, 260, 30);
+        
+    var ProdName = objDs.getColumn(i, "PRODUCT_NAME");
+    staProdName.set_text(ProdName);
+    staProdName.set_textAlign("center");
+    staProdName.set_font("normal bold 13px/normal 'KopubWorld'");
+    staProdName.set_color("#000000"); 
+    
+    var objDiv = this.components[sDivId];
+    objDiv.form.addChild("staProdName", staProdName);
+    staProdName.show();
+};
+
+this.makeStaPrice = function (sDivId, objDs, i)
+{
+    var staPrice = new Static();
+    staPrice.init("staProdPrice", -30, 280, 320, 30);
+       
+    var nPrice = objDs.getColumn(i, "PRICE");
+    staPrice.set_text(nexacro.toNumber(nPrice).toLocaleString() + "원");
+    staPrice.set_textAlign("center");
+    staPrice.set_font("normal 13px/normal 'KopubWorld'");
+    staPrice.set_color("#ff5500");
+    
+    var objDiv = this.components[sDivId];
+    objDiv.form.addChild("staProdPrice", staPrice);
+    staPrice.show();
+};
+
+this.makeBtnAddToCart = function (sDivId, i)
+{
+    var btnAddToCart = new Button();
+    btnAddToCart.init("btnAddToCart", 220, 220, 30, 30);
+    btnAddToCart.background = "url('imagerc::add-to-cart.png') no-repeat center center /contain #F5F5F0";
+    btnAddToCart.set_border("0px none");
+    btnAddToCart.set_borderRadius("5px");
+    
+    btnAddToCart.prodId = this.ds_foodInfo.getColumn(i, "PRODUCT_ID");
+    btnAddToCart.addEventHandler("onclick", this.fn_addToCart, this);
+    btnAddToCart.set_cursor("pointer");
+    
+    var objDiv = this.components[sDivId];
+    objDiv.form.addChild("btnAddToCart", btnAddToCart);
+    btnAddToCart.show();
+    btnAddToCart.bringToFront();
+};
+
+this.setProdList = function ()
+{
+    var objDs = this.ds_foodInfo;
+    if (objDs == null || objDs.getRowCount() == 0) return;
+
+    var nCardW   = 260;
+    var nCardH   = 310;
+    var nGapX    = 25;
+    var nGapY    = 25;
+    var nStartX  = 250;
+    var nStartY  = 400;
+    var nColCnt  = 4;
+	var nTitleH  = 60;
+	
+	var nTop = nStartY;
+	var nCol = 0;
+	var sPrevCate = "";
+
+    var nCnt = objDs.getRowCount();
+    
+    for(var i=0; i < nCnt; i++)
+    {
+		var sCurrCate = objDs.getColumn(i, "CATEGORY");
+		if(sCurrCate == this.exceptCategory)
+			continue;
+        
+        if (sCurrCate != sPrevCate) 
+        {
+            if (i > 0 && nCol > 0)	nTop += (nCardH + nGapY);
+            if (i > 0)	nTop += 20; 
+
+            this.makeTitle(objDs, i, nTop);
+
+            nTop += (nTitleH + 10); // 타이틀 높이만큼 nTop 증가 + 간격
+
+            nCol = 0; // 카테고리가 바뀌었으니 열 위치(nCol) 초기화
+            sPrevCate = sCurrCate;
+        }
+
+        var nLeft = nStartX + (nCol * (nCardW + nGapX));
+        var sDivId = "divCard" + i;
+        
+        if(this.isValidObject(sDivId)){
+            var objDel = this.removeChild(sDivId);
+            objDel.destroy();
+        }
+
+        var objDiv = new Div();
+        objDiv.init(sDivId, nLeft, nTop, nCardW, nCardH);
+        
+        objDiv.set_border("1px solid #e5e5e5");
+        objDiv.set_background("#ffffff");
+			
+        this.addChild(sDivId, objDiv);
+        objDiv.show();
+		
+        
+        this.makeImgv(sDivId, objDs, i);
+        this.makeStaName(sDivId, objDs, i);
+        this.makeStaPrice(sDivId, objDs, i);
+        this.makeBtnAddToCart(sDivId, i);
+		
+		nCol++; // 오른쪽으로 한칸 Push
+        if (nCol >= nColCnt) { // 한줄이 다 찼다면
+            nCol = 0;               // 맨 왼쪽으로 시작
+            nTop += (nCardH + nGapY); // 아래 줄 이동
+        }
+    }
+    this.divChkboxset.form.resetScroll();
+    this.resetScroll();
+};
+
+
+this.deleteDiv = function ()
+{
+    for(var i = this.components.length - 1; i >= 0; i--) // 컴포넌트 삭제 시 id 충돌 때문에 역순 삭제
+    {
+        var obj = this.components[i];
+		if(obj instanceof nexacro.Static && obj.id.indexOf("staProdTitle") == 0)
+        {
+            this.removeChild(obj.id).destroy();
+        }
+        if(obj instanceof nexacro.Div && obj.id.indexOf("divCard") == 0)
+        {
+            this.removeChild(obj.id).destroy();
+        }
+    }
+};
+
+
+this.fn_showDetail = function (obj:nexacro.ImageViewer,e:nexacro.ClickEventInfo) // !chk
+{
+    var sPopupId = "sPopupId";
+    var sUrl = "Base::frmProduct1230.xfdl";
+    var oArg = {param: obj.id, prodType: "food"};
+    var sPopupCallback = "fnCallPopup";
+    var oOption = {title: "제품 상세 정보", width: "580", height: "630" };
+    this.gfnOpenPopup(sPopupId, sUrl, oArg, sPopupCallback, oOption);
+};
+
+/************************************************************************************************
+ * 각 COMPONENT 별 EVENT 영역
+ ************************************************************************************************/
+this.divChkboxset_chbsChkCate_onitemchanged = function(obj:nexacro.CheckBoxSet,e:nexacro.ItemChangeEventInfo)
+{
+	this.deleteDiv();
+    this.ds_foodInfo.filter("");
+
+    var arrSelected = this.divChkboxset.form.chbsChkCate.getSelectedItems();
+    var idx = this.divChkboxset.form.chbsChkCate.getSelectedCount();
+    var str = "";
+    
+    if(idx < 1){
+        this.deleteDiv(this.divCount);
+        return;
+    }
+    
+    for(var i=0; i<idx;i++){ 
+        var sCategory = this.ds_category.getColumn(arrSelected[i], "CATEGORY");
+        if(i == 0){
+            str += "CATEGORY=='" + sCategory +"'";
+        }
+        else{
+            str += "||CATEGORY=='" + sCategory +"'";
+        }
+    }   
+
+   
+    this.ds_foodInfo.filter(str);
+	this.ds_foodInfo.set_keystring("S:U+" + "fn_categorySort");
+	
+    this.divCount = this.ds_foodInfo.rowcount; // this를 붙여 수정한 부분
+    this.setProdList();
+};
+
+this.divChkboxset_Button00_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+    var sCate = 'sample';
+    var str = "CATEGORY=='" + sCate +"'";
+    this.ds_foodInfo.filter(str);
+};]]></Script>
+    <Objects>
+      <Dataset id="ds_foodInfo">
+        <ColumnInfo>
+          <Column id="PRODUCT_ID" type="STRING" size="256"/>
+          <Column id="PRODUCT_NAME" type="STRING" size="256"/>
+          <Column id="CATEGORY" type="STRING" size="256"/>
+          <Column id="PRICE" type="INT" size="256"/>
+          <Column id="IMAGE_FILE" type="STRING" size="500"/>
+        </ColumnInfo>
+      </Dataset>
+      <Dataset id="ds_category">
+        <ColumnInfo>
+          <Column id="CATEGORY" type="STRING" size="256"/>
+        </ColumnInfo>
+        <Rows>
+          <Row>
+            <Col id="CATEGORY">브레드</Col>
+          </Row>
+          <Row>
+            <Col id="CATEGORY">케이크</Col>
+          </Row>
+          <Row>
+            <Col id="CATEGORY">제주 전용 상품</Col>
+          </Row>
+          <Row>
+            <Col id="CATEGORY">온라인 홀케익 예약</Col>
+          </Row>
+          <Row>
+            <Col id="CATEGORY">2026 New Year 1</Col>
+          </Row>
+          <Row>
+            <Col id="CATEGORY">샌드위치&amp;샐러드</Col>
+          </Row>
+          <Row>
+            <Col id="CATEGORY">과일&amp;요거트</Col>
+          </Row>
+          <Row>
+            <Col id="CATEGORY">스낵&amp;미니디저트</Col>
+          </Row>
+          <Row>
+            <Col id="CATEGORY">아이스크림</Col>
+          </Row>
+          <Row>
+            <Col id="CATEGORY">브런치유어웨이</Col>
+          </Row>
+        </Rows>
+      </Dataset>
+      <Dataset id="ds_selectedCate">
+        <ColumnInfo>
+          <Column id="CATEGORY" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+    </Objects>
+    <Bind>
+      <BindItem id="item0" compid="divChkboxset.form.chbsChkCate" propid="value" datasetid="ds_selectedCate" columnid="CATEGORY"/>
+    </Bind>
+  </Form>
+</FDL>

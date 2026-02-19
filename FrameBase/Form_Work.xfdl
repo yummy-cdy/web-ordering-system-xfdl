@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="Form_Work" width="1536" height="864" titletext="font setting sample" onload="Form_Work_onload">
+    <Layouts>
+      <Layout width="1536" height="864" screenid="Desktop_screen">
+        <Static id="Static00" taborder="0" text="테스트 test" left="64" top="50" width="468" height="114" onclick="Static00_onclick" font="normal 12px/normal &quot;KopubWorld&quot;" visible="false"/>
+        <Static id="Static01" taborder="1" text="테스트" left="65" top="189" width="280" height="105" visible="false"/>
+      </Layout>
+    </Layouts>
+    <Script type="xscript5.1"><![CDATA[]]></Script>
+  </Form>
+</FDL>

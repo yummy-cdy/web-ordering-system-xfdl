@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="frmMain1202" width="1600" height="80" titletext="divMenuBar 구현화면" background="white">
+    <Layouts>
+      <Layout height="80" mobileorientation="landscape" width="1600">
+        <Static id="Static01_00_00" taborder="0" text="FRAME" left="0" top="0" width="250" background="red" opacity="40%" textAlign="center" visible="false" bottom="0"/>
+        <Static id="Static01_00" taborder="1" text="FRAME" left="0" top="60" height="20" background="red" opacity="40%" textAlign="center" visible="false" onclick="Static01_00_onclick" right="0"/>
+        <Static id="Static01_00_01" taborder="2" text="FRAME" left="0" top="0" height="20" background="red" opacity="40%" textAlign="center" visible="false" right="0"/>
+        <Static id="Static01_00_00_00" taborder="4" text="FRAME" left="1350" top="0" width="250" background="red" opacity="40%" textAlign="center" visible="false" bottom="0"/>
+        <ImageViewer id="ivMainLogo" taborder="3" left="15.63%" top="18.75%" width="3.125%" background="url('imagerc::starbucks-roundlogo.png') no-repeat right center /contain" border="0px none" height="62.5%" onclick="ivMainLogo_onclick"/>
+        <Button id="btnMenu" taborder="5" text="MENU" top="25%" width="6.875%" height="50%" right="45.625%" background="white" onmouseenter="fn_onmouseenter" onmouseleave="fn_onmouseleave" font="normal bold 13px/normal &quot;KopubWorld&quot;" onclick="btnMenu_onclick" border="1px solid black"/>
+        <Button id="btnStore" taborder="6" text="STORE" top="25%" width="6.875%" height="50%" right="38.75%" background="white" onmouseenter="fn_onmouseenter" onmouseleave="fn_onmouseleave" font="normal bold 13px/normal &quot;KopubWorld&quot;" border="1px solid black"/>
+        <Button id="btnNotice" taborder="7" text="EVENT &amp; NOTICE" top="25.00%" width="7.5%" height="50%" right="22.50%" background="white" onmouseenter="fn_onmouseenter" onmouseleave="fn_onmouseleave" font="normal bold 12px/normal &quot;KopubWorld&quot;" border="1px solid black"/>
+        <Button id="btnAbout" taborder="8" text="ABOUT US" top="25%" height="50%" width="6.875%" right="15.625%" background="white" onmouseenter="fn_onmouseenter" onmouseleave="fn_onmouseleave" font="normal bold 13px/normal &quot;KopubWorld&quot;" border="1px solid black"/>
+        <Button id="btnSirenOrder" taborder="9" text="SIREN ORDER" top="25.00%" width="8.75%" height="50%" right="30.00%" background="white" onmouseenter="fn_onmouseenter" onmouseleave="fn_onmouseleave" font="normal bold 13px/normal &quot;KopubWorld&quot;" border="1px solid black" onclick="btnSirenOrder_onclick"/>
+      </Layout>
+    </Layouts>
+    <Script type="xscript5.1"><![CDATA[/**
+*  Nexacro Professional Training Couse
+*  @MenuPath    개발가이드 > 표준 및 기본 정의 > 그리드 페이징
+*  @FileName 	SamplePaging.xfdl 
+*  @Creator 	TOBESOFT Education
+*  @CreateDate 	2025/01/03
+*  @Desction    
+************** 소스 수정 이력 ***********************************************
+*  date          		Modifier                Description
+*******************************************************************************
+*  2025/01/29		TOBESOFT Education			최초 생성 
+*******************************************************************************
+*/
+
+
+
+/************************************************************************************************
+ * FORM 변수 선언 영역
+ ************************************************************************************************/
+this.fn_onmouseenter = function (obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	obj.background="mistyrose";
+};
+
+this.fn_onmouseleave = function (obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	obj.background = "none no-repeat left top";
+};
+
+/************************************************************************************************
+ * FORM EVENT 영역(onload, onbeforeclose)
+ ************************************************************************************************/
+/**
+ * @description example: ~하는 부분
+*/
+
+/************************************************************************************************
+ * CALLBACK 콜백 처리부분(Transaction, Popup)
+ ************************************************************************************************/
+
+/************************************************************************************************
+ * CRUD 및 TRANSACTION 서비스 호출 처리
+ ************************************************************************************************/
+
+/************************************************************************************************
+ * 사용자 FUNCTION 영역
+ ************************************************************************************************/
+
+/************************************************************************************************
+ * 각 COMPONENT 별 EVENT 영역
+ ************************************************************************************************/
+
+this.ivMainLogo_onclick = function(obj:nexacro.ImageViewer,e:nexacro.ClickEventInfo)
+{
+	// 메인화면으로 돌아가기
+	this.parent.parent.divCenter.url = "Base::frmMain1203.xfdl"; 
+};
+
+
+this.btnMenu_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	this.parent.parent.divCenter.url = "Base::frmProduct1200.xfdl"; 
+};
+
+this.btnSirenOrder_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	this.parent.parent.divCenter.url = "Order::frmCust1210.xfdl"; 
+};
+]]></Script>
+  </Form>
+</FDL>

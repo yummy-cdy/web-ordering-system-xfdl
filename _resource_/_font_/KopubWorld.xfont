@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<XFONT version="1.0"><![CDATA[
+@font-face {
+  font-family : 'KopubWorld';
+  font-style : normal;
+  font-weight : 400;
+  src : url(./_resource_/_font_/KoPubWorld-Dotum-Medium.woff) format('woff');
+   
+}
+
+
+
+/********************************************************************
+
+
+@font-face {
+  font-family : 'KopubWorld';
+  font-style : normal;
+  font-weight : 400;
+  src : url(./_resource_/_font_/KoPubWorld-Dotum-Medium.woff) format('woff'),
+	url(./_resource_/_font_/KoPubWorld Dotum Medium.ttf) format('truetype');
+   
+}
+
+
+@font-face {
+  font-family : 'NanumGothicBold';
+  font-style : normal;
+  font-weight : 700;
+  src : local("NanumGothicBold");
+  src : url(./_resource_/_font_/NanumGothicBold.eot);
+  src : url(./_resource_/_font_/NanumGothicBold.eot?#iefix) format('embedded-opentype'),
+    url(./_resource_/_font_/NanumGothicBold.woff2) format('woff2'),
+    url(./_resource_/_font_/NanumGothicBold.woff) format('woff'),
+    url(./_resource_/_font_/NanumGothicBold.ttf) format('truetype');
+}
+********************************************************************/]]></XFONT>

@@ -1,0 +1,361 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="frmAuth1230" width="1600" height="770" titletext="회원가입(직원)" background="white" onload="frmAuth1230_onload">
+    <Layouts>
+      <Layout height="770" mobileorientation="landscape" width="1600">
+        <Static id="Static01_00_00_00_00" taborder="0" text="FRAME" left="0" top="0" width="250" background="red" opacity="40%" textAlign="center" visible="false" bottom="0"/>
+        <Static id="Static01_00_00_00" taborder="1" text="FRAME" left="1350" top="0" width="250" background="red" opacity="40%" textAlign="center" visible="false" bottom="0"/>
+        <Static id="Static01_00_01" taborder="2" text="FRAME" left="0" top="0" height="20" background="red" opacity="40%" textAlign="center" visible="false" right="0"/>
+        <Static id="Static01_00_01_00" taborder="3" text="FRAME" left="0" top="750" height="20" background="red" opacity="40%" textAlign="center" visible="false" right="0"/>
+        <Div id="divSignUp" taborder="4" text="Div00" left="15.63%" top="2.2222222222222223%" width="68.75%" formscrollbarsize="0" bottom="2.2222222222222223%">
+          <Layouts>
+            <Layout>
+              <TextField id="tfEmail" taborder="0" labeltext="ID (Email)" left="31.00%" top="32.48%" width="28.09090909090909%" height="7.746904258532165%" font="normal bold 13px/normal &quot;KopubWorld&quot;normal bold 13px/normal &quot;KopubWorld&quot;" inputtype="email"/>
+              <Button id="btnNaverSignUp" taborder="1" left="31.00%" top="22.79%" width="37.36363636363637%" height="5.813953488372093%" font="normal bold 13px/normal &quot;KopubWorld&quot;" border="0px none" background="url('imagerc::NAVER_signup_Light_KR_green_wide_H56.png') no-repeat center center /contain"/>
+              <TextField id="tfPW" taborder="2" labeltext="Password" left="31.00%" top="41.05%" width="37.36363636363637%" height="7.746904258532165%" font="normal bold 13px/normal &quot;KopubWorld&quot;normal bold 13px/normal &quot;KopubWorld&quot;" onchanged="divSignUp_tfPW_onchanged" inputtype="text"/>
+              <ImageViewer id="staLogo" taborder="3" left="31.09090909090909%" top="8.02%" width="37.36363636363637%" height="11.627906976744185%" border="0px none" background="url('imagerc::starbucks-seeklogo.png') no-repeat left center /contain" text=""/>
+              <TextField id="tfPWChk" taborder="4" labeltext="Password Check" left="31.00%" top="50.29%" width="37.36363636363637%" height="7.746904258532165%" font="normal bold 13px/normal &quot;KopubWorld&quot;normal bold 13px/normal &quot;KopubWorld&quot;" inputtype="password"/>
+              <Button id="btnValidEmail" taborder="5" left="60.00%" top="33.98%" width="8%" height="5.844155844155844%" onclick="divSignUp_btnValidEmail_onclick" font="normal bold 13px/normal &quot;KopubWorld&quot;" border="1px solid black" text="중복 체크" background="white"/>
+              <TextField id="tfName" taborder="6" labeltext="Name" left="31.00%" top="59.53%" width="37.36363636363637%" height="7.610993657505285%" font="normal bold 13px/normal &quot;KopubWorld&quot;normal bold 13px/normal &quot;KopubWorld&quot;"/>
+              <Button id="btnSignUp" taborder="7" text="회원가입" left="31.00%" top="86.58%" width="37.36363636363637%" height="3.8054968287526423%" onclick="divSignUp_btnSignUp_onclick" enable="true" font="normal bold 13px/normal &quot;KopubWorld&quot;" borderRadius="5px 5px 5px 5px" border="1px solid #000000" background="white"/>
+              <TextField id="tfStoreCode" taborder="8" labeltext="Store Code" left="31.00%" top="76.93%" width="28.09090909090909%" height="7.746904258532165%" font="normal bold 13px/normal &quot;KopubWorld&quot;normal bold 13px/normal &quot;KopubWorld&quot;"/>
+              <Combo id="cboStore" taborder="9" left="31%" top="68.63485351857445%" width="37.36363636363637%" height="7.746904258532165%" value="" index="-1" innerdataset="ds_store" codecolumn="STORE_CODE" datacolumn="STORE_NAME" displaynulltext="매장을 선택해주세요"/>
+              <Button id="btnValidCode" taborder="10" text="코드 확인" left="60%" top="78.69223799456357%" width="8%" height="5.844155844155844%" font="normal bold 13px/normal &quot;KopubWorld&quot;" background="white" border="1px solid black" onclick="divSignUp_btnValidCode_onclick"/>
+              <Button id="btn00" taborder="11" text="btn00" left="82" top="242" width="140" height="151" onclick="divSignUp_btn00_onclick"/>
+            </Layout>
+          </Layouts>
+        </Div>
+        <Grid id="Grid00" taborder="5" left="1840" top="330" width="313" height="228" binddataset="ds_signUp" visible="false">
+          <Formats>
+            <Format id="default">
+              <Columns>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+              </Columns>
+              <Rows>
+                <Row band="head" size="24"/>
+                <Row size="24"/>
+              </Rows>
+              <Band id="head">
+                <Cell text="LOGIN_EMAIL"/>
+                <Cell col="1" text="LOGIN_PW"/>
+                <Cell col="2" text="CHECK_PW"/>
+                <Cell col="3" text="NAME"/>
+              </Band>
+              <Band id="body">
+                <Cell text="bind:LOGIN_EMAIL"/>
+                <Cell col="1" text="bind:LOGIN_PW"/>
+                <Cell col="2" text="bind:CHECK_PW"/>
+                <Cell col="3" text="bind:NAME"/>
+              </Band>
+            </Format>
+          </Formats>
+        </Grid>
+      </Layout>
+    </Layouts>
+    <Script type="xscript5.1"><![CDATA[/**
+*  Nexacro Professional Training Couse
+*  @MenuPath    개발가이드 > 표준 및 기본 정의 > 그리드 페이징
+*  @FileName 	SamplePaging.xfdl 
+*  @Creator 	TOBESOFT Education
+*  @CreateDate 	2025/01/03
+*  @Desction    
+************** 소스 수정 이력 ***********************************************
+*  date          		Modifier                Description
+*******************************************************************************
+*  2026/01/29      		 이아인	 	  	       최초 생성
+*******************************************************************************
+*  2026/02/13      		 이아인	 	  	       최초 생성
+*******************************************************************************
+*/
+
+
+
+/************************************************************************************************
+ * FORM 변수 선언 영역
+ ************************************************************************************************/
+this.bValidEmail = false;
+this.bValidCode = false;
+
+this.fvApp = nexacro.getApplication();
+
+/************************************************************************************************
+ * FORM EVENT 영역(onload, onbeforeclose)
+ ************************************************************************************************/
+/**
+ * @description example: ~하는 부분
+*/
+this.frmAuth1230_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
+{
+	this.ds_signUp.addRow();
+	this.ds_store.addRow();
+	this.fnGetStoreList();
+};
+
+/************************************************************************************************
+ * CALLBACK 콜백 처리부분(Transaction, Popup)
+ ************************************************************************************************/
+this.fn_callback = function(svcId, errCd, errMsg)
+{
+	if(errCd < 0){
+		alert("에러 : " + errMsg);
+		return;
+	}
+	var sMsgId = "";
+	
+	if(svcId == "svcRegisterStaff"){
+		if(errCd>=0){
+			this.sleep(500);
+			this.parent.parent.form.go("Staff::frmStaff1200.xfdl");
+		}
+		else
+			this.gfnAlert("msg.action.fail");		// 저장에 실패하였습니다.			
+	}
+	
+	if(svcId == "svcIsValidEmail"){
+		if(this.bValidEmail==true){
+			this.fnItIsValidEmail();
+			}
+		else{
+			//alert("false>>"+this.bValidEmail);
+			alert("이미 사용 중인 이메일입니다");
+		}
+	}
+	if(svcId == "svcGetStoreList"){
+		this.divSignUp.form.cboStore.index = -1;
+		this.ds_selected.addRow();
+	}
+	
+	if(svcId == "svcIsValidCode"){
+		if(this.bValidCode==true){
+			this.fnItIsValidCode();
+		}
+		else{
+			alert("유효하지 않은 코드입니다");
+		}
+	}
+	
+}
+
+/************************************************************************************************
+ * CRUD 및 TRANSACTION 서비스 호출 처리
+ ************************************************************************************************/
+this.fnGetStoreList = function ()
+{
+	var sSvcId  = "svcGetStoreList";
+	var sUrl    = "p024/getStoreList.do";
+	var inData  = "";
+	var outData = "ds_store=out_data";
+	var sParam  = "";
+	this.gfnTransaction(sSvcId, sUrl, inData, outData, sParam, "fn_callback");
+};
+
+/************************************************************************************************
+ * 사용자 FUNCTION 영역
+ ************************************************************************************************/
+/*
+@ 공백 문자를 검사하는 함수
+*/
+this.fnCheckIsBlankIn = function (purpose)
+{
+    var regex = /\s/; 
+    var arrCheckCols = []; // 검사할 컬럼 ID들을 담을 배열
+
+    // 1. 체크 범위 설정
+    if(purpose == "isValidEmail") {
+        arrCheckCols.push("LOGIN_EMAIL"); // 이메일 체크 시에는 이메일 컬럼만
+    } else if(purpose == "isValidCode") {
+        arrCheckCols.push("STORE_CODE");  // 매장 코드 체크 시에는 코드 컬럼만
+    } else {
+        // 전체 가입 버튼 클릭 시에는 상태값 제외 전체 컬럼
+        for(var i=0; i<this.ds_signUp.colcount; i++){
+            var colId = this.ds_signUp.getColID(i);
+            if(colId != "IS_VALID_EMAIL" && colId != "IS_VALID_CODE"){
+                arrCheckCols.push(colId);
+            }
+        }
+    }
+
+    // 2. 설정된 컬럼들만 정밀 검사
+    for(var i=0; i<arrCheckCols.length; i++){
+        var sColId = arrCheckCols[i];
+        var sVal = this.ds_signUp.getColumn(0, sColId);
+        
+        if(this.gfnIsNull(sVal)) continue; 
+        
+        if(regex.test(sVal.toString())){ // 공백이 나온다면
+            return false; 
+        }
+    }
+    return true; 
+};
+
+this.fnCheckValidation = function ()
+{
+	var isBlank = this.fnCheckIsBlankIn();
+	if(!isBlank){
+		alert("공백은 포함할 수 없습니다");
+		return false;
+	}
+	
+	this.gfnClearValidation(this.ds_signUp);
+	
+	this.gfnSetValidation(this.ds_signUp, "LOGIN_EMAIL", "이메일(ID)", "required,isemail");	// 아이디 입력 체크
+	this.gfnSetValidation(this.ds_signUp, "LOGIN_PW", "비밀번호", "required,rangelength:1:20");	 // 패스워드 입력 체크
+	this.gfnSetValidation(this.ds_signUp, "CHECK_PW", "비밀번호 확인", "required,equalto:LOGIN_PW");	// 패스워드 일치 체크
+	this.gfnSetValidation(this.ds_signUp, "NAME", "이름", "required,rangelength:1:10");	// 이름 입력 체크
+	this.gfnSetValidation(this.ds_signUp, "IS_VALID_EMAIL", "이메일 중복 체크", "required");	// 이메일 중복 체크
+	this.gfnSetValidation(this.ds_signUp, "STORE_CODE", "매장 코드 체크", "required");	// 매장 코드 입력 체크
+	this.gfnSetValidation(this.ds_signUp, "IS_VALID_CODE", "매장 코드 유효성 체크", "required");	// 매장 코드 체크
+	
+	// 수정된 Row가 아닌 전체 Row에 대해 Validation check
+ 	if (this.gfnValidation(this.ds_signUp, "A") == false) return false;
+
+	return true;
+};
+
+
+this.fnItIsValidEmail = function ()
+{
+	this.divSignUp.form.btnValidEmail.background = "yellowgreen";
+	this.divSignUp.form.btnValidEmail.color = "white";
+	this.ds_signUp.setColumn(0,"IS_VALID_EMAIL","Clear");
+	//alert("true>>"+this.bValidEmail);
+	this.divSignUp.form.btnValidEmail.enable = false;
+	this.divSignUp.form.tfEmail.enable = false;
+	alert("사용 가능한 이메일 입니다");
+};
+
+this.fnItIsValidCode = function ()
+{
+	this.divSignUp.form.btnValidCode.background = "yellowgreen";
+	this.divSignUp.form.btnValidCode.color = "white";
+	this.ds_signUp.setColumn(0,"IS_VALID_CODE","Clear");
+	trace("true>>"+this.bValidCode);
+	this.divSignUp.form.cboStore.enable = false;
+	this.divSignUp.form.btnValidCode.enable = false;
+	this.divSignUp.form.tfStoreCode.enable = false;
+	alert("유효한 매장 코드 입니다");
+};
+
+
+this.fnIsStoreSelected = function ()
+{
+	this.gfnClearValidation(this.ds_selected);
+	
+	this.gfnSetValidation(this.ds_selected, "STORE_CODE", "매장 선택", "required");	// 매장 선택 체크
+
+	// 수정된 Row가 아닌 전체 Row에 대해 Validation check
+ 	if (this.gfnValidation(this.ds_selected, "A") == false) return false;
+	
+	return true;
+};
+
+/************************************************************************************************
+ * 각 COMPONENT 별 EVENT 영역
+ ************************************************************************************************/
+this.divSignUp_btnValidEmail_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	var isBlank = this.fnCheckIsBlankIn("isValidEmail");
+	if(!isBlank){
+		alert("공백은 포함할 수 없습니다");
+		return;
+	}
+	
+	var sSvcId  = "svcIsValidEmail";
+	var sUrl    = "p024/isValidEmail.do";
+	var inData  = "";
+	var outData = "";
+	var sParam  = "inputEmail=" + this.divSignUp.form.tfEmail.value;
+	
+	this.gfnTransaction(sSvcId, sUrl, inData, outData, sParam, "fn_callback");
+};
+
+this.divSignUp_btnValidCode_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	if(!this.fnIsStoreSelected()){
+		return;
+	}
+	
+	var isBlank = this.fnCheckIsBlankIn("isValidCode");
+	if(!isBlank){
+		alert("공백은 포함할 수 없습니다");
+		return;
+	}
+
+	var userId = nexacro.getApplication().gdsAuth.getColumn(0, "LOGIN_EMAIL");
+	var storeCode = this.ds_selected.getColumn(0, "STORE_CODE");
+	
+	var sSvcId  = "svcIsValidCode";
+	var sUrl    = "p024/isValidCode.do";
+	var inData  = "";
+	var outData = "";
+	var sParam  = "inputCode="+this.divSignUp.form.tfStoreCode.value;
+	this.gfnTransaction(sSvcId, sUrl, inData, outData, sParam, "fn_callback");
+};
+
+this.divSignUp_btnSignUp_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	// 정합성 검사
+	var bChkVal = this.fnCheckValidation();
+	// (이메일 양식, 중복, 패스워드 재입력 일치, 이름에 숫자 들어가진 않았는가 등)
+	
+	if(this.bValidEmail == false || this.bValidCode == false){
+		return;
+	}
+	
+	if(bChkVal){
+		var sSvcId  = "svcRegisterStaff";
+		var sUrl    = "p024/registerStaff.do";
+		var inData  = "ds_input=ds_signUp:u";
+		var outData = "";
+		var sParam  = "";
+		this.gfnTransaction(sSvcId, sUrl, inData, outData, sParam, "fn_callback");
+		
+		alert("회원가입이 완료되었습니다");
+	}
+	
+};
+this.divSignUp_btn00_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	this.fvApp.mainframe.WorkFrame.set_formurl("Staff::frmStaff1200.xfdl");
+	
+};
+]]></Script>
+    <Objects>
+      <Dataset id="ds_signUp">
+        <ColumnInfo>
+          <Column id="LOGIN_EMAIL" type="STRING" size="256"/>
+          <Column id="LOGIN_PW" type="STRING" size="256"/>
+          <Column id="CHECK_PW" type="STRING" size="256"/>
+          <Column id="NAME" type="STRING" size="256"/>
+          <Column id="IS_VALID_EMAIL" type="STRING" size="256"/>
+          <Column id="STORE_CODE" type="STRING" size="256"/>
+          <Column id="IS_VALID_CODE" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+      <Dataset id="ds_store">
+        <ColumnInfo>
+          <Column id="STORE_CODE" type="STRING" size="256"/>
+          <Column id="STORE_NAME" type="STRING" size="256"/>
+          <Column id="ADDRESS" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+      <Dataset id="ds_selected">
+        <ColumnInfo>
+          <Column id="STORE_CODE" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+    </Objects>
+    <Bind>
+      <BindItem id="item0" compid="divSignUp.form.tfEmail" propid="value" datasetid="ds_signUp" columnid="LOGIN_EMAIL"/>
+      <BindItem id="item2" compid="divSignUp.form.tfName" propid="value" datasetid="ds_signUp" columnid="NAME"/>
+      <BindItem id="item1" compid="divSignUp.form.tfPWChk" propid="value" datasetid="ds_signUp" columnid="CHECK_PW"/>
+      <BindItem id="item3" compid="divSignUp.form.tfPW" propid="value" datasetid="ds_signUp" columnid="LOGIN_PW"/>
+      <BindItem id="item4" compid="divSignUp.form.tfStoreCode" propid="value" datasetid="ds_signUp" columnid="STORE_CODE"/>
+      <BindItem id="item5" compid="divSignUp.form.cboStore" propid="value" datasetid="ds_selected" columnid="STORE_CODE"/>
+    </Bind>
+  </Form>
+</FDL>

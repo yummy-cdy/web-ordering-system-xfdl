@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="Work_Msg" width="1280" height="720" titletext="New Form">
+    <Layouts>
+      <Layout height="720" mobileorientation="landscape" width="1280">
+        <Grid id="grd00" taborder="0" left="31" top="29" width="609" height="420" binddataset="gdsMessage" autofittype="col">
+          <Formats>
+            <Format id="default">
+              <Columns>
+                <Column size="80"/>
+                <Column size="153"/>
+                <Column size="65"/>
+              </Columns>
+              <Rows>
+                <Row size="24" band="head"/>
+                <Row size="24"/>
+              </Rows>
+              <Band id="head">
+                <Cell text="MSG_ID"/>
+                <Cell col="1" text="MSG_TEXT"/>
+                <Cell col="2" text="MSG_TYPE"/>
+              </Band>
+              <Band id="body">
+                <Cell text="bind:MSG_ID" edittype="normal"/>
+                <Cell col="1" text="bind:MSG_TEXT" edittype="normal"/>
+                <Cell col="2" text="bind:MSG_TYPE" edittype="normal"/>
+              </Band>
+            </Format>
+          </Formats>
+        </Grid>
+        <Button id="btn_alert" taborder="1" text="btn_alert" left="674" top="52" width="210" height="77" onclick="btn_alert_onclick"/>
+        <Button id="btn_confirm" taborder="2" text="btn_confirm" left="678" top="154" width="211" height="91" onclick="btn_confirm_onclick"/>
+      </Layout>
+    </Layouts>
+    <Script type="xscript5.1"><![CDATA[this.btn_alert_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	var sMsgId = "msg.err.validator.minlength";
+	var arrArg = ["이름","3"];
+	var sPopId = sMsgId;
+	var sMsgCallback = "";
+
+	this.gfnAlert(sMsgId,  arrArg, sPopId, sMsgCallback);
+};
+
+this.btn_confirm_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	var sMsgId = "confirm.logout";
+	var arrArg = "";
+	var sPopId = sMsgId;
+	var sMsgCallback = "fn_callback";
+
+	this.gfnAlert(sMsgId,  arrArg, sPopId, function(id, rtn){
+															if(rtn) 
+															{
+																this.alert("확인");
+															}
+															else 
+															{
+																this.alert("취소");
+															}
+											});
+};
+
+// this.fn_callback = function (id, rtn)
+// {
+// 	if (rtn)
+// 	{
+// 		this.alert("확인");
+// 	}
+// 	else
+// 	{
+// 		this.alert("취소");
+// 	}
+// };]]></Script>
+  </Form>
+</FDL>

@@ -1,0 +1,501 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="frmProduct1210" width="1600" height="900" titletext="메뉴(음료)" onload="frmProduct1210_onload" background="white" scrollbarsize="0">
+    <Layouts>
+      <Layout height="900" mobileorientation="landscape" width="1600">
+        <Div id="divChkboxset" taborder="1" text="Div00" left="250" top="0" width="1100" height="278" background="lavender">
+          <Layouts>
+            <Layout>
+              <CheckBoxSet id="chbsChkCate" taborder="0" left="22" top="40" width="1048" height="174" innerdataset="ds_category" codecolumn="CATEGORY" datacolumn="CATEGORY" columncount="4"/>
+            </Layout>
+          </Layouts>
+        </Div>
+        <Button id="Button00" taborder="0" text="조회" left="1861" top="310" width="384" height="90" onclick="getDrinkInfo" positionstep="0" visible="false"/>
+        <Grid id="grdProducts" taborder="2" left="1753" top="3" width="815" height="247" binddataset="ds_drinkInfo" autofittype="col" positionstep="0" visible="false">
+          <Formats>
+            <Format id="default">
+              <Columns>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+              </Columns>
+              <Rows>
+                <Row band="head" size="24"/>
+                <Row size="24"/>
+              </Rows>
+              <Band id="head">
+                <Cell text="PRODUCT_ID"/>
+                <Cell col="1" text="PRODUCT_NAME"/>
+                <Cell col="2" text="CATEGORY"/>
+                <Cell col="3" text="PRICE"/>
+                <Cell col="4" text="IMAGE_FILE"/>
+              </Band>
+              <Band id="body">
+                <Cell text="bind:PRODUCT_ID"/>
+                <Cell col="1" text="bind:PRODUCT_NAME"/>
+                <Cell col="2" text="bind:CATEGORY"/>
+                <Cell col="3" text="bind:PRICE"/>
+                <Cell col="4" text="bind:IMAGE_FILE"/>
+              </Band>
+            </Format>
+          </Formats>
+        </Grid>
+        <Static id="Static01_00_00_00_00" taborder="3" text="FRAME" left="0" top="0" width="250" background="red" opacity="40%" textAlign="center" visible="false" bottom="0"/>
+        <Static id="Static01_00_00_00" taborder="4" text="FRAME" left="1350" top="0" width="250" background="red" opacity="40%" textAlign="center" visible="false" bottom="0"/>
+        <Div id="divMain" taborder="5" text="Div00" left="250" top="278" width="1100" height="1000" background="lavenderblush">
+          <Layouts>
+            <Layout>
+              <Div id="divPage" taborder="0" left="-29" right="149" url="Cmm::CmmPaging.xfdl" height="30" top="742"/>
+            </Layout>
+          </Layouts>
+        </Div>
+        <Button id="Button01" taborder="6" text="Button01" left="1693" top="420" width="120" height="50" onclick="Button01_onclick"/>
+        <Button id="Button02" taborder="7" text="Button02" left="1696" top="557" width="134" height="78" onclick="Button02_onclick"/>
+        <Div id="divPage" taborder="8" left="260" right="240" url="Cmm::CmmPaging.xfdl" height="100" top="248" background="yellowgreen"/>
+      </Layout>
+    </Layouts>
+    <Script type="xscript5.1"><![CDATA[/**
+*  Nexacro Professional Training Couse
+*  @MenuPath    개발가이드 > 표준 및 기본 정의 > 그리드 페이징
+*  @FileName 	SamplePaging.xfdl 
+*  @Creator 	TOBESOFT Education
+*  @CreateDate 	2025/01/03
+*  @Desction    
+************** 소스 수정 이력 ***********************************************
+*  date          		Modifier                Description
+*******************************************************************************
+*  2026/01/30      		 이아인	 	  	         최초 생성 
+*******************************************************************************
+*  2026/02/02      		 이아인	 	  	   div 동적 생성, DB 연결 
+*******************************************************************************
+*  2026/02/03      		 이아인	 	  	      함수 분리, 필터링
+*******************************************************************************
+*/
+this.fvImgUrl = "http://172.10.14.128:8088/edupack_egov/upload/p02/p024/";
+
+
+/************************************************************************************************
+ * FORM 변수 선언 영역
+ ************************************************************************************************/
+this.fvRecords=0; 			//목록갯수
+this.fvPage=0;	 			//페이지번호
+this.fvRecordsOffset=0;		//시작rownum
+this.fvTotalCount=0;		//전체데이터갯수
+this.fvPageCount=0; 		//실제표출페이지갯수
+
+ this.fnPageInit = function ()
+ {
+ 	//pagin info init setting
+	this.fvRecords=12; //목록갯수
+	this.fvPage=0;	 								 //페이지번호
+	this.fvRecordsOffset=0;							 //시작rownum
+	this.fvPageCount = 10;							 //실제표출페이지갯수
+	this.fvTotalCount = 0;
+	
+	this.fnSearch();
+ };
+/**
+ * @description 페이징만들기
+*/
+this.fnPagingSetting = function ()
+{
+//	this.fvTotalCount = nexacro.toNumber(this.dsPagingInfo.getColumn("totalCount")); //전체로우갯수
+	//create page 
+	//alert(">>>!>>>"+this.fvTotalCount);
+	this.divPage.form.fnCreatePage("fnPagingCallback",
+									this.fvTotalCount,
+									this.fvRecords,
+									this.fvPage,
+									this.fvPageCount);	
+};
+
+/**
+ * @description 페이징콜백 페이징화면에서 눌린페이지 넘겨줌
+*/
+this.fnPagingCallback = function(nPage, nRecordsOffset)
+{
+	this.fvPage = nPage; 				
+	this.fvRecordsOffset = nRecordsOffset;
+	
+	this.fnSearch(); //조회함수호출
+};
+
+/************************************************************************************************
+ * FORM EVENT 영역(onload, onbeforeclose)
+ ************************************************************************************************/
+this.frmProduct1210_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
+{
+//	this.ds_drinkInfo.addRow();
+//	this.getDrinkInfo();
+	this.fnPageInit(); //최초조회조건세팅 
+	trace(this.fnSearchValue()); 
+};
+
+
+/************************************************************************************************
+ * CALLBACK 콜백 처리부분(Transaction, Popup)
+ ************************************************************************************************/
+this.fn_callback = function(svcId, errCd, errMsg)
+{
+	if(errCd < 0){ alert("에러 : " + errMsg); }
+	
+	if(svcId == "svcGetDrinkInfo2"){
+		
+	}
+	
+	if(svcId == "svcGetDrinkInfo"){
+		this.setProdList();
+// 		var imgPath = this.ds_drinkInfo.getColumn(0, "IMAGE_FILE");
+// 		trace(">>>>>"+imgPath);
+// 		this.imgSample0.image = "imagerc::"+imgPath;
+// 		for(var i=0; i<5;i++){
+// // 		var compId = "imgSample" + i;
+// // 		var imgPath = this.ds_drinkInfo.getColumn(i, "IMAGE_FILE");
+// // 		this.compId.set_image("imagerc::" + imgPath);
+// 				// 이미지 뷰어			
+// 		}
+		this.fnPagingSetting(); //make paging
+		var cnt = this.ds_drinkInfo.extractRows("CATEGORY == '콜드 브루'").length;
+		trace(">>>카테고리 카운트>>>"+cnt);
+
+	}
+	
+}
+
+/************************************************************************************************
+ * CRUD 및 TRANSACTION 서비스 호출 처리
+ ************************************************************************************************/
+
+
+/************************************************************************************************
+ * 사용자 FUNCTION 영역
+ ************************************************************************************************/
+this.fvApp = nexacro.getApplication();
+
+this.makeImgv = function(sDivId, objDs, i)
+{	
+	// 이미지 뷰어
+	var objImg = new ImageViewer();
+	objImg.init("imgView", 0, 0, 260, 260); 
+	
+	var imgPath = this.fvImgUrl + objDs.getColumn(i, "IMAGE_FILE");
+	// var imgPath = objDs.getColumn(i, "ORIGINAL_IMG_URL");
+	// trace("imgPath>>"+imgPath);
+	objImg.set_image(imgPath);
+	
+	
+	// trace(objDs.getColumn(i, "IMAGE_FILE"));
+	objImg.set_stretch("contain");
+	objImg.set_border("0px none");
+	trace("sDivId===" + sDivId); 	
+	//var objDiv = this.components[sDivId];
+	var objDiv = eval("this.divMain.form." + sDivId);
+	
+	trace("objDiv--" + objDiv); 
+	
+	objDiv.form.addChild("imgView", objImg);
+	objImg.show();   
+};
+
+this.makeStaName = function (sDivId, objDs, i)
+{
+    var staProdName = new Static();
+    staProdName.init("staProdName", 0, 260, 260, 30);
+        
+    var ProdName = objDs.getColumn(i, "PRODUCT_NAME");
+    staProdName.set_text(ProdName);
+    staProdName.set_textAlign("center");
+    staProdName.set_font("normal bold 13px/normal 'KopubWorld'");
+    staProdName.set_color("#000000"); 
+    
+    var objDiv = this.components[sDivId];
+	
+    objDiv.form.addChild("staProdName", staProdName);
+    staProdName.show();
+};
+
+this.makeStaPrice = function (sDivId, objDs, i)
+{
+	var staPrice = new Static();
+    staPrice.init("staProdPrice", -30, 280, 320, 30); // 위치조정 필요
+       
+    var nPrice = objDs.getColumn(i, "PRICE");
+    staPrice.set_text(nexacro.toNumber(nPrice).toLocaleString() + "원");
+    staPrice.set_textAlign("center");
+    staPrice.set_font("normal 13px/normal 'KopubWorld'");
+    staPrice.set_color("#ff5500"); // 주황색 포인트
+    
+	var objDiv = this.components[sDivId];
+	
+    objDiv.form.addChild("staProdPrice", staPrice);
+    staPrice.show();
+};
+
+this.makeBtnAddToCart = function (sDivId, i)
+{
+	// addToCart 버튼
+	var btnAddToCart = new Button();
+
+	btnAddToCart.init("btnAddToCart", 220, 270, 30, 30);  
+	btnAddToCart.background = "url('imagerc::shopping-bag.png') no-repeat center bottom /contain";
+	btnAddToCart.set_border("0px none"); // 이미지는 테두리 없는 게 깔끔함
+	
+	// !chk : 새로운 property 추가
+	btnAddToCart.prodId = this.ds_drinkInfo.getColumn(i, "PRODUCT_ID");
+	
+	btnAddToCart.addEventHandler("onclick", this.fn_addToCart, this);
+    btnAddToCart.set_cursor("pointer");    // 마우스 손가락 모양
+	
+	// 카드(divObj)의 form에 추가
+	var objDiv = this.components[sDivId];
+	objDiv.form.addChild("btnAddToCart", btnAddToCart);
+
+	btnAddToCart.show();
+	btnAddToCart.bringToFront();
+};
+
+this.setProdList = function ()
+{
+	//this.deleteDiv("")
+	this.deleteDiv();
+	var objDs = this.ds_drinkInfo;
+    // 데이터 없으면 중단
+    /*if (objDs == null || objDs.getRowCount() == 0) return;*/
+    
+
+    // 디자인
+    var nCardW   = 260;   // 카드 가로
+    var nCardH   = 310;   // 카드 세로
+    var nGapX    = 25;    // 가로 간격
+    var nGapY    = 25;    // 세로 간격
+    var nStartX  = 10;   // 시작 위치
+    var nStartY  = 10;    // 시작 위치
+    var nColCnt  = 4;     // 한 줄에 4개
+    
+	var nCnt = objDs.getRowCount();
+	
+	//var nCnt = 30;  // 이중 for? // 하드 코딩
+	
+	// 카테고리 갯수, 반복문
+	// !chk
+	var arrSelected = this.divChkboxset.form.chbsChkCate.getSelectedItems();
+	var idx = this.divChkboxset.form.chbsChkCate.getSelectedCount();
+	for(var i=0; i<idx;i++){
+		var sCategory = this.ds_category.getColumn(arrSelected[i], "CATEGORY");
+	}
+	
+    for(var i=0; i < nCnt; i++)
+    {
+		//var prodId = this.ds_drinkInfo.getColumn(i, "PRODUCT_ID");
+        // 좌표 계산
+        var nRow = Math.floor(i / nColCnt); 
+        var nCol = i % nColCnt;             
+        
+        var nLeft = nStartX + (nCol * (nCardW + nGapX));
+        var nTop  = nStartY + (nRow * (nCardH + nGapY));
+        
+		// !chk : 카테고리를 비교하여, 이전과 다르다면 변화를 줌
+		// (1) static 추가 혹은 (2) background-color 변경
+		
+        // 카드 Div 생성
+        var sDivId = "divCard" + i;
+        var objDiv = new Div();
+        objDiv.init(sDivId, nLeft, nTop, nCardW, nCardH);
+        
+        objDiv.set_border("1px solid #e5e5e5");
+        objDiv.set_background("#ffffff");
+        
+		this.divMain.form.addChild(sDivId, objDiv);
+        objDiv.show();
+        
+		
+		// !260203 함수 분리
+		this.makeImgv(sDivId, objDs, i); // 이미지 뷰어 생성
+		//this.makeStaName(sDivId, objDs, i); // 메뉴(product)명을 표시한 Static 생성
+		//this.makeStaPrice(sDivId, objDs, i); // 가격을 표시한 Static 생성
+		//this.makeBtnAddToCart(sDivId, i); // addToCart 버튼 추가
+	}
+	this.divChkboxset.form.resetScroll();
+	this.resetScroll();
+};
+
+this.fnSearch = function () // transaction -> DB에서 음료 정보 일부(ID, NAME, CATEGORY, PRICE, IMG_FILE)
+{
+	this.dsSearch.clearData();
+	var nRow = this.dsSearch.addRow();
+	this.dsSearch.setColumn(nRow, "records", this.fvRecords);
+	this.dsSearch.setColumn(nRow, "recordsOffset", this.fvRecordsOffset); 
+	
+	var strValue = this.fnSearchValue();
+	
+
+	this.dsSearch.setColumn(this.dsSearch.rowposition, "CATEGORY_ID", strValue);
+     
+	trace("strValue==" + strValue);
+
+	var sSvcId  = "svcGetDrinkInfo";
+	var sUrl    = "p024/getDrinkInfo2.do";
+	var inData  = "ds_search=dsSearch";
+	var outData = "ds_drinkInfo=out_products";
+	var sParam  = "";
+	this.gfnTransaction(sSvcId, sUrl, inData, outData, sParam, "fn_callback");
+};
+
+this.deleteDiv = function ()
+{
+	if(this.isValidObject(this.divMain))
+	{		
+		var objDivMain = this.removeChild("divMain"); 
+		objDivMain.destroy(); 
+		objDivMain = null; 
+		  
+		var objDivMain = new Div();  //내가 만들려고하는 오브젝트, 그리드를 만들고싶으면 new grid(); 콤보도 마찬가지로 표현.. 
+		objDivMain.init("divMain", 250, 368, 1100, 10000); // 컴포넌트에 대한 초기값, (아이디, left, top, width, height) 
+		objDivMain.set_background()
+		
+		this.addChild("divMain", objDivMain); // 생성했는데 화면에다가 붙여주는 것
+		objDivMain.show();  // 화면에보여줄려고 하는 메소드 show 
+	}	
+};
+
+this.fn_addToCart = function (obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	if(nexacro.getApplication().gdsAuth.rowcount < 1){
+		alert("로그인해야 사용할 수 있습니다.");
+		return;
+	}
+	
+	userId = nexacro.getApplication().gdsAuth.getColumn(0, "LOGIN_EMAIL");
+	// trace(">>> dkdlel"+userId + obj.prodId);
+	
+	var sSvcId  = "svcAddToCart";
+	var sUrl    = "p024/addToCart.do";
+	var inData  = "";
+	var outData = "";
+	var sParam  = "userId="+userId+" prodId="+obj.prodId;
+	this.gfnTransaction(sSvcId, sUrl, inData, outData, sParam, "fn_callback");
+};
+
+
+
+/************************************************************************************************
+ * 각 COMPONENT 별 EVENT 영역
+ ************************************************************************************************/
+this.divChkboxset_chbsChkCate_onitemchanged = function(obj:nexacro.CheckBoxSet,e:nexacro.ItemChangeEventInfo)
+{
+	// reload 하는거
+	var arrSelected = this.divChkboxset.form.chbsChkCate.getSelectedItems();
+	var idx = this.divChkboxset.form.chbsChkCate.getSelectedCount();
+	var sCategory="";
+	for(var i=0; i<idx;i++){
+		sCategory += "','" + this.ds_category.getColumn(arrSelected[i], "CATEGORY");
+		trace(i+"번째 >>>"+sCategory); // cate name이 나옴
+	}	
+	sCategory = sCategory.substr(2, sCategory.length) + "'"; 
+		trace("end >>>"+sCategory); 
+// 	  
+// 	for(var i=0; i<idx;i++){
+// 		trace("선택된 checkboxset(인덱싱 기준)>>>>"+arrSelected[i]);
+// 	}
+	
+};
+
+// 목적: 전체 외의 것을 선택시 전체는 선택 해제, 전체를 선택시 선택되었던 나머지는 전부 선택 해제
+this.handleSelected = function () 
+{
+	var arrSelected = obj.getSelectedItems();
+	var idx = obj.getSelectedCount();
+	
+// 	if(arrSelected[0] == 0){
+// 		// 나머지 선택을 비활성으로 바꿈
+// 	}
+};
+this.Button01_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	//trace("===-----=" + this.divChkboxset.form.chbsChkCate.value);
+	this.fnPageInit(); //최초조회조건세팅 
+};
+
+this.fnSearchValue = function()
+{
+	// reload 하는거
+	var arrSelected = this.divChkboxset.form.chbsChkCate.getSelectedItems();
+	var idx = this.divChkboxset.form.chbsChkCate.getSelectedCount();
+	var sCategory="";
+	for(var i=0; i<idx;i++){
+		sCategory += "','" + this.ds_category.getColumn(arrSelected[i], "CATEGORY");
+		trace(i+"번째 >>>"+sCategory); // cate name이 나옴
+	}
+	trace("before: " + sCategory + "<===");	
+  sCategory = sCategory.substr(2, sCategory.length) + "'"; 
+//	sCategory = sCategory.substr(1, sCategory.length); 
+	trace("After: " + sCategory + "<===");	  
+	return sCategory;    
+}      
+
+this.Button02_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	trace(this.fnSearchValue()); 
+};
+]]></Script>
+    <Objects>
+      <Dataset id="ds_drinkInfo">
+        <ColumnInfo>
+          <Column id="PRODUCT_ID" type="STRING" size="256"/>
+          <Column id="PRODUCT_NAME" type="STRING" size="256"/>
+          <Column id="CATEGORY" type="STRING" size="256"/>
+          <Column id="PRICE" type="INT" size="256"/>
+          <Column id="IMAGE_FILE" type="STRING" size="500"/>
+        </ColumnInfo>
+      </Dataset>
+      <Dataset id="ds_category">
+        <ColumnInfo>
+          <Column id="CATEGORY" type="STRING" size="256"/>
+        </ColumnInfo>
+        <Rows>
+          <Row>
+            <Col id="CATEGORY">10</Col>
+          </Row>
+          <Row>
+            <Col id="CATEGORY">20</Col>
+          </Row>
+          <Row>
+            <Col id="CATEGORY">프라푸치노</Col>
+          </Row>
+          <Row>
+            <Col id="CATEGORY">블렌디드</Col>
+          </Row>
+          <Row>
+            <Col id="CATEGORY">스타벅스 리프레셔</Col>
+          </Row>
+          <Row>
+            <Col id="CATEGORY">스타벅스 피지오</Col>
+          </Row>
+          <Row>
+            <Col id="CATEGORY">2026 New Year 1</Col>
+          </Row>
+          <Row>
+            <Col id="CATEGORY">티</Col>
+          </Row>
+          <Row>
+            <Col id="CATEGORY">기타 제조 음료</Col>
+          </Row>
+          <Row>
+            <Col id="CATEGORY">스타벅스 주스(병음료)</Col>
+          </Row>
+        </Rows>
+      </Dataset>
+      <Dataset id="dsSearch">
+        <ColumnInfo>
+          <Column id="CATEGORY_ID" type="STRING" size="256"/>
+          <Column id="records" type="INT" size="256"/>
+          <Column id="page" type="INT" size="256"/>
+          <Column id="recordsOffset" type="INT" size="256"/>
+          <Column id="pageCount" type="INT" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+    </Objects>
+  </Form>
+</FDL>

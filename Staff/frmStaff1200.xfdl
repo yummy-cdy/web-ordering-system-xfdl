@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="frmStaff1200" width="1600" height="900" titletext="New Form" background="lavender">
+    <Layouts>
+      <Layout height="900" mobileorientation="landscape" width="1600">
+        <Button id="btn00" taborder="0" text="staffpage sample" left="208" top="208" width="385" height="105"/>
+        <Button id="btn00_00" taborder="1" text="staffpage sample" left="465" top="408" width="385" height="105"/>
+        <Button id="btn00_01" taborder="2" text="staffpage sample" left="785" top="575" width="385" height="105"/>
+      </Layout>
+    </Layouts>
+  </Form>
+</FDL>

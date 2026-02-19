@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="frmAuth1231" width="1600" height="770" titletext="회원가입 화면(분기점)" onload="frmAuth1231_onload" background="white">
+    <Layouts>
+      <Layout height="770" mobileorientation="landscape" width="1600">
+        <ImageViewer id="imgvCust" taborder="0" left="330" top="130" width="400" height="400" background="url('imagerc::customer.png') no-repeat center center /50%" border="1px solid black"/>
+        <Static id="Static01_00_01_00" taborder="1" text="FRAME" left="0" top="750" height="20" background="red" opacity="40%" textAlign="center" visible="false" right="0"/>
+        <Static id="Static01_00_01" taborder="2" text="FRAME" left="0" top="0" height="20" background="red" opacity="40%" textAlign="center" visible="false" right="0"/>
+        <Static id="Static01_00_00_00" taborder="3" text="FRAME" left="1350" top="0" width="250" background="red" opacity="40%" textAlign="center" visible="false" bottom="0"/>
+        <Static id="Static01_00_00_00_00" taborder="4" text="FRAME" left="0" top="0" width="250" background="red" opacity="40%" textAlign="center" visible="false" bottom="0"/>
+        <ImageViewer id="imgvStaff" taborder="5" top="130" width="400" height="400" background="url('imagerc::staff.png') no-repeat center center /50%" border="1px solid black" right="330"/>
+        <Button id="btnCust" taborder="6" text="고객으로 회원가입" left="345" top="567" width="384" height="71" onclick="btnCust_onclick" border="1px solid black" background="white" font="normal bold 13px/normal &quot;KopubWorld&quot;"/>
+        <Button id="btnStaff" taborder="7" text="파트너로 회원가입" left="878" top="567" width="384" height="71" border="1px solid black" background="white" font="normal bold 13px/normal &quot;KopubWorld&quot;" onclick="btnStaff_onclick"/>
+      </Layout>
+    </Layouts>
+    <Script type="xscript5.1"><![CDATA[/**
+*  Nexacro Professional Training Couse
+*  @MenuPath    개발가이드 > 표준 및 기본 정의 > 그리드 페이징
+*  @FileName 	SamplePaging.xfdl 
+*  @Creator 	TOBESOFT Education
+*  @CreateDate 	2025/01/03
+*  @Desction    
+************** 소스 수정 이력 ***********************************************
+*  date          		Modifier                Description
+*******************************************************************************
+*  2026/02/02      		 이아인	 	  	       최초 생성 
+*******************************************************************************
+*/
+
+
+
+/************************************************************************************************
+ * FORM 변수 선언 영역
+ ************************************************************************************************/
+
+
+/************************************************************************************************
+ * FORM EVENT 영역(onload, onbeforeclose)
+ ************************************************************************************************/
+/**
+ * @description example: ~하는 부분
+*/
+
+
+/************************************************************************************************
+ * CALLBACK 콜백 처리부분(Transaction, Popup)
+ ************************************************************************************************/
+
+
+/************************************************************************************************
+ * CRUD 및 TRANSACTION 서비스 호출 처리
+ ************************************************************************************************/
+
+
+/************************************************************************************************
+ * 사용자 FUNCTION 영역
+ ************************************************************************************************/
+
+
+/************************************************************************************************
+ * 각 COMPONENT 별 EVENT 영역
+ ************************************************************************************************/
+this.btnCust_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	this.parent.parent.divCenter.url = "Auth::frmAuth1231.xfdl";
+};
+
+
+this.btnStaff_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	this.parent.parent.divCenter.url = "Auth::frmAuth1232.xfdl";
+};
+]]></Script>
+  </Form>
+</FDL>

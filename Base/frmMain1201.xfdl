@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="frmMain1201" width="1600" height="50" titletext="divTop 구현화면" background="#F5F5F0" onload="frmMain1201_onload">
+    <Layouts>
+      <Layout height="50" mobileorientation="landscape" width="1600">
+        <Static id="Static01_00" taborder="0" text="FRAME" left="0" background="red" opacity="40%" textAlign="center" visible="false" onclick="Static01_00_onclick" right="0" height="10" bottom="0"/>
+        <Button id="btnCart" taborder="1" left="71.875%" top="26%" height="50%" width="1.5625%" onclick="btnCart_onclick" background="url('imagerc::shopping-cart.png') no-repeat center center /contain" border="0px none"/>
+        <Static id="Static01_00_01" taborder="2" text="FRAME" left="0" top="0" height="10" background="red" opacity="40%" textAlign="center" visible="false" right="0"/>
+        <Static id="staAuth" taborder="3" text="로그인" left="81.25%" top="36%" height="28%" onclick="staAuth_onclick" textAlign="center" width="2.25%" background="" textDecoration="underline" font="normal 12px/normal &quot;KopubWorld&quot;"/>
+        <Static id="staMyPage" taborder="4" text="마이페이지" left="75.63%" top="36.00%" width="4.375%" height="28%" textDecoration="underline" textAlign="center" onclick="staMyPage_onclick" font="normal 12px/normal &quot;KopubWorld&quot;"/>
+        <Static id="Static01_00_00" taborder="5" text="FRAME" left="0" top="0" width="250" background="red" opacity="40%" textAlign="center" visible="false" bottom="0"/>
+        <Static id="Static01_00_00_00" taborder="6" text="FRAME" top="0" background="red" opacity="40%" textAlign="center" visible="false" onclick="Static01_00_00_00_onclick" bottom="0" right="0" width="250"/>
+      </Layout>
+    </Layouts>
+    <Script type="xscript5.1"><![CDATA[/**
+*  Nexacro Professional Training Couse
+*  @MenuPath    개발가이드 > 표준 및 기본 정의 > 그리드 페이징
+*  @FileName 	SamplePaging.xfdl 
+*  @Creator 	TOBESOFT Education
+*  @CreateDate 	2025/01/03
+*  @Desction    
+************** 소스 수정 이력 ***********************************************
+*  date          		Modifier                Description
+*******************************************************************************
+*  2026/01/00      		 이아인	 	  	       최초 생성 
+*******************************************************************************
+*/
+
+
+
+/************************************************************************************************
+ * FORM 변수 선언 영역
+ ************************************************************************************************/
+// var statusAuth = false;
+this.fvApp = nexacro.getApplication();
+
+/************************************************************************************************
+ * FORM EVENT 영역(onload, onbeforeclose)
+ ************************************************************************************************/
+/**
+ * @description example: ~하는 부분
+*/
+
+this.frmMain1201_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
+{
+	var statusAuth = nexacro.getApplication().appStatusAuth; // 로그인 상태 확인
+	
+
+	if(statusAuth==true){
+		this.staAuth.text="로그아웃";
+	}
+	else{
+		this.staAuth.text="로그인";		
+	}
+	
+	this.staAuth.fittocontents = "width";
+	
+};
+
+
+/************************************************************************************************
+ * CALLBACK 콜백 처리부분(Transaction, Popup)
+ ************************************************************************************************/
+
+
+/************************************************************************************************
+ * CRUD 및 TRANSACTION 서비스 호출 처리
+ ************************************************************************************************/
+
+
+/************************************************************************************************
+ * 사용자 FUNCTION 영역
+ ************************************************************************************************/
+// this.fnSetStatusAuth = function(){
+// 
+//    var statusAuth = "로그아웃";
+//    if(nexacro.getApplication().appStatusAuth == "false") {
+//       statusAuth = "로그인";      
+//    } 
+//    
+//    this.staAuth.text=statusAuth;
+//    this.staAuth.fittocontents = "width";
+//    this.resetScroll();
+// }
+
+/************************************************************************************************
+ * 각 COMPONENT 별 EVENT 영역
+ ************************************************************************************************/
+
+this.staAuth_onclick = function(obj:nexacro.Static,e:nexacro.ClickEventInfo)
+{
+	var statusAuth = nexacro.getApplication().appStatusAuth;
+
+	if(statusAuth == "false"){ 
+		this.parent.parent.divCenter.url = "Auth::frmAuth1200.xfdl"; // 로그인 상태가 아니라면 로그인 창 이동
+	}
+	else{
+		// 로그인 상태에서 눌렀다면 로그아웃 상태로 변경하고
+		nexacro.getApplication().appStatusAuth = "false"; // false가 아니라 "false"로 주어야 한다.
+		alert("로그아웃 되었습니다");
+		
+		this.parent.parent.divCenter.url = "Base::frmMain1203.xfdl";
+		
+		this.fvApp.gdsAuth.clearData();
+		this.staAuth.text="로그인"; // 사용자가 다시 로그인 할 수 있도록 로그인으로 바꿈
+	}
+	this.staAuth.fittocontents = "width";	
+	
+};
+
+
+
+this.btnCart_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	var statusAuth = nexacro.getApplication().appStatusAuth;
+	if(statusAuth==true){ // true = 로그인 상태일 때 // 근데 "true"로 하면 작동하지 않고 true로 해야 작동함
+		//this.alert("사용 가능");
+		this.parent.parent.divCenter.url = "Order::frmCart1200.xfdl";
+	}
+	else if(statusAuth=="false"){
+		this.alert("로그인해야 사용할 수 있습니다."); // false=로그아웃 상태일 때
+	}
+};
+
+]]></Script>
+  </Form>
+</FDL>

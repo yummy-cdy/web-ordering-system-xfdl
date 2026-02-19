@@ -1,0 +1,1274 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="WorkGrid" width="1280" height="720" titletext="New Form" onload="WorkGrid_onload">
+    <Layouts>
+      <Layout height="720" width="1280">
+        <Grid id="grd00" taborder="0" left="24" top="70" width="233" height="220" binddataset="dsCheckbox" autofittype="col" griduserproperty="checkbox">
+          <Formats>
+            <Format id="default">
+              <Columns>
+                <Column size="80"/>
+                <Column size="80"/>
+              </Columns>
+              <Rows>
+                <Row band="head" size="24"/>
+                <Row size="24"/>
+              </Rows>
+              <Band id="head">
+                <Cell text="EMP_NAME"/>
+                <Cell col="1" text="EMP_ID"/>
+              </Band>
+              <Band id="body">
+                <Cell text="bind:EMP_NAME"/>
+                <Cell col="1" text="bind:EMP_ID"/>
+              </Band>
+            </Format>
+          </Formats>
+        </Grid>
+        <Static id="sta00" taborder="1" text="체크박스( checkbox )" left="24" top="34" width="233" height="32"/>
+        <Grid id="grd01" taborder="2" left="273" top="71" width="209" height="221" binddataset="dsNo" autofittype="col" griduserproperty="no,checkbox">
+          <Formats>
+            <Format id="default">
+              <Columns>
+                <Column size="80"/>
+                <Column size="80"/>
+              </Columns>
+              <Rows>
+                <Row band="head" size="24"/>
+                <Row size="24"/>
+              </Rows>
+              <Band id="head">
+                <Cell text="EMP_NAME"/>
+                <Cell col="1" text="EMP_ID"/>
+              </Band>
+              <Band id="body">
+                <Cell text="bind:EMP_NAME"/>
+                <Cell col="1" text="bind:EMP_ID"/>
+              </Band>
+            </Format>
+          </Formats>
+        </Grid>
+        <Static id="sta01" taborder="3" text="순번(no)" left="273" top="38" width="209" height="24"/>
+        <Static id="sta02" taborder="4" text="sta02" left="84" top="324" width="359" height="142"/>
+      </Layout>
+    </Layouts>
+    <Objects>
+      <Dataset id="dsFindReplace">
+        <ColumnInfo>
+          <Column id="EMP_NAME" type="STRING" size="50"/>
+          <Column id="EMP_ID" type="STRING" size="10"/>
+          <Column id="DEPT_CODE" type="STRING" size="256"/>
+          <Column id="POSITION" type="STRING" size="10"/>
+          <Column id="HIRE_DATE" type="DATE" size="10"/>
+          <Column id="SALARY" type="INT" size="10"/>
+          <Column id="GENDER" type="STRING" size="256"/>
+          <Column id="MARRIED" type="STRING" size="256"/>
+          <Column id="SKILL" type="STRING" size="256"/>
+          <Column id="HOBBY" type="STRING" size="256"/>
+          <Column id="MEMO" type="STRING" size="256"/>
+        </ColumnInfo>
+        <Rows>
+          <Row>
+            <Col id="EMP_NAME">Melon</Col>
+            <Col id="EMP_ID">KR010</Col>
+            <Col id="POSITION">10</Col>
+            <Col id="HIRE_DATE">20071001</Col>
+            <Col id="SALARY">9000</Col>
+            <Col id="GENDER">F</Col>
+            <Col id="MARRIED">false</Col>
+            <Col id="SKILL">01,07</Col>
+            <Col id="HOBBY">01,05</Col>
+            <Col id="DEPT_CODE">10</Col>
+            <Col id="MEMO">aqua</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Jackson</Col>
+            <Col id="EMP_ID">US050</Col>
+            <Col id="POSITION">60</Col>
+            <Col id="HIRE_DATE">20091021</Col>
+            <Col id="SALARY">6000</Col>
+            <Col id="GENDER">M</Col>
+            <Col id="MARRIED">false</Col>
+            <Col id="SKILL">11,03,13</Col>
+            <Col id="HOBBY">09,14</Col>
+            <Col id="DEPT_CODE">20</Col>
+            <Col id="MEMO">gold</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Jennie</Col>
+            <Col id="EMP_ID">KR240</Col>
+            <Col id="POSITION">50</Col>
+            <Col id="HIRE_DATE">20110508</Col>
+            <Col id="SALARY">7000</Col>
+            <Col id="GENDER">F</Col>
+            <Col id="MARRIED">true</Col>
+            <Col id="SKILL">01,06</Col>
+            <Col id="HOBBY">05</Col>
+            <Col id="DEPT_CODE">40</Col>
+            <Col id="MEMO">greenyellow</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Dennis </Col>
+            <Col id="EMP_ID">JP150</Col>
+            <Col id="POSITION">20</Col>
+            <Col id="HIRE_DATE">20091021</Col>
+            <Col id="SALARY">5000</Col>
+            <Col id="GENDER">M</Col>
+            <Col id="MARRIED">false</Col>
+            <Col id="SKILL">09,11</Col>
+            <Col id="HOBBY">07,06,05</Col>
+            <Col id="DEPT_CODE">30</Col>
+            <Col id="MEMO">khaki</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Andrew</Col>
+            <Col id="EMP_ID">US020</Col>
+            <Col id="POSITION">60</Col>
+            <Col id="HIRE_DATE">20160602</Col>
+            <Col id="SALARY">6500</Col>
+            <Col id="GENDER">M</Col>
+            <Col id="MARRIED">true</Col>
+            <Col id="SKILL">07,06,06</Col>
+            <Col id="HOBBY">09,13</Col>
+            <Col id="DEPT_CODE">40</Col>
+            <Col id="MEMO">lightpink</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Jungkook</Col>
+            <Col id="EMP_ID">KR200</Col>
+            <Col id="POSITION">60</Col>
+            <Col id="HIRE_DATE">20120304</Col>
+            <Col id="SALARY">7000</Col>
+            <Col id="GENDER">M</Col>
+            <Col id="MARRIED">true</Col>
+            <Col id="SKILL">07,06,06</Col>
+            <Col id="HOBBY">09,14</Col>
+            <Col id="DEPT_CODE">50</Col>
+            <Col id="MEMO">orange</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Adam</Col>
+            <Col id="EMP_ID">JP230</Col>
+            <Col id="POSITION">50</Col>
+            <Col id="HIRE_DATE">20110928</Col>
+            <Col id="SALARY">8000</Col>
+            <Col id="GENDER">M</Col>
+            <Col id="MARRIED">true</Col>
+            <Col id="SKILL">11,03,13</Col>
+            <Col id="HOBBY">09,15</Col>
+            <Col id="DEPT_CODE">30</Col>
+            <Col id="MEMO">silver</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">JiYoung</Col>
+            <Col id="EMP_ID">KR080</Col>
+            <Col id="POSITION">50</Col>
+            <Col id="HIRE_DATE">20131120</Col>
+            <Col id="SALARY">8500</Col>
+            <Col id="GENDER">F</Col>
+            <Col id="MARRIED">false</Col>
+            <Col id="SKILL">01,07</Col>
+            <Col id="HOBBY">05</Col>
+            <Col id="DEPT_CODE">40</Col>
+            <Col id="MEMO">violet</Col>
+          </Row>
+        </Rows>
+      </Dataset>
+      <Dataset id="dsCheckbox">
+        <ColumnInfo>
+          <Column id="EMP_NAME" type="STRING" size="256"/>
+          <Column id="EMP_ID" type="STRING" size="256"/>
+        </ColumnInfo>
+        <Rows>
+          <Row>
+            <Col id="EMP_NAME">Melon</Col>
+            <Col id="EMP_ID">KR010</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Jackson</Col>
+            <Col id="EMP_ID">US050</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Jennie</Col>
+            <Col id="EMP_ID">KR240</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Dennis </Col>
+            <Col id="EMP_ID">JP150</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Andrew</Col>
+            <Col id="EMP_ID">US020</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Jungkook</Col>
+            <Col id="EMP_ID">KR200</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Adam</Col>
+            <Col id="EMP_ID">JP230</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">JiYoung</Col>
+            <Col id="EMP_ID">KR080</Col>
+          </Row>
+        </Rows>
+      </Dataset>
+      <Dataset id="dsNo">
+        <ColumnInfo>
+          <Column id="EMP_NAME" type="STRING" size="256"/>
+          <Column id="EMP_ID" type="STRING" size="256"/>
+        </ColumnInfo>
+        <Rows>
+          <Row>
+            <Col id="EMP_NAME">Melon</Col>
+            <Col id="EMP_ID">KR010</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Jackson</Col>
+            <Col id="EMP_ID">US050</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Jennie</Col>
+            <Col id="EMP_ID">KR240</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Dennis </Col>
+            <Col id="EMP_ID">JP150</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Andrew</Col>
+            <Col id="EMP_ID">US020</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Jungkook</Col>
+            <Col id="EMP_ID">KR200</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Adam</Col>
+            <Col id="EMP_ID">JP230</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">JiYoung</Col>
+            <Col id="EMP_ID">KR080</Col>
+          </Row>
+        </Rows>
+      </Dataset>
+      <Dataset id="dsStatus" updatecontrol="false" oncolumnchanged="dsStatus_oncolumnchanged">
+        <ColumnInfo>
+          <Column id="EMP_NAME" type="STRING" size="256"/>
+          <Column id="EMP_ID" type="STRING" size="256"/>
+        </ColumnInfo>
+        <Rows>
+          <Row>
+            <Col id="EMP_NAME">Melon</Col>
+            <Col id="EMP_ID">KR010</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Jackson</Col>
+            <Col id="EMP_ID">US050</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Jennie</Col>
+            <Col id="EMP_ID">KR240</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Dennis </Col>
+            <Col id="EMP_ID">JP150</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Andrew</Col>
+            <Col id="EMP_ID">US020</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Jungkook</Col>
+            <Col id="EMP_ID">KR200</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Adam</Col>
+            <Col id="EMP_ID">JP230</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">JiYoung</Col>
+            <Col id="EMP_ID">KR080</Col>
+          </Row>
+        </Rows>
+      </Dataset>
+      <Dataset id="dsSort">
+        <ColumnInfo>
+          <Column id="EMP_NAME" type="STRING" size="50"/>
+          <Column id="EMP_ID" type="STRING" size="10"/>
+          <Column id="DEPT_CODE" type="STRING" size="256"/>
+          <Column id="POSITION" type="STRING" size="10"/>
+          <Column id="HIRE_DATE" type="DATE" size="10"/>
+          <Column id="SALARY" type="INT" size="10"/>
+          <Column id="GENDER" type="STRING" size="256"/>
+          <Column id="MARRIED" type="STRING" size="256"/>
+          <Column id="SKILL" type="STRING" size="256"/>
+          <Column id="HOBBY" type="STRING" size="256"/>
+          <Column id="MEMO" type="STRING" size="256"/>
+        </ColumnInfo>
+        <Rows>
+          <Row>
+            <Col id="EMP_NAME">Melon</Col>
+            <Col id="EMP_ID">KR010</Col>
+            <Col id="POSITION">10</Col>
+            <Col id="HIRE_DATE">20071001</Col>
+            <Col id="SALARY">9000</Col>
+            <Col id="GENDER">F</Col>
+            <Col id="MARRIED">false</Col>
+            <Col id="SKILL">01,07</Col>
+            <Col id="HOBBY">01,05</Col>
+            <Col id="DEPT_CODE">10</Col>
+            <Col id="MEMO">aqua</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Jackson</Col>
+            <Col id="EMP_ID">US050</Col>
+            <Col id="POSITION">60</Col>
+            <Col id="HIRE_DATE">20091021</Col>
+            <Col id="SALARY">6000</Col>
+            <Col id="GENDER">M</Col>
+            <Col id="MARRIED">false</Col>
+            <Col id="SKILL">11,03,13</Col>
+            <Col id="HOBBY">09,14</Col>
+            <Col id="DEPT_CODE">20</Col>
+            <Col id="MEMO">gold</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Jennie</Col>
+            <Col id="EMP_ID">KR240</Col>
+            <Col id="POSITION">50</Col>
+            <Col id="HIRE_DATE">20110508</Col>
+            <Col id="SALARY">7000</Col>
+            <Col id="GENDER">F</Col>
+            <Col id="MARRIED">true</Col>
+            <Col id="SKILL">01,06</Col>
+            <Col id="HOBBY">05</Col>
+            <Col id="DEPT_CODE">40</Col>
+            <Col id="MEMO">greenyellow</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Dennis </Col>
+            <Col id="EMP_ID">JP150</Col>
+            <Col id="POSITION">20</Col>
+            <Col id="HIRE_DATE">20091021</Col>
+            <Col id="SALARY">5000</Col>
+            <Col id="GENDER">M</Col>
+            <Col id="MARRIED">false</Col>
+            <Col id="SKILL">09,11</Col>
+            <Col id="HOBBY">07,06,05</Col>
+            <Col id="DEPT_CODE">30</Col>
+            <Col id="MEMO">khaki</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Andrew</Col>
+            <Col id="EMP_ID">US020</Col>
+            <Col id="POSITION">60</Col>
+            <Col id="HIRE_DATE">20160602</Col>
+            <Col id="SALARY">6500</Col>
+            <Col id="GENDER">M</Col>
+            <Col id="MARRIED">true</Col>
+            <Col id="SKILL">07,06,06</Col>
+            <Col id="HOBBY">09,13</Col>
+            <Col id="DEPT_CODE">40</Col>
+            <Col id="MEMO">lightpink</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Jungkook</Col>
+            <Col id="EMP_ID">KR200</Col>
+            <Col id="POSITION">60</Col>
+            <Col id="HIRE_DATE">20120304</Col>
+            <Col id="SALARY">7000</Col>
+            <Col id="GENDER">M</Col>
+            <Col id="MARRIED">true</Col>
+            <Col id="SKILL">07,06,06</Col>
+            <Col id="HOBBY">09,14</Col>
+            <Col id="DEPT_CODE">50</Col>
+            <Col id="MEMO">orange</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Adam</Col>
+            <Col id="EMP_ID">JP230</Col>
+            <Col id="POSITION">50</Col>
+            <Col id="HIRE_DATE">20110928</Col>
+            <Col id="SALARY">8000</Col>
+            <Col id="GENDER">M</Col>
+            <Col id="MARRIED">true</Col>
+            <Col id="SKILL">11,03,13</Col>
+            <Col id="HOBBY">09,15</Col>
+            <Col id="DEPT_CODE">30</Col>
+            <Col id="MEMO">silver</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">JiYoung</Col>
+            <Col id="EMP_ID">KR080</Col>
+            <Col id="POSITION">50</Col>
+            <Col id="HIRE_DATE">20131120</Col>
+            <Col id="SALARY">8500</Col>
+            <Col id="GENDER">F</Col>
+            <Col id="MARRIED">false</Col>
+            <Col id="SKILL">01,07</Col>
+            <Col id="HOBBY">05</Col>
+            <Col id="DEPT_CODE">40</Col>
+            <Col id="MEMO">violet</Col>
+          </Row>
+        </Rows>
+      </Dataset>
+      <Dataset id="dsSortMultiheader">
+        <ColumnInfo>
+          <Column id="EMP_NAME" type="STRING" size="50"/>
+          <Column id="EMP_ID" type="STRING" size="10"/>
+          <Column id="DEPT_CODE" type="STRING" size="256"/>
+          <Column id="POSITION" type="STRING" size="10"/>
+          <Column id="HIRE_DATE" type="DATE" size="10"/>
+          <Column id="SALARY" type="INT" size="10"/>
+          <Column id="GENDER" type="STRING" size="256"/>
+          <Column id="MARRIED" type="STRING" size="256"/>
+          <Column id="SKILL" type="STRING" size="256"/>
+          <Column id="HOBBY" type="STRING" size="256"/>
+          <Column id="MEMO" type="STRING" size="256"/>
+        </ColumnInfo>
+        <Rows>
+          <Row>
+            <Col id="EMP_NAME">Melon</Col>
+            <Col id="EMP_ID">KR010</Col>
+            <Col id="POSITION">10</Col>
+            <Col id="HIRE_DATE">20071001</Col>
+            <Col id="SALARY">9000</Col>
+            <Col id="GENDER">F</Col>
+            <Col id="MARRIED">false</Col>
+            <Col id="SKILL">01,07</Col>
+            <Col id="HOBBY">01,05</Col>
+            <Col id="DEPT_CODE">10</Col>
+            <Col id="MEMO">aqua</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Jackson</Col>
+            <Col id="EMP_ID">US050</Col>
+            <Col id="POSITION">60</Col>
+            <Col id="HIRE_DATE">20091021</Col>
+            <Col id="SALARY">6000</Col>
+            <Col id="GENDER">M</Col>
+            <Col id="MARRIED">false</Col>
+            <Col id="SKILL">11,03,13</Col>
+            <Col id="HOBBY">09,14</Col>
+            <Col id="DEPT_CODE">20</Col>
+            <Col id="MEMO">gold</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Jennie</Col>
+            <Col id="EMP_ID">KR240</Col>
+            <Col id="POSITION">50</Col>
+            <Col id="HIRE_DATE">20110508</Col>
+            <Col id="SALARY">7000</Col>
+            <Col id="GENDER">F</Col>
+            <Col id="MARRIED">true</Col>
+            <Col id="SKILL">01,06</Col>
+            <Col id="HOBBY">05</Col>
+            <Col id="DEPT_CODE">40</Col>
+            <Col id="MEMO">greenyellow</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Dennis </Col>
+            <Col id="EMP_ID">JP150</Col>
+            <Col id="POSITION">20</Col>
+            <Col id="HIRE_DATE">20091021</Col>
+            <Col id="SALARY">5000</Col>
+            <Col id="GENDER">M</Col>
+            <Col id="MARRIED">false</Col>
+            <Col id="SKILL">09,11</Col>
+            <Col id="HOBBY">07,06,05</Col>
+            <Col id="DEPT_CODE">30</Col>
+            <Col id="MEMO">khaki</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Andrew</Col>
+            <Col id="EMP_ID">US020</Col>
+            <Col id="POSITION">60</Col>
+            <Col id="HIRE_DATE">20160602</Col>
+            <Col id="SALARY">6500</Col>
+            <Col id="GENDER">M</Col>
+            <Col id="MARRIED">true</Col>
+            <Col id="SKILL">07,06,06</Col>
+            <Col id="HOBBY">09,13</Col>
+            <Col id="DEPT_CODE">40</Col>
+            <Col id="MEMO">lightpink</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Jungkook</Col>
+            <Col id="EMP_ID">KR200</Col>
+            <Col id="POSITION">60</Col>
+            <Col id="HIRE_DATE">20120304</Col>
+            <Col id="SALARY">7000</Col>
+            <Col id="GENDER">M</Col>
+            <Col id="MARRIED">true</Col>
+            <Col id="SKILL">07,06,06</Col>
+            <Col id="HOBBY">09,14</Col>
+            <Col id="DEPT_CODE">50</Col>
+            <Col id="MEMO">orange</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Adam</Col>
+            <Col id="EMP_ID">JP230</Col>
+            <Col id="POSITION">50</Col>
+            <Col id="HIRE_DATE">20110928</Col>
+            <Col id="SALARY">8000</Col>
+            <Col id="GENDER">M</Col>
+            <Col id="MARRIED">true</Col>
+            <Col id="SKILL">11,03,13</Col>
+            <Col id="HOBBY">09,15</Col>
+            <Col id="DEPT_CODE">30</Col>
+            <Col id="MEMO">silver</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">JiYoung</Col>
+            <Col id="EMP_ID">KR080</Col>
+            <Col id="POSITION">50</Col>
+            <Col id="HIRE_DATE">20131120</Col>
+            <Col id="SALARY">8500</Col>
+            <Col id="GENDER">F</Col>
+            <Col id="MARRIED">false</Col>
+            <Col id="SKILL">01,07</Col>
+            <Col id="HOBBY">05</Col>
+            <Col id="DEPT_CODE">40</Col>
+            <Col id="MEMO">violet</Col>
+          </Row>
+        </Rows>
+      </Dataset>
+      <Dataset id="dsRowfix">
+        <ColumnInfo>
+          <Column id="EMP_NAME" type="STRING" size="50"/>
+          <Column id="EMP_ID" type="STRING" size="10"/>
+          <Column id="DEPT_CODE" type="STRING" size="256"/>
+          <Column id="POSITION" type="STRING" size="10"/>
+          <Column id="HIRE_DATE" type="DATE" size="10"/>
+          <Column id="SALARY" type="INT" size="10"/>
+          <Column id="GENDER" type="STRING" size="256"/>
+          <Column id="MARRIED" type="STRING" size="256"/>
+          <Column id="SKILL" type="STRING" size="256"/>
+          <Column id="HOBBY" type="STRING" size="256"/>
+          <Column id="MEMO" type="STRING" size="256"/>
+        </ColumnInfo>
+        <Rows>
+          <Row>
+            <Col id="EMP_NAME">Melon</Col>
+            <Col id="EMP_ID">KR010</Col>
+            <Col id="POSITION">10</Col>
+            <Col id="HIRE_DATE">20071001</Col>
+            <Col id="SALARY">9000</Col>
+            <Col id="GENDER">F</Col>
+            <Col id="MARRIED">false</Col>
+            <Col id="SKILL">01,07</Col>
+            <Col id="HOBBY">01,05</Col>
+            <Col id="DEPT_CODE">10</Col>
+            <Col id="MEMO">aqua</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Jackson</Col>
+            <Col id="EMP_ID">US050</Col>
+            <Col id="POSITION">60</Col>
+            <Col id="HIRE_DATE">20091021</Col>
+            <Col id="SALARY">6000</Col>
+            <Col id="GENDER">M</Col>
+            <Col id="MARRIED">false</Col>
+            <Col id="SKILL">11,03,13</Col>
+            <Col id="HOBBY">09,14</Col>
+            <Col id="DEPT_CODE">20</Col>
+            <Col id="MEMO">gold</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Jennie</Col>
+            <Col id="EMP_ID">KR240</Col>
+            <Col id="POSITION">50</Col>
+            <Col id="HIRE_DATE">20110508</Col>
+            <Col id="SALARY">7000</Col>
+            <Col id="GENDER">F</Col>
+            <Col id="MARRIED">true</Col>
+            <Col id="SKILL">01,06</Col>
+            <Col id="HOBBY">05</Col>
+            <Col id="DEPT_CODE">40</Col>
+            <Col id="MEMO">greenyellow</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Dennis </Col>
+            <Col id="EMP_ID">JP150</Col>
+            <Col id="POSITION">20</Col>
+            <Col id="HIRE_DATE">20091021</Col>
+            <Col id="SALARY">5000</Col>
+            <Col id="GENDER">M</Col>
+            <Col id="MARRIED">false</Col>
+            <Col id="SKILL">09,11</Col>
+            <Col id="HOBBY">07,06,05</Col>
+            <Col id="DEPT_CODE">30</Col>
+            <Col id="MEMO">khaki</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Andrew</Col>
+            <Col id="EMP_ID">US020</Col>
+            <Col id="POSITION">60</Col>
+            <Col id="HIRE_DATE">20160602</Col>
+            <Col id="SALARY">6500</Col>
+            <Col id="GENDER">M</Col>
+            <Col id="MARRIED">true</Col>
+            <Col id="SKILL">07,06,06</Col>
+            <Col id="HOBBY">09,13</Col>
+            <Col id="DEPT_CODE">40</Col>
+            <Col id="MEMO">lightpink</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Jungkook</Col>
+            <Col id="EMP_ID">KR200</Col>
+            <Col id="POSITION">60</Col>
+            <Col id="HIRE_DATE">20120304</Col>
+            <Col id="SALARY">7000</Col>
+            <Col id="GENDER">M</Col>
+            <Col id="MARRIED">true</Col>
+            <Col id="SKILL">07,06,06</Col>
+            <Col id="HOBBY">09,14</Col>
+            <Col id="DEPT_CODE">50</Col>
+            <Col id="MEMO">orange</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Adam</Col>
+            <Col id="EMP_ID">JP230</Col>
+            <Col id="POSITION">50</Col>
+            <Col id="HIRE_DATE">20110928</Col>
+            <Col id="SALARY">8000</Col>
+            <Col id="GENDER">M</Col>
+            <Col id="MARRIED">true</Col>
+            <Col id="SKILL">11,03,13</Col>
+            <Col id="HOBBY">09,15</Col>
+            <Col id="DEPT_CODE">30</Col>
+            <Col id="MEMO">silver</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">JiYoung</Col>
+            <Col id="EMP_ID">KR080</Col>
+            <Col id="POSITION">50</Col>
+            <Col id="HIRE_DATE">20131120</Col>
+            <Col id="SALARY">8500</Col>
+            <Col id="GENDER">F</Col>
+            <Col id="MARRIED">false</Col>
+            <Col id="SKILL">01,07</Col>
+            <Col id="HOBBY">05</Col>
+            <Col id="DEPT_CODE">40</Col>
+            <Col id="MEMO">violet</Col>
+          </Row>
+        </Rows>
+      </Dataset>
+      <Dataset id="dsFilter">
+        <ColumnInfo>
+          <Column id="EMP_NAME" type="STRING" size="50"/>
+          <Column id="EMP_ID" type="STRING" size="10"/>
+          <Column id="DEPT_CODE" type="STRING" size="256"/>
+          <Column id="POSITION" type="STRING" size="10"/>
+          <Column id="HIRE_DATE" type="DATE" size="10"/>
+          <Column id="SALARY" type="INT" size="10"/>
+          <Column id="GENDER" type="STRING" size="256"/>
+          <Column id="MARRIED" type="STRING" size="256"/>
+          <Column id="SKILL" type="STRING" size="256"/>
+          <Column id="HOBBY" type="STRING" size="256"/>
+          <Column id="MEMO" type="STRING" size="256"/>
+        </ColumnInfo>
+        <Rows>
+          <Row>
+            <Col id="EMP_NAME">Melon</Col>
+            <Col id="EMP_ID">KR010</Col>
+            <Col id="POSITION">10</Col>
+            <Col id="HIRE_DATE">20071001</Col>
+            <Col id="SALARY">9000</Col>
+            <Col id="GENDER">F</Col>
+            <Col id="MARRIED">false</Col>
+            <Col id="SKILL">01,07</Col>
+            <Col id="HOBBY">01,05</Col>
+            <Col id="DEPT_CODE">10</Col>
+            <Col id="MEMO">aqua</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Jackson</Col>
+            <Col id="EMP_ID">US050</Col>
+            <Col id="POSITION">60</Col>
+            <Col id="HIRE_DATE">20091021</Col>
+            <Col id="SALARY">6000</Col>
+            <Col id="GENDER">M</Col>
+            <Col id="MARRIED">false</Col>
+            <Col id="SKILL">11,03,13</Col>
+            <Col id="HOBBY">09,14</Col>
+            <Col id="DEPT_CODE">20</Col>
+            <Col id="MEMO">gold</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Jennie</Col>
+            <Col id="EMP_ID">KR240</Col>
+            <Col id="POSITION">50</Col>
+            <Col id="HIRE_DATE">20110508</Col>
+            <Col id="SALARY">7000</Col>
+            <Col id="GENDER">F</Col>
+            <Col id="MARRIED">true</Col>
+            <Col id="SKILL">01,06</Col>
+            <Col id="HOBBY">05</Col>
+            <Col id="DEPT_CODE">40</Col>
+            <Col id="MEMO">greenyellow</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Dennis </Col>
+            <Col id="EMP_ID">JP150</Col>
+            <Col id="POSITION">20</Col>
+            <Col id="HIRE_DATE">20091021</Col>
+            <Col id="SALARY">5000</Col>
+            <Col id="GENDER">M</Col>
+            <Col id="MARRIED">false</Col>
+            <Col id="SKILL">09,11</Col>
+            <Col id="HOBBY">07,06,05</Col>
+            <Col id="DEPT_CODE">30</Col>
+            <Col id="MEMO">khaki</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Andrew</Col>
+            <Col id="EMP_ID">US020</Col>
+            <Col id="POSITION">60</Col>
+            <Col id="HIRE_DATE">20160602</Col>
+            <Col id="SALARY">6500</Col>
+            <Col id="GENDER">M</Col>
+            <Col id="MARRIED">true</Col>
+            <Col id="SKILL">07,06,06</Col>
+            <Col id="HOBBY">09,13</Col>
+            <Col id="DEPT_CODE">40</Col>
+            <Col id="MEMO">lightpink</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Jungkook</Col>
+            <Col id="EMP_ID">KR200</Col>
+            <Col id="POSITION">60</Col>
+            <Col id="HIRE_DATE">20120304</Col>
+            <Col id="SALARY">7000</Col>
+            <Col id="GENDER">M</Col>
+            <Col id="MARRIED">true</Col>
+            <Col id="SKILL">07,06,06</Col>
+            <Col id="HOBBY">09,14</Col>
+            <Col id="DEPT_CODE">50</Col>
+            <Col id="MEMO">orange</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Adam</Col>
+            <Col id="EMP_ID">JP230</Col>
+            <Col id="POSITION">50</Col>
+            <Col id="HIRE_DATE">20110928</Col>
+            <Col id="SALARY">8000</Col>
+            <Col id="GENDER">M</Col>
+            <Col id="MARRIED">true</Col>
+            <Col id="SKILL">11,03,13</Col>
+            <Col id="HOBBY">09,15</Col>
+            <Col id="DEPT_CODE">30</Col>
+            <Col id="MEMO">silver</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">JiYoung</Col>
+            <Col id="EMP_ID">KR080</Col>
+            <Col id="POSITION">50</Col>
+            <Col id="HIRE_DATE">20131120</Col>
+            <Col id="SALARY">8500</Col>
+            <Col id="GENDER">F</Col>
+            <Col id="MARRIED">false</Col>
+            <Col id="SKILL">01,07</Col>
+            <Col id="HOBBY">05</Col>
+            <Col id="DEPT_CODE">40</Col>
+            <Col id="MEMO">violet</Col>
+          </Row>
+        </Rows>
+      </Dataset>
+      <Dataset id="dsColhide">
+        <ColumnInfo>
+          <Column id="EMP_NAME" type="STRING" size="50"/>
+          <Column id="EMP_ID" type="STRING" size="10"/>
+          <Column id="DEPT_CODE" type="STRING" size="256"/>
+          <Column id="POSITION" type="STRING" size="10"/>
+          <Column id="HIRE_DATE" type="DATE" size="10"/>
+          <Column id="SALARY" type="INT" size="10"/>
+          <Column id="GENDER" type="STRING" size="256"/>
+          <Column id="MARRIED" type="STRING" size="256"/>
+          <Column id="SKILL" type="STRING" size="256"/>
+          <Column id="HOBBY" type="STRING" size="256"/>
+          <Column id="MEMO" type="STRING" size="256"/>
+        </ColumnInfo>
+        <Rows>
+          <Row>
+            <Col id="EMP_NAME">Melon</Col>
+            <Col id="EMP_ID">KR010</Col>
+            <Col id="POSITION">10</Col>
+            <Col id="HIRE_DATE">20071001</Col>
+            <Col id="SALARY">9000</Col>
+            <Col id="GENDER">F</Col>
+            <Col id="MARRIED">false</Col>
+            <Col id="SKILL">01,07</Col>
+            <Col id="HOBBY">01,05</Col>
+            <Col id="DEPT_CODE">10</Col>
+            <Col id="MEMO">aqua</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Jackson</Col>
+            <Col id="EMP_ID">US050</Col>
+            <Col id="POSITION">60</Col>
+            <Col id="HIRE_DATE">20091021</Col>
+            <Col id="SALARY">6000</Col>
+            <Col id="GENDER">M</Col>
+            <Col id="MARRIED">false</Col>
+            <Col id="SKILL">11,03,13</Col>
+            <Col id="HOBBY">09,14</Col>
+            <Col id="DEPT_CODE">20</Col>
+            <Col id="MEMO">gold</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Jennie</Col>
+            <Col id="EMP_ID">KR240</Col>
+            <Col id="POSITION">50</Col>
+            <Col id="HIRE_DATE">20110508</Col>
+            <Col id="SALARY">7000</Col>
+            <Col id="GENDER">F</Col>
+            <Col id="MARRIED">true</Col>
+            <Col id="SKILL">01,06</Col>
+            <Col id="HOBBY">05</Col>
+            <Col id="DEPT_CODE">40</Col>
+            <Col id="MEMO">greenyellow</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Dennis </Col>
+            <Col id="EMP_ID">JP150</Col>
+            <Col id="POSITION">20</Col>
+            <Col id="HIRE_DATE">20091021</Col>
+            <Col id="SALARY">5000</Col>
+            <Col id="GENDER">M</Col>
+            <Col id="MARRIED">false</Col>
+            <Col id="SKILL">09,11</Col>
+            <Col id="HOBBY">07,06,05</Col>
+            <Col id="DEPT_CODE">30</Col>
+            <Col id="MEMO">khaki</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Andrew</Col>
+            <Col id="EMP_ID">US020</Col>
+            <Col id="POSITION">60</Col>
+            <Col id="HIRE_DATE">20160602</Col>
+            <Col id="SALARY">6500</Col>
+            <Col id="GENDER">M</Col>
+            <Col id="MARRIED">true</Col>
+            <Col id="SKILL">07,06,06</Col>
+            <Col id="HOBBY">09,13</Col>
+            <Col id="DEPT_CODE">40</Col>
+            <Col id="MEMO">lightpink</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Jungkook</Col>
+            <Col id="EMP_ID">KR200</Col>
+            <Col id="POSITION">60</Col>
+            <Col id="HIRE_DATE">20120304</Col>
+            <Col id="SALARY">7000</Col>
+            <Col id="GENDER">M</Col>
+            <Col id="MARRIED">true</Col>
+            <Col id="SKILL">07,06,06</Col>
+            <Col id="HOBBY">09,14</Col>
+            <Col id="DEPT_CODE">50</Col>
+            <Col id="MEMO">orange</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">Adam</Col>
+            <Col id="EMP_ID">JP230</Col>
+            <Col id="POSITION">50</Col>
+            <Col id="HIRE_DATE">20110928</Col>
+            <Col id="SALARY">8000</Col>
+            <Col id="GENDER">M</Col>
+            <Col id="MARRIED">true</Col>
+            <Col id="SKILL">11,03,13</Col>
+            <Col id="HOBBY">09,15</Col>
+            <Col id="DEPT_CODE">30</Col>
+            <Col id="MEMO">silver</Col>
+          </Row>
+          <Row>
+            <Col id="EMP_NAME">JiYoung</Col>
+            <Col id="EMP_ID">KR080</Col>
+            <Col id="POSITION">50</Col>
+            <Col id="HIRE_DATE">20131120</Col>
+            <Col id="SALARY">8500</Col>
+            <Col id="GENDER">F</Col>
+            <Col id="MARRIED">false</Col>
+            <Col id="SKILL">01,07</Col>
+            <Col id="HOBBY">05</Col>
+            <Col id="DEPT_CODE">40</Col>
+            <Col id="MEMO">violet</Col>
+          </Row>
+        </Rows>
+      </Dataset>
+      <Dataset id="dsUserheader">
+        <ColumnInfo>
+          <Column id="normal" type="STRING" size="256"/>
+          <Column id="button" type="STRING" size="256"/>
+          <Column id="calendar" type="STRING" size="256"/>
+          <Column id="check" type="STRING" size="256"/>
+          <Column id="combo" type="STRING" size="256"/>
+          <Column id="comboText" type="STRING" size="256"/>
+          <Column id="date" type="STRING" size="256"/>
+          <Column id="decoText" type="STRING" size="256"/>
+          <Column id="editControl" type="STRING" size="256"/>
+          <Column id="mask" type="STRING" size="256"/>
+          <Column id="maskEdit" type="STRING" size="256"/>
+          <Column id="number" type="STRING" size="256"/>
+          <Column id="text" type="STRING" size="256"/>
+          <Column id="textArea" type="STRING" size="256"/>
+          <Column id="headTest1" type="STRING" size="256"/>
+          <Column id="headTest12" type="STRING" size="256"/>
+          <Column id="headTest13" type="STRING" size="256"/>
+          <Column id="headTest14" type="STRING" size="256"/>
+        </ColumnInfo>
+        <Rows>
+          <Row>
+            <Col id="normal">test</Col>
+            <Col id="button">test</Col>
+            <Col id="calendar">19890912</Col>
+            <Col id="check">0</Col>
+            <Col id="combo">prev</Col>
+            <Col id="comboText">prev</Col>
+            <Col id="date">19890912</Col>
+            <Col id="decoText">&lt;fs v='16'&gt;TEST&lt;/fs&gt;</Col>
+            <Col id="editControl">test</Col>
+            <Col id="mask">8508301</Col>
+            <Col id="maskEdit">8508301</Col>
+            <Col id="number">9999999999999</Col>
+            <Col id="text">test</Col>
+            <Col id="textArea">test</Col>
+            <Col id="headTest1">aa</Col>
+            <Col id="headTest12">aa</Col>
+            <Col id="headTest13">aa</Col>
+            <Col id="headTest14">aa</Col>
+          </Row>
+          <Row>
+            <Col id="normal">TEST</Col>
+            <Col id="button">TEST</Col>
+            <Col id="calendar">19890912</Col>
+            <Col id="check">1</Col>
+            <Col id="combo">next</Col>
+            <Col id="comboText">next</Col>
+            <Col id="date">19890912</Col>
+            <Col id="decoText">&lt;fc v='red'&gt;T&lt;/fc&gt;&lt;fc v='orange'&gt;E&lt;/fc&gt;&lt;fc v='purple'&gt;S&lt;/fc&gt;&lt;fc v='green'&gt;E&lt;/fc&gt;</Col>
+            <Col id="editControl">TEST</Col>
+            <Col id="mask">8303301</Col>
+            <Col id="maskEdit">8303301</Col>
+            <Col id="number">8888888888</Col>
+            <Col id="text">TEST</Col>
+            <Col id="textArea">TEST</Col>
+            <Col id="headTest1">bb</Col>
+            <Col id="headTest12">aa</Col>
+            <Col id="headTest13">bb</Col>
+            <Col id="headTest14">aa</Col>
+          </Row>
+          <Row>
+            <Col id="normal">Test</Col>
+            <Col id="button">Test</Col>
+            <Col id="calendar">19890912</Col>
+            <Col id="check">0</Col>
+            <Col id="combo">all</Col>
+            <Col id="comboText">all</Col>
+            <Col id="date">19890912</Col>
+            <Col id="decoText">&lt;ff v='굴림'&gt;TEST&lt;/ff&gt;</Col>
+            <Col id="editControl">Test</Col>
+            <Col id="mask">8902022</Col>
+            <Col id="maskEdit">8902022</Col>
+            <Col id="number">7777777777</Col>
+            <Col id="text">Test</Col>
+            <Col id="textArea">Test</Col>
+            <Col id="headTest1">cc</Col>
+            <Col id="headTest12">aa</Col>
+            <Col id="headTest13">cc</Col>
+            <Col id="headTest14">bb</Col>
+          </Row>
+          <Row>
+            <Col id="normal">test1</Col>
+            <Col id="button">test1</Col>
+            <Col id="calendar">19890810</Col>
+            <Col id="check">1</Col>
+            <Col id="combo">prev</Col>
+            <Col id="comboText">prev</Col>
+            <Col id="date">19890810</Col>
+            <Col id="decoText">&lt;b v='true'&gt;TE&lt;/b&gt;&lt;b v='false'&gt;ST&lt;/b&gt;</Col>
+            <Col id="editControl">test1</Col>
+            <Col id="mask">9201012</Col>
+            <Col id="maskEdit">9201012</Col>
+            <Col id="number">88888888888</Col>
+            <Col id="text">test1</Col>
+            <Col id="textArea">test1</Col>
+            <Col id="headTest1">dd</Col>
+            <Col id="headTest12">bb</Col>
+            <Col id="headTest13">aa</Col>
+            <Col id="headTest14">bb</Col>
+          </Row>
+          <Row>
+            <Col id="normal">서울특별시</Col>
+            <Col id="button">서울특별시</Col>
+            <Col id="calendar">19890810</Col>
+            <Col id="check">1</Col>
+            <Col id="combo">next</Col>
+            <Col id="comboText">next</Col>
+            <Col id="date">19890810</Col>
+            <Col id="decoText">&lt;i v='true'&gt;TE&lt;/i&gt;&lt;i v='false'&gt;ST&lt;/i&gt;</Col>
+            <Col id="editControl">서울특별시</Col>
+            <Col id="mask">8702022</Col>
+            <Col id="maskEdit">8702022</Col>
+            <Col id="number">9999999999</Col>
+            <Col id="text">서울특별시</Col>
+            <Col id="textArea">서울특별시gsdfdsfdddddddddddddddddddddddddddddddddddddddddddddddddddddddddggggggggggggggaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</Col>
+            <Col id="headTest1">ee</Col>
+            <Col id="headTest12">bbb</Col>
+            <Col id="headTest13">bb</Col>
+            <Col id="headTest14">bb</Col>
+          </Row>
+          <Row>
+            <Col id="normal">경기도</Col>
+            <Col id="button">경기도</Col>
+            <Col id="calendar">19890810</Col>
+            <Col id="check">0</Col>
+            <Col id="combo">all</Col>
+            <Col id="comboText">all</Col>
+            <Col id="date">19890810</Col>
+            <Col id="decoText">&lt;u v='true'&gt;TE&lt;/u&gt;&lt;u v='false'&gt;ST&lt;/u&gt;</Col>
+            <Col id="editControl">경기도</Col>
+            <Col id="mask">8801012</Col>
+            <Col id="maskEdit">8801012</Col>
+            <Col id="number">8888888888</Col>
+            <Col id="text">경기도</Col>
+            <Col id="textArea">경기도</Col>
+            <Col id="headTest1">ff</Col>
+            <Col id="headTest12">bb</Col>
+            <Col id="headTest13">cc</Col>
+            <Col id="headTest14">bb</Col>
+          </Row>
+          <Row>
+            <Col id="normal">서울특별시</Col>
+            <Col id="button">서울특별시</Col>
+            <Col id="calendar">19890912</Col>
+            <Col id="check">0</Col>
+            <Col id="combo">prev</Col>
+            <Col id="comboText">prev</Col>
+            <Col id="date">19890912</Col>
+            <Col id="decoText">&lt;s v='true'&gt;TE&lt;/s&gt;&lt;s v='false'&gt;ST&lt;/s&gt;</Col>
+            <Col id="editControl">서울특별시</Col>
+            <Col id="mask">9008301</Col>
+            <Col id="maskEdit">9008301</Col>
+            <Col id="number">4444444444</Col>
+            <Col id="text">서울특별시</Col>
+            <Col id="textArea">서울특별시</Col>
+            <Col id="headTest1">gg</Col>
+            <Col id="headTest12">cc</Col>
+            <Col id="headTest13">aa</Col>
+            <Col id="headTest14">cc</Col>
+          </Row>
+          <Row>
+            <Col id="normal">경기도</Col>
+            <Col id="button">경기도</Col>
+            <Col id="calendar">19890810</Col>
+            <Col id="check">0</Col>
+            <Col id="combo">next</Col>
+            <Col id="comboText">next</Col>
+            <Col id="date">19890810</Col>
+            <Col id="decoText">&lt;fs v='16'&gt;TEST&lt;/fs&gt;</Col>
+            <Col id="editControl">경기도</Col>
+            <Col id="mask">9103301</Col>
+            <Col id="maskEdit">9103301</Col>
+            <Col id="number">5555555555</Col>
+            <Col id="text">경기도</Col>
+            <Col id="textArea">경기도</Col>
+            <Col id="headTest1">hh</Col>
+            <Col id="headTest12">ccc</Col>
+            <Col id="headTest13">bb</Col>
+            <Col id="headTest14">cc</Col>
+          </Row>
+          <Row>
+            <Col id="normal">경기도</Col>
+            <Col id="button">경기도</Col>
+            <Col id="calendar">19880826</Col>
+            <Col id="check">0</Col>
+            <Col id="combo">all</Col>
+            <Col id="comboText">all</Col>
+            <Col id="date">19880826</Col>
+            <Col id="decoText">&lt;fc v='red'&gt;T&lt;/fc&gt;&lt;fc v='orange'&gt;E&lt;/fc&gt;&lt;fc v='purple'&gt;S&lt;/fc&gt;&lt;fc v='green'&gt;E&lt;/fc&gt;</Col>
+            <Col id="editControl">경기도</Col>
+            <Col id="mask">9205052</Col>
+            <Col id="maskEdit">9205052</Col>
+            <Col id="number">11111111111</Col>
+            <Col id="text">경기도</Col>
+            <Col id="textArea">경기도</Col>
+            <Col id="headTest1">ii</Col>
+            <Col id="headTest12">ccc</Col>
+            <Col id="headTest13">cc</Col>
+            <Col id="headTest14">cc</Col>
+          </Row>
+          <Row>
+            <Col id="normal">서울특별시</Col>
+            <Col id="button">서울특별시</Col>
+            <Col id="calendar">19890912</Col>
+            <Col id="check">1</Col>
+            <Col id="combo">prev</Col>
+            <Col id="comboText">prev</Col>
+            <Col id="date">19890912</Col>
+            <Col id="decoText">&lt;ff v='굴림'&gt;TEST&lt;/ff&gt;</Col>
+            <Col id="editControl">서울특별시</Col>
+            <Col id="mask">9208302</Col>
+            <Col id="maskEdit">9208302</Col>
+            <Col id="number">2</Col>
+            <Col id="text">서울특별시</Col>
+            <Col id="textArea">서울특별시</Col>
+            <Col id="headTest1">jj</Col>
+            <Col id="headTest12">ddd</Col>
+            <Col id="headTest13">aa</Col>
+            <Col id="headTest14">dd</Col>
+          </Row>
+          <Row>
+            <Col id="normal">TEST</Col>
+            <Col id="button">TEST</Col>
+            <Col id="calendar">19890810</Col>
+            <Col id="check">1</Col>
+            <Col id="combo">next</Col>
+            <Col id="comboText">next</Col>
+            <Col id="date">19890810</Col>
+            <Col id="decoText">&lt;b v='true'&gt;TE&lt;/b&gt;&lt;b v='false'&gt;ST&lt;/b&gt;</Col>
+            <Col id="editControl">TEST</Col>
+            <Col id="mask">8508301</Col>
+            <Col id="maskEdit">8508301</Col>
+            <Col id="number">222222222</Col>
+            <Col id="text">TEST</Col>
+            <Col id="textArea">TEST</Col>
+            <Col id="headTest1">kk</Col>
+            <Col id="headTest12">ddd</Col>
+            <Col id="headTest13">bb</Col>
+            <Col id="headTest14">dd</Col>
+          </Row>
+          <Row>
+            <Col id="normal">test</Col>
+            <Col id="button">test</Col>
+            <Col id="calendar">19890826</Col>
+            <Col id="check">1</Col>
+            <Col id="combo">all</Col>
+            <Col id="comboText">all</Col>
+            <Col id="date">19890826</Col>
+            <Col id="decoText">&lt;i v='true'&gt;TE&lt;/i&gt;&lt;i v='false'&gt;ST&lt;/i&gt;</Col>
+            <Col id="editControl">test</Col>
+            <Col id="mask">8303301</Col>
+            <Col id="maskEdit">8303301</Col>
+            <Col id="number">2</Col>
+            <Col id="text">test</Col>
+            <Col id="textArea">test</Col>
+            <Col id="headTest1">ll</Col>
+            <Col id="headTest12">ddd</Col>
+            <Col id="headTest13">cc</Col>
+            <Col id="headTest14">dd</Col>
+          </Row>
+          <Row>
+            <Col id="normal">Test</Col>
+            <Col id="button">Test</Col>
+            <Col id="calendar">19880826</Col>
+            <Col id="check">1</Col>
+            <Col id="combo">prev</Col>
+            <Col id="comboText">prev</Col>
+            <Col id="date">19880826</Col>
+            <Col id="decoText">&lt;u v='true'&gt;TE&lt;/u&gt;&lt;u v='false'&gt;ST&lt;/u&gt;</Col>
+            <Col id="editControl">Test</Col>
+            <Col id="mask">8902022</Col>
+            <Col id="maskEdit">8902022</Col>
+            <Col id="number">555555555</Col>
+            <Col id="text">Test</Col>
+            <Col id="textArea">Test</Col>
+            <Col id="headTest1">nn</Col>
+            <Col id="headTest12">eee</Col>
+            <Col id="headTest13">aa</Col>
+            <Col id="headTest14">ee</Col>
+          </Row>
+          <Row>
+            <Col id="normal">test</Col>
+            <Col id="button">test</Col>
+            <Col id="calendar">19890912</Col>
+            <Col id="check">1</Col>
+            <Col id="combo">next</Col>
+            <Col id="comboText">next</Col>
+            <Col id="date">19890912</Col>
+            <Col id="decoText">&lt;fs v='16'&gt;TEST&lt;/fs&gt;</Col>
+            <Col id="editControl">test</Col>
+            <Col id="mask">9201012</Col>
+            <Col id="maskEdit">9201012</Col>
+            <Col id="number">233</Col>
+            <Col id="text">test</Col>
+            <Col id="textArea">test</Col>
+            <Col id="headTest1">mm</Col>
+            <Col id="headTest12">eee</Col>
+            <Col id="headTest13">bb</Col>
+            <Col id="headTest14">ee</Col>
+          </Row>
+          <Row>
+            <Col id="normal">test</Col>
+            <Col id="button">test</Col>
+            <Col id="calendar">19880810</Col>
+            <Col id="check">1</Col>
+            <Col id="combo">all</Col>
+            <Col id="comboText">all</Col>
+            <Col id="date">19880810</Col>
+            <Col id="decoText">&lt;fc v='red'&gt;T&lt;/fc&gt;&lt;fc v='orange'&gt;E&lt;/fc&gt;&lt;fc v='purple'&gt;S&lt;/fc&gt;&lt;fc v='green'&gt;E&lt;/fc&gt;</Col>
+            <Col id="editControl">test</Col>
+            <Col id="mask">8702022</Col>
+            <Col id="maskEdit">8702022</Col>
+            <Col id="number">555555</Col>
+            <Col id="text">test</Col>
+            <Col id="textArea">test</Col>
+            <Col id="headTest1">oo</Col>
+            <Col id="headTest12">eee</Col>
+            <Col id="headTest13">cc</Col>
+            <Col id="headTest14">ee</Col>
+          </Row>
+          <Row>
+            <Col id="normal">TEST</Col>
+            <Col id="button">TEST</Col>
+            <Col id="calendar">20171019</Col>
+            <Col id="check">1</Col>
+            <Col id="combo">prev</Col>
+            <Col id="comboText">prev</Col>
+            <Col id="date">20171019</Col>
+            <Col id="decoText">&lt;ff v='굴림'&gt;TEST&lt;/ff&gt;</Col>
+            <Col id="editControl">TEST</Col>
+            <Col id="mask">8801012</Col>
+            <Col id="maskEdit">8801012</Col>
+            <Col id="number">4444444</Col>
+            <Col id="text">TEST</Col>
+            <Col id="textArea">TEST</Col>
+            <Col id="headTest1">pp</Col>
+            <Col id="headTest12">eee</Col>
+            <Col id="headTest13">cc</Col>
+            <Col id="headTest14">ee</Col>
+          </Row>
+          <Row>
+            <Col id="normal">TEST</Col>
+            <Col id="button">TEST</Col>
+            <Col id="calendar">20171018</Col>
+            <Col id="check">0</Col>
+            <Col id="combo">next</Col>
+            <Col id="comboText">next</Col>
+            <Col id="date">20171018</Col>
+            <Col id="decoText">&lt;b v='true'&gt;TE&lt;/b&gt;&lt;b v='false'&gt;ST&lt;/b&gt;</Col>
+            <Col id="editControl">TEST</Col>
+            <Col id="mask">9008301</Col>
+            <Col id="maskEdit">9008301</Col>
+            <Col id="number">1111111</Col>
+            <Col id="text">TEST</Col>
+            <Col id="textArea">TEST</Col>
+            <Col id="headTest1">qq</Col>
+            <Col id="headTest12">ee</Col>
+            <Col id="headTest13">aa</Col>
+            <Col id="headTest14">ee</Col>
+          </Row>
+        </Rows>
+      </Dataset>
+    </Objects>
+    <Script type="xscript5.1"><![CDATA[
+this.WorkGrid_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
+{
+	this.gfnFormOnLoad(this);
+};
+]]></Script>
+  </Form>
+</FDL>

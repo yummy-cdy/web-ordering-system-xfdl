@@ -1,0 +1,370 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="frmCust1210" width="1600" height="900" titletext="사이렌 오더(진행 화면)" onload="frmCust1210_onload" background="white">
+    <Layouts>
+      <Layout height="900" mobileorientation="landscape" width="1600">
+        <Static id="Static01_00_00_00_00" taborder="0" text="FRAME" left="0" top="0" width="250" background="red" opacity="20%" textAlign="center" visible="false" bottom="0"/>
+        <Static id="Static01_00_01" taborder="1" text="FRAME" left="0" top="0" height="20" background="red" opacity="20%" textAlign="center" visible="false" right="0"/>
+        <Static id="Static01_00_00_00" taborder="2" text="FRAME" left="1350" top="0" width="250" background="red" opacity="20%" textAlign="center" visible="false" bottom="0"/>
+        <Static id="Static01_00_01_00" taborder="3" text="FRAME" left="0" top="880" height="20" background="red" opacity="20%" textAlign="center" visible="false" right="0"/>
+        <ListView id="lvOrderHist" taborder="4" left="250" top="420" width="1100" height="460"/>
+        <Div id="divText" taborder="5" left="350" top="20" width="900" height="360">
+          <Layouts>
+            <Layout>
+              <Static id="staTitle" taborder="0" text="NAME 님의 주문을 n번째 메뉴로 준비 중이에요" left="0" top="56" width="805" height="83" font="normal 600 21pt/normal &quot;KopubWorld&quot;"/>
+              <Static id="staStore" taborder="1" text="STORE_NAME 점" left="0" top="0" width="301" height="56" font="normal 600 13px/normal &quot;KopubWorld&quot;" color="#01a862"/>
+              <Static id="Static00" taborder="2" text="주문 완료" left="75" top="235" width="145" height="48" textAlign="center" font="normal 500 13px/normal &quot;KopubWorld&quot;"/>
+              <Static id="Static00_00" taborder="3" text="준비 중" left="378" top="235" width="145" height="48" textAlign="center" font="normal 500 13px/normal &quot;KopubWorld&quot;"/>
+              <Static id="Static00_00_00" taborder="4" text="준비 완료" left="675" top="235" width="145" height="48" textAlign="center" font="normal 500 13px/normal &quot;KopubWorld&quot;"/>
+              <ProgressBar id="pgbOrderStatus" taborder="5" max="99" min="0" left="0" top="285" width="900" height="15" pos="66" blockgap="5" blocksize="380" smooth="true" cssclass="pgb_orderStatus" text="" direction="forward"/>
+            </Layout>
+          </Layouts>
+        </Div>
+      </Layout>
+    </Layouts>
+    <Objects>
+      <XPush id="XPush00" onerror="XPush00_onerror" onkeepalive="XPush00_onkeepalive" onsuccess="XPush00_onsuccess"/>
+      <Dataset id="dsTopic">
+        <ColumnInfo>
+          <Column id="Chk" type="STRING" size="256"/>
+          <Column id="TOPIC_ID" type="STRING" size="256"/>
+          <Column id="TOPIC_NAME" type="STRING" size="256"/>
+        </ColumnInfo>
+        <Rows>
+          <Row>
+            <Col id="TOPIC_ID">ALL</Col>
+            <Col id="TOPIC_NAME">전체</Col>
+          </Row>
+          <Row>
+            <Col id="TOPIC_ID">TOBEEDU01</Col>
+            <Col id="TOPIC_NAME">EDU01</Col>
+          </Row>
+          <Row>
+            <Col id="TOPIC_ID">TOBEEDU02</Col>
+            <Col id="TOPIC_NAME">EDU02</Col>
+          </Row>
+          <Row>
+            <Col id="TOPIC_ID">TOBEEDU03</Col>
+            <Col id="TOPIC_NAME">EDU03</Col>
+          </Row>
+          <Row>
+            <Col id="TOPIC_ID">TOBEEDU04</Col>
+            <Col id="TOPIC_NAME">EDU04</Col>
+          </Row>
+          <Row>
+            <Col id="TOPIC_ID">TOBEEDU05</Col>
+            <Col id="TOPIC_NAME">EDU05</Col>
+          </Row>
+          <Row>
+            <Col id="TOPIC_ID">TOBEEDU06</Col>
+            <Col id="TOPIC_NAME">EDU06</Col>
+          </Row>
+        </Rows>
+      </Dataset>
+      <Dataset id="dsMessage">
+        <ColumnInfo>
+          <Column id="TOPIC_ID" type="STRING" size="256"/>
+          <Column id="TOPIC_TYPE" type="STRING" size="256"/>
+          <Column id="CODE" type="STRING" size="256"/>
+          <Column id="MSG" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+      <Dataset id="dsProvider">
+        <ColumnInfo>
+          <Column id="PROJECT_ID" type="STRING" size="256"/>
+          <Column id="PUSH_TYPE" type="STRING" size="256"/>
+          <Column id="TOPIC_TYPE" type="STRING" size="256"/>
+          <Column id="TOPIC_ID" type="STRING" size="256"/>
+          <Column id="CODE" type="STRING" size="256"/>
+          <Column id="MSG" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+      <Dataset id="ds_userHist">
+        <ColumnInfo>
+          <Column id="LOGIN_EMAIL" type="STRING" size="256"/>
+          <Column id="ORDER_ID" type="STRING" size="256"/>
+          <Column id="STORE_CODE" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+    </Objects>
+    <Script type="xscript5.1"><![CDATA[/**
+*  Nexacro Professional Training Couse
+*  @MenuPath    개발가이드 > 표준 및 기본 정의 > 그리드 페이징
+*  @FileName 	SamplePaging.xfdl 
+*  @Creator 	TOBESOFT Education
+*  @CreateDate 	2025/01/03
+*  @Desction    
+************** 소스 수정 이력 ***********************************************
+*  date          		Modifier                Description
+*******************************************************************************
+*  2026/02/12      		 이아인	 	  	       최초 생성 
+*******************************************************************************
+*/
+
+
+
+/************************************************************************************************
+ * FORM 변수 선언 영역
+ ************************************************************************************************/
+this.fvApp = nexacro.getApplication();
+
+this.contentStore = "";
+this.contentTitle = "";
+this.contentDesc = "";
+
+var strTopicID = "JKIINZ9T"; // STORE_ID 
+var strPushType = "PUSH"; // 고객 쪽은 RELI 보낼 필요X
+//var userId = "Edu01"; 
+var userId = this.fvApp.gdsAuth.getColumn(0, "LOGIN_EMAIL");
+
+/************************************************************************************************
+ * FORM EVENT 영역(onload, onbeforeclose)
+ ************************************************************************************************/
+/**
+ * @description example: ~하는 부분
+*/
+this.frmCust1210_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
+{
+	// dsTopic에 내 토픽 설정
+    this.dsTopic.clearData();
+    var nRow = this.dsTopic.addRow();
+    this.dsTopic.setColumn(nRow, "TOPIC_ID", userId);
+    
+    this.fnXPushStart();
+    this.fnGetUserHist();
+};
+
+
+/************************************************************************************************
+ * CALLBACK 콜백 처리부분(Transaction, Popup)
+ ************************************************************************************************/
+this.fn_push_callback = function(Row, ChangeColumn, AllColumns, Type, ActionType, MessageId)
+{
+    if(ActionType == "PUSH") {
+        // 수신된 dsMessage의 데이터를 직접 참조
+        var pushOrderId = this.dsMessage.getColumn(Row, "CODE");
+        var pushStatus  = this.dsMessage.getColumn(Row, "MSG");
+
+        // 현재 내 화면의 주문번호(ds_userHist)와 푸시로 온 주문번호(CODE)가 일치하는지 확인
+        if(this.ds_userHist.getColumn(0, "ORDER_ID") == pushOrderId) {
+            this.fn_setProgressBar(pushStatus);
+        }
+    }
+};
+
+/************************************************************************************************
+ * CRUD 및 TRANSACTION 서비스 호출 처리
+ ************************************************************************************************/
+this.fnGetUserHist = function ()
+{
+	var sSvcId  = "svcGetUser";
+	var sUrl    = "p024/Example.do";
+	var inData  = "ds_input=ds_data:u";
+	var outData = "ds_data=out_data";
+	var sParam  = "";
+	this.gfnTransaction(sSvcId, sUrl, inData, outData, sParam, "fn_callback");
+};
+
+/************************************************************************************************
+ * 사용자 FUNCTION 영역
+ ************************************************************************************************/
+this.notYet = function ()
+{
+	obj.color = "#9E9E9E";
+	obj.font = "normal 500 13px/normal 'KopubWorld'";
+};
+this.nowOn = function ()
+{
+	obj.color = "#212121";
+	obj.font = "normal 700 13px/normal 'KopubWorld'";
+};
+
+/************************************************************************************************
+ * 각 COMPONENT 별 EVENT 영역
+ ************************************************************************************************/
+/////////////////////////// !chk : XPush 처리 영역 /////////////////////////// 
+/*
+// e.statuscode------------------------------------
+// -100 - Push 서버가 “Byec”를 보냈거나 서버와의 규약에 따라 종료되었습니다. (e.action이 -1임)
+// -101 - 타임아웃 처리되었습니다.
+// -200 - Command Auth Error. 현재 선택된 IP에 대해인증에 오류가 발생하였습니다.
+// -201 - iplist 속성에 등록되어 있는 Push 서버로의 접속이 모두 실패했습니다.
+// -202 - 데이터 전송 채널 인증(authentication)에 오류가 발생하였습니다.
+// -300 - 서버로의 접속에 실패했습니다.
+// -301 - 패킷 전송(send/recv) 오류가 발생하였습니다.
+// -302 - 이미 PUSH서버에 접속되어 있습니다.
+// -401 - X-PUSH 서버와 접속해제(disconnect) 요청을 실패했습니다.
+// -501 - X-PUSH 서버로부터 메시지 수신중단(suspend) 요청을 실패했습니다.
+// -601 - X-PUSH 서버로부터 메시지 수신 재시작(resume) 요청을 실패했습니다.
+// -701 - X-PUSH 서버로 topic 등록/등록해제 요청을 실패했습니다.
+// -801 - 메시지 포맷 버전 정보가 일치하지 않습니다.
+// -901 - 신뢰성 메시지에 대한 수신응답 전송에 실패했습니다.
+// -902 - 미수신 메시지 요청을 실패했습니다.
+// -1001 - X-PUSH 서버로 모바일 DeviceToken 정보 등록요청을 실패했습니다.
+// -1002 - X-PUSH 서버로 유저 topic 정보 등록요청(reqisterUser)이 실패했습니다.
+// -1003 - X-PUSH 서버로 유저 topic 정보 등록해제(unregisterUser)요청이 실패했습니다.
+// -1004 - 미수신 메시지 정보요청을 실패했습니다.
+// -1072 - 디바이스 등록(RGST)시 중복된 경우 발생. registerDevice 기등록 정상오류
+// -1092 - registerTopic 기등록 정상오류 
+*/
+this.XPush00_onerror = function(obj:nexacro.XPush,e:nexacro.XPushErrorEventInfo)
+{
+//	this.taLog.set_value("");        
+	this.taLog.set_value(this.taLog.value + "\n" + "XPush00_onerror Event\n" + 
+			" - eventid: " + e.eventid + "\n" +
+			" - statuscode: " + e.statuscode + "\n" +   
+			" - errormsg: " + e.errormsg + "\n" +
+			" - reason: " + e.reason + "\n" +
+			" - action: " + e.action + "\n" +
+			" - serverip: " + e.serverip + "\n" +
+			" - serverport: " + e.serverport + "\n" +
+			" - e.message: " + e.message + "\n" +
+			" - e.command : " + e.command + "\n" +
+			" - e.message : " + e.message + "\n" +
+			" - e.returnvalue : " + e.returnvalue);
+	if(e.message != null) {
+		this.taLog.set_value( "e.message != null\n" + 
+			" - e.message.messagetype: " + e.message.messagetype + "\n" +
+			" - e.message.messagekey: " + e.message.messagekey + "\n" +
+			" - e.message.messageid: " + e.message.messageid + "\n" +
+			" - e.message.devicetoken: " + e.message.devicetoken
+		)
+	}
+
+	if( e.action == 0 ) {
+		this.taLog.set_value(this.taLog.value + "\n" +  "connect() error");
+	}
+	if( e.action == 1 ) {
+		this.taLog.set_value(this.taLog.value + "\n" + "disconnect() error");
+	}
+	if( e.action == 2) {
+		this.taLog.set_value(this.taLog.value + "\n" + "subscribe() error");
+	}
+	if( e.action == 3) {
+		this.taLog.set_value(this.taLog.value + "\n" + "unsubscribe() error");
+	}
+	if( e.action == 4) {
+		this.taLog.set_value(this.taLog.value + "\n" + "requestMessage() error");
+	}
+	if( e.action == 5) {
+		this.taLog.set_value(this.taLog.value + "\n" + "sendResponse() error");
+	}
+	if( e.action == 6) {
+		this.taLog.set_value(this.taLog.value + "\n" + "reqisterDevice() error");
+	}
+	if( e.action == 7) {
+		this.taLog.set_value(this.taLog.value + "\n" + "unreqisterDevice() error");
+	}
+	if( e.action == 8) {
+		this.taLog.set_value(this.taLog.value + "\n" + "reqisterUser() error");
+	}
+	if( e.action == 9) {
+		this.taLog.set_value(this.taLog.value + "\n" + "unreqisterUser() error");
+	}   
+};
+
+this.XPush00_onkeepalive = function(obj:nexacro.XPush,e:nexacro.XPushKeepAliveEventInfo)
+{ 
+		this.taLog.set_value("KEEP");      
+};
+
+this.XPush00_onsuccess = function(obj:nexacro.XPush,e:nexacro.XPushEventInfo)
+{
+	//trace(this.dsMessage.saveXML());
+/*
+	alert("XPush00_onsuccess Event\n" + 
+			" - eventid: " + e.eventid + "\n" +
+			" - statuscode: " + e.statuscode + "\n" +
+			" - errormsg: " + e.errormsg + "\n" +
+			" - reason: " + e.reason + "\n" +
+			" - action: " + e.action + "\n" +
+			" - serverip: " + e.serverip + "\n" +
+			" - serverport: " + e.serverport + "\n" +
+			" - e.message: " + e.message + "\n" +
+			" - e.command : " + e.command + "\n" +
+			" - e.message : " + e.message + "\n" +
+			" - e.returnvalue : " + e.returnvalue);
+*/			
+	if(e.message != null) {
+		this.taLog.set_value( "e.message != null\n" + 
+			" - e.message.messagetype: " + e.message.messagetype + "\n" +
+			" - e.message.messagekey: " + e.message.messagekey + "\n" +
+			" - e.message.messageid: " + e.message.messageid + "\n" +
+			" - e.message.returnvalue: " + e.message.returnvalue + "\n" +
+			" - e.message.devicetoken: " + e.message.devicetoken
+		) 
+	}
+	
+	if( e.action == 0 ) {
+		this.taLog.set_value("connect() success");
+		
+//		this.XPush00.subscribe("9999", strTopicID, this, nexacro.getApplication().gdsXPushMessage, "append", "fn_push_callback");
+		this.XPush00.subscribe("9999", userId, this, nexacro.getApplication().gdsXPushMessage, "append", "fn_push_callback");
+		
+	}
+	if( e.action == 1 ) {
+		this.taLog.set_value("disconnect() success");
+	}
+	if( e.action == 2) {
+		this.taLog.set_value("subscribe() success");
+//		var ret = this.XPush00.registerTopic("9999", strTopicID);
+		var ret = this.XPush00.registerTopic("9999", userId);
+	}
+	if( e.action == 3) {
+		this.taLog.set_value("unsubscribe() success");
+	}
+	if( e.action == 4) {
+		this.taLog.set_value("requestMessage() success");
+	//	trace("e4 : " + this.dsMessage.saveXML());
+	}
+	if( e.action == 5) {
+		this.taLog.set_value("sendResponse() success");
+	}
+	if( e.action == 6) {
+		this.taLog.set_value("reqisterDevice() success");
+	}
+	if( e.action == 7) {
+		this.taLog.set_value("unreqisterDevice() success");
+	}
+	if( e.action == 8) {
+		this.taLog.set_value("reqisterUser() success");
+//		this.XPush00.requestMessage("9999",strTopicID);
+		this.XPush00.requestMessage("9999", userId);
+	}
+	if( e.action == 9) {
+		this.taLog.set_value("unreqisterUser() success");
+	}
+	if( e.action == 10) {
+		this.taLog.set_value("requestMessageCount() success");
+		if(e.message.returnvalue != undefined || e.message.returnvalue != null) {
+			var returnvalue = e.message.returnvalue;
+			this.taLog.set_value("length : " + returnvalue.length);
+			for(var i = 0; i < returnvalue.length; i++) {
+				this.taLog.set_value("index:" + i + " : " + returnvalue[i].topictype + " : " + returnvalue[i].topicid + " : " + returnvalue[i].count);
+			}
+		}
+	}
+};
+
+this.fnXPushStart = function ()
+{
+    this.XPush00.set_projectid("TOBE_EDU");
+    this.XPush00.set_iplist("tcp://localhost:50001, http://localhost:50000, http://172.10.14.128:50000");
+    this.XPush00.connect(userId, "..."); 
+};
+
+
+this.fn_setProgressBar = function(status)
+{
+    var nPos = 0;
+    if(status == "1") nPos = 0;
+    else if(status == "2") nPos = 33;
+    else if(status == "4") nPos = 66;
+    else if(status == "8") nPos = 99;
+
+    this.divText.form.pgbOrderStatus.set_pos(nPos);
+    
+    if(status == "4") this.alert("메뉴가 준비되었습니다!");
+};]]></Script>
+  </Form>
+</FDL>

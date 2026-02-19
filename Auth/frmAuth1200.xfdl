@@ -1,0 +1,169 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="frmAuth1200" width="1600" height="770" titletext="로그인 화면" background="white" onload="frmAuth1200_onload">
+    <Layouts>
+      <Layout height="770" mobileorientation="landscape" width="1600">
+        <Static id="Static01_00_00_00_00" taborder="0" text="FRAME" left="0" top="0" width="250" background="red" opacity="40%" textAlign="center" visible="false" bottom="0"/>
+        <Static id="Static01_00_01" taborder="1" text="FRAME" left="0" top="0" height="20" background="red" opacity="40%" textAlign="center" visible="false" right="0"/>
+        <Static id="Static01_00_00_00" taborder="2" text="FRAME" left="1350" top="0" width="250" background="red" opacity="40%" textAlign="center" visible="false" bottom="0"/>
+        <Static id="Static01_00_01_00" taborder="3" text="FRAME" left="0" top="750" height="20" background="red" opacity="40%" textAlign="center" visible="false" right="0"/>
+        <Div id="divLogin" taborder="4" left="15.625%" top="27.77777777777778%" width="68.75%" height="48.111111111111114%" formscrollbarsize="0">
+          <Layouts>
+            <Layout>
+              <TextField id="tfEmail" taborder="0" labeltext="ID (Email)" left="20.91%" top="25.64%" width="31.818181818181817%" height="18.244803695150114%" font="normal bold 13px/normal &quot;KopubWorld&quot;normal bold 13px/normal &quot;KopubWorld&quot;" inputtype="email"/>
+              <TextField id="tfPassword" taborder="1" labeltext="Password" left="20.91%" top="46.19%" width="31.818181818181817%" height="18.244803695150114%" font="normal bold 13px/normal &quot;KopubWorld&quot;" inputtype="password"/>
+              <Button id="btnLogin" taborder="2" text="로그인" left="57.27272727272727%" top="28.637413394919168%" width="28.181818181818183%" height="23.556581986143186%" background="white" font="normal bold 13px/normal &quot;KopubWorld&quot;" border="1px solid #000000" borderRadius="5px 5px 5px 5px" onclick="divLogin_btnLogin_onclick"/>
+              <Button id="btnNaverLogin" taborder="3" left="57.27272727272727%" top="54.50346420323326%" width="28.181818181818183%" height="13.856812933025404%" background="url('imagerc::NAVER_login_Light_KR_green_wide_H56.png') no-repeat left top /contain" border="0px none"/>
+              <Static id="btnFindID" taborder="4" text="아이디 찾기" left="59.55%" top="69.52%" width="6.363636363636363%" height="5.773672055427252%" textAlign="center" font="normal 700 11px/normal &quot;KopubWorld&quot;"/>
+              <Static id="staFindPW" taborder="5" text="비밀번호 찾기" left="67.64%" top="69.52%" width="7.454545454545454%" height="5.773672055427252%" textAlign="center" font="normal 700 11px/normal &quot;KopubWorld&quot;"/>
+              <Static id="staSignUp" taborder="6" text="회원가입" left="76.91%" top="69.52%" width="6.363636363636363%" height="5.773672055427252%" textAlign="center" font="normal 700 11px/normal &quot;KopubWorld&quot;" onclick="divLogin_staSignUp_onclick"/>
+              <Static id="staMsg" taborder="7" left="20.90909090909091%" top="64.43418013856812%" width="31.636363636363637%" height="12.009237875288683%" font="normal 500 11px/normal &quot;KopubWorld&quot;" color="red" text="이메일(로그인 아이디) 또는 비밀번호가 잘못 되었습니다. 이메일과 비밀번호를 정확히 입력해 주세요." textAlign="left" tooltiptype="default" wordWrap="char" visible="false" padding="0px"/>
+            </Layout>
+          </Layouts>
+        </Div>
+        <ImageViewer id="staLogo" taborder="5" left="36.1875%" top="19.444444444444443%" width="27.6875%" height="8.333333333333334%" background="url('imagerc::starbucks-seeklogo.png') no-repeat center center /contain" border="0px none"/>
+      </Layout>
+    </Layouts>
+    <Script type="xscript5.1"><![CDATA[
+// this.Button00_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+// {
+// 	nexacro.getApplication().appStatusAuth = true;
+// 	this.parent.parent.divTop.form.fnSetStatusAuth();
+// 
+// };
+// 
+// 
+// this.Button01_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+// {
+// 	alert(">>>>"+nexacro.getApplication().appStatusAuth);
+// };
+// 
+
+// 이제 statusAuth = gdsAuth.getRowCount()로 >0 으로 관리
+
+/**
+*  Nexacro Professional Training Couse
+*  @MenuPath    개발가이드 > 표준 및 기본 정의 > 그리드 페이징
+*  @FileName 	SamplePaging.xfdl 
+*  @Creator 	TOBESOFT Education
+*  @CreateDate 	2025/01/03
+*  @Desction    
+************** 소스 수정 이력 ***********************************************
+*  date          		Modifier                Description
+*******************************************************************************
+*  2026/01/27      		 이아인	 	  	        최초 생성 
+*******************************************************************************
+*  2026/01/28      		 이아인	 	  DB 연결 및 로그인 프로세스 완료 
+*******************************************************************************
+*/
+
+
+
+/************************************************************************************************
+ * FORM 변수 선언 영역
+ ************************************************************************************************/
+this.fvApp = nexacro.getApplication();
+
+/************************************************************************************************
+ * FORM EVENT 영역(onload, onbeforeclose)
+ ************************************************************************************************/
+/**
+ * @description example: ~하는 부분
+*/
+this.frmAuth1200_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
+{
+	this.ds_userInput.addRow();
+};
+
+/************************************************************************************************
+ * CALLBACK 콜백 처리부분(Transaction, Popup)
+ ************************************************************************************************/
+this.fn_callback = function(svcId, errCd, errMsg)
+{
+	if(errCd < 0){ alert("에러 : " + errMsg); }
+	var sMsgId = "";
+
+	if(svcId == "svcRequestLogin"){
+		
+		if(nexacro.getApplication().gdsAuth.getRowCount() > 0){
+			this.fvApp.appStatusAuth = true;
+			this.sleep(500);
+			
+			var userType = this.fvApp.gdsAuth.getColumn(0, "USER_TYPE");
+			
+			if(userType == "Cust")
+				this.parent.parent.divCenter.url = "Base::frmMain1203.xfdl";
+			else if(userType == "Staff"){
+				// 여기에 나중에 화면 갈아끼우기
+			}	
+		}
+		else	this.divLogin.form.staMsg.visible = true;
+		
+	}
+}
+
+/************************************************************************************************
+ * CRUD 및 TRANSACTION 서비스 호출 처리
+ ************************************************************************************************/
+
+
+/************************************************************************************************
+ * 사용자 FUNCTION 영역
+ ************************************************************************************************/
+
+this.fnCheckValidation = function ()
+{
+	this.gfnClearValidation(this.ds_userInput);
+	
+	this.gfnSetValidation(this.ds_userInput, "LOGIN_EMAIL", "이메일(ID)", "required");	// 아이디 입력 체크
+	this.gfnSetValidation(this.ds_userInput, "LOGIN_PW", "비밀번호", "required");	 // 패스워드 입력 체크
+	// 수정된 Row가 아닌 전체 Row에 대해 Validation check
+ 	if (this.gfnValidation(this.ds_signUp, "A") == false) {
+		return false;
+	}
+
+	return true;
+};
+
+/************************************************************************************************
+ * 각 COMPONENT 별 EVENT 영역
+ ************************************************************************************************/
+
+
+this.divLogin_staSignUp_onclick = function(obj:nexacro.Static,e:nexacro.ClickEventInfo)
+{
+	this.parent.parent.divCenter.url = "Auth::frmAuth1230.xfdl";
+};
+
+this.divLogin_btnLogin_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	//var chkVal = this.fnCheckValidation();
+	
+	var chkVal = true;
+	
+	if(chkVal==true){
+		var sSvcId  = "svcRequestLogin";
+		var sUrl    = "p024/requestLogin.do";
+		var inData  = "ds_input=ds_userInput:u";
+		var outData = "gdsAuth=out_data";
+		var sParam  = "";
+		this.gfnTransaction(sSvcId, sUrl, inData, outData, sParam, "fn_callback");
+	}
+};
+
+
+]]></Script>
+    <Objects>
+      <Dataset id="ds_userInput">
+        <ColumnInfo>
+          <Column id="LOGIN_EMAIL" type="STRING" size="256"/>
+          <Column id="LOGIN_PW" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+    </Objects>
+    <Bind>
+      <BindItem id="item0" compid="divLogin.form.tfEmail" propid="value" datasetid="ds_userInput" columnid="LOGIN_EMAIL"/>
+      <BindItem id="item1" compid="divLogin.form.tfPassword" propid="value" datasetid="ds_userInput" columnid="LOGIN_PW"/>
+    </Bind>
+  </Form>
+</FDL>

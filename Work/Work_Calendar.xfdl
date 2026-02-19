@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="Work_Calendar" width="1280" height="720" titletext="New Form">
+    <Layouts>
+      <Layout height="720" width="1280">
+        <Calendar id="cal00" taborder="0" left="30" top="26" width="144" height="36"/>
+        <Calendar id="cal01" taborder="1" left="200" top="26" width="136" height="34" popuptype="none"/>
+        <Static id="sta00" taborder="2" text="popuptype : none" left="200" top="5" width="150" height="18"/>
+        <Calendar id="cal02" taborder="3" left="358" top="26" width="172" height="191" type="monthonly"/>
+        <Static id="sta00_00" taborder="4" text="type : monthonly" left="365" top="5" width="150" height="18"/>
+        <Calendar id="cal03" taborder="5" left="31" top="109" width="125" height="37" popuptype="none" ondropdown="cal03_ondropdown"/>
+        <Static id="sta01" taborder="6" text="~" left="171" top="109" width="34" height="37"/>
+        <Calendar id="cal04" taborder="7" left="200" top="109" width="118" height="37" popuptype="none"/>
+        <PopupDiv id="pdiv00" text="pdiv00" visible="false" left="31" top="156" width="291" height="194">
+          <Layouts>
+            <Layout>
+              <Calendar id="cal00" taborder="0" left="3" top="1" width="132" height="176" type="monthonly"/>
+              <Calendar id="cal01" taborder="1" left="142" top="2" width="127" height="175" type="monthonly"/>
+            </Layout>
+          </Layouts>
+        </PopupDiv>
+        <Div id="div00" taborder="8" text="div00" left="33" top="410" width="277" height="30" url="Cmm::CmmCalendarFromTo.xfdl"/>
+        <Div id="div01" taborder="9" text="div01" left="334" top="408" width="376" height="42" url="Cmm::CmmDateRange.xfdl"/>
+        <DateRangePicker id="DateRangePicker00" taborder="10" left="672" top="119" width="376" height="281"/>
+      </Layout>
+    </Layouts>
+    <Script type="xscript5.1"><![CDATA[
+this.cal03_ondropdown = function(obj:nexacro.Calendar,e:nexacro.EventInfo)
+{
+	this.pdiv00.trackPopupByComponent(this.cal03, 0, this.cal03.height);
+	
+};
+]]></Script>
+  </Form>
+</FDL>

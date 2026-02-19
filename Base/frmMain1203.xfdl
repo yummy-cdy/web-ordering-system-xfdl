@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="frmMain1203" width="1600" height="770" titletext="divCenter 구현화면" background="white" onload="frmMain1203_onload" scrollbarsize="0">
+    <Layouts>
+      <Layout height="770" mobileorientation="landscape" width="1600">
+        <Static id="Static01_00_00_00" taborder="0" text="FRAME" left="1350" top="0" width="250" background="red" opacity="40%" textAlign="center" visible="false" bottom="0"/>
+        <Static id="Static01_00_01" taborder="1" text="FRAME" left="0" top="0" height="20" background="red" opacity="40%" textAlign="center" visible="false" right="0"/>
+        <Static id="Static01_00_01_00" taborder="2" text="FRAME" left="0" top="750" height="20" background="red" opacity="40%" textAlign="center" visible="false" right="0"/>
+        <Static id="Static01_00_00_00_00" taborder="3" text="FRAME" left="0" top="0" width="250" background="red" opacity="40%" textAlign="center" visible="false" bottom="0"/>
+        <Static id="Static00" taborder="4" text="(홍보 이미지/문구) 메인화면" left="614" top="310" width="373" height="150" textAlign="center" font="normal 15pt/normal &quot;Arial&quot;"/>
+        <ImageViewer id="ImageViewer00" taborder="5" left="0" top="0" width="1620" height="2680" text=" " image="url('imagerc::MainScreen-sample.png')" stretch="fixaspectratio"/>
+      </Layout>
+    </Layouts>
+    <Script type="xscript5.1"><![CDATA[
+/**
+*  Nexacro Professional Training Couse
+*  @MenuPath    개발가이드 > 표준 및 기본 정의 > 그리드 페이징
+*  @FileName 	SamplePaging.xfdl 
+*  @Creator 	TOBESOFT Education
+*  @CreateDate 	2025/01/03
+*  @Desction    
+************** 소스 수정 이력 ***********************************************
+*  date          		Modifier                Description
+*******************************************************************************
+*  2026/01/00      		 이아인	 	  	       최초 생성 
+*******************************************************************************
+*/
+
+
+
+/************************************************************************************************
+ * FORM 변수 선언 영역
+ ************************************************************************************************/
+
+
+/************************************************************************************************
+ * FORM EVENT 영역(onload, onbeforeclose)
+ ************************************************************************************************/
+/**
+ * @description example: ~하는 부분
+*/
+
+
+/************************************************************************************************
+ * CALLBACK 콜백 처리부분(Transaction, Popup)
+ ************************************************************************************************/
+
+
+/************************************************************************************************
+ * CRUD 및 TRANSACTION 서비스 호출 처리
+ ************************************************************************************************/
+
+
+/************************************************************************************************
+ * 사용자 FUNCTION 영역
+ ************************************************************************************************/
+this.fnSetStatusAuth = function(){
+	var statusAuth = "로그아웃";
+	if(nexacro.getApplication().appStatusAuth == "false") {
+		statusAuth = "로그인";
+	}
+	
+	this.parent.parent.divTop.form.staAuth.text = statusAuth;
+	this.parent.parent.divTop.form.staAuth.fittocontents = "width";
+	this.parent.parent.divTop.form.resetScroll();
+}
+
+/************************************************************************************************
+ * 각 COMPONENT 별 EVENT 영역
+ ************************************************************************************************/
+this.frmMain1203_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
+{
+	this.fnSetStatusAuth();
+};
+]]></Script>
+  </Form>
+</FDL>

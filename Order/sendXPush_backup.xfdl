@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="CustSample" width="1280" height="720" titletext="New Form" onload="CustSample_onload">
+    <Layouts>
+      <Layout height="720" width="1280">
+        <Static id="Static00" taborder="0" text="보낸거" left="112" top="93" width="204" height="66" background="lightsteelblue"/>
+        <Static id="Static01" taborder="1" text="받은거" left="112" top="206" width="204" height="66" background="lightseagreen"/>
+        <TextArea id="taSendCust" taborder="2" left="317" top="87" width="427" height="79"/>
+        <TextArea id="taReceiveCust" taborder="3" left="310" top="200" width="427" height="79"/>
+        <Button id="btnSend" taborder="4" text="send" left="750" top="89" width="97" height="74" onclick="btnSend_onclick"/>
+        <Static id="Static02" taborder="5" text="CUSTOMER" left="0" top="0" width="252" height="67" background="gold"/>
+      </Layout>
+    </Layouts>
+    <Objects>
+      <XPush id="XPush00"/>
+      <Dataset id="dsTopic">
+        <ColumnInfo>
+          <Column id="Chk" type="STRING" size="256"/>
+          <Column id="TOPIC_ID" type="STRING" size="256"/>
+          <Column id="TOPIC_NAME" type="STRING" size="256"/>
+        </ColumnInfo>
+        <Rows>
+          <Row>
+            <Col id="TOPIC_ID">ALL</Col>
+            <Col id="TOPIC_NAME">전체</Col>
+          </Row>
+          <Row>
+            <Col id="TOPIC_ID">TOBEEDU01</Col>
+            <Col id="TOPIC_NAME">EDU01</Col>
+          </Row>
+          <Row>
+            <Col id="TOPIC_ID">TOBEEDU02</Col>
+            <Col id="TOPIC_NAME">EDU02</Col>
+          </Row>
+          <Row>
+            <Col id="TOPIC_ID">TOBEEDU03</Col>
+            <Col id="TOPIC_NAME">EDU03</Col>
+          </Row>
+          <Row>
+            <Col id="TOPIC_ID">TOBEEDU04</Col>
+            <Col id="TOPIC_NAME">EDU04</Col>
+          </Row>
+          <Row>
+            <Col id="TOPIC_ID">TOBEEDU05</Col>
+            <Col id="TOPIC_NAME">EDU05</Col>
+          </Row>
+          <Row>
+            <Col id="TOPIC_ID">TOBEEDU06</Col>
+            <Col id="TOPIC_NAME">EDU06</Col>
+          </Row>
+        </Rows>
+      </Dataset>
+      <Dataset id="dsMessage">
+        <ColumnInfo>
+          <Column id="TOPIC_ID" type="STRING" size="256"/>
+          <Column id="TOPIC_TYPE" type="STRING" size="256"/>
+          <Column id="CODE" type="STRING" size="256"/>
+          <Column id="MSG" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+      <Dataset id="dsProvider">
+        <ColumnInfo>
+          <Column id="PROJECT_ID" type="STRING" size="256"/>
+          <Column id="PUSH_TYPE" type="STRING" size="256"/>
+          <Column id="TOPIC_TYPE" type="STRING" size="256"/>
+          <Column id="TOPIC_ID" type="STRING" size="256"/>
+          <Column id="CODE" type="STRING" size="256"/>
+          <Column id="MSG" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+    </Objects>
+    <Script type="xscript5.1"><![CDATA[var strID = "SampleID";
+var strPushType = "PUSH";
+var strTopicType = "9999";
+var strTopicID = "Edu01";
+
+this.CustSample_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
+{
+
+	// 
+};
+
+
+this.btnSend_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	if(this.confirm("메시지를 전송하시겠습니까"))
+	{
+		
+		if(this.taSendCust.text == "") // 메세지 내용이 비었다면
+		{
+			
+			this.alert("전송할 메시지를 입력해주세요");
+			this.taSendCust.setFocus();
+			return;
+		}
+		  
+
+		this.dsProvider.addRow();
+		this.dsProvider.setColumn(this.dsProvider.rowposition,"PROJECT_ID", "TOBE_EDU");
+		this.dsProvider.setColumn(this.dsProvider.rowposition,"PUSH_TYPE", "PUSH");
+		this.dsProvider.setColumn(this.dsProvider.rowposition,"TOPIC_TYPE", "9999");
+		this.dsProvider.setColumn(this.dsProvider.rowposition,"TOPIC_ID", "Edu01");
+		this.dsProvider.setColumn(this.dsProvider.rowposition,"CODE", "10");  
+		this.dsProvider.setColumn(this.dsProvider.rowposition,"MSG", this.taSendCust.text);
+
+			trace(this.dsProvider.saveXML());
+		this.transaction("SendMsg","SvcXpushUrl::Service_XPush.jsp","in_Provider=dsProvider:U","","argPUSH_TYPE=" + nexacro.wrapQuote(strPushType) + " argPUSH_MSG=" + this.taSendCust.text,"fn_callback");
+	}
+};
+
+
+this.fn_callback = function(svcid, ecd, emsg)
+{
+	if(ecd >= 0){ this.alert("메시지를 정상적으로 발송하였습니다.");}
+	else { this.alert("메시지 전달실패 : " + emsg);}
+}
+
+
+///////////////////////////////
+
+]]></Script>
+  </Form>
+</FDL>

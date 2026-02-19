@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="Work_test" width="1280" height="720" titletext="New Form" onload="Work_test_onload">
+    <Layouts>
+      <Layout height="720" width="1280">
+        <Button id="btn1" taborder="0" text="1" left="106" top="31" width="153" height="94" onclick="fn_click"/>
+        <Button id="btn2" taborder="1" text="2" left="106" top="btn1:0" width="153" height="94" onclick="fn_click"/>
+        <Button id="btn3" taborder="2" text="3" left="106" top="btn2:0" width="153" height="94" onclick="fn_click"/>
+        <Button id="btn4" taborder="3" text="4" left="106" top="btn3:0" width="153" height="94" onclick="fn_click"/>
+        <Static id="Static00" taborder="4" text="Static00" left="354" top="81" width="448" height="56" background="lavender" onclick="fn_click"/>
+        <Div id="Div01" taborder="5" text="Div01" left="355" top="Static00:20" width="505" height="280">
+          <Layouts>
+            <Layout>
+              <Div id="Div00" taborder="0" text="div111" left="49" top="30" width="152" height="141" background="skyblue">
+                <Layouts>
+                  <Layout/>
+                </Layouts>
+              </Div>
+              <Div id="Div00_00" taborder="1" text="div222" left="210" top="30" width="152" height="141" background="skyblue"/>
+            </Layout>
+          </Layouts>
+        </Div>
+        <Static id="staMain" taborder="6" text="staMain" left="840" top="78" width="448" height="56" background="lavender" onclick="fn_click"/>
+      </Layout>
+    </Layouts>
+    <Script type="xscript5.1"><![CDATA[
+this.fn_click = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	obj.height = 0;
+	
+	for(var i=0; i<5;i++){
+		var sDivId = "divCard" + i;
+		var objDiv = this.components[sDivId];
+		objDiv.top = obj.getOffsetTop();
+		objDiv.left = obj.getOffsetLeft()+(i*10);
+		objDiv.background = "white"
+		
+	}
+	
+	this.resetScroll();
+	
+};
+
+
+
+
+this.Work_test_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
+{
+	var pbase = this.staMain.getOffsetWidth();
+	for(var i=0; i<5;i++){
+		var sDivId = "divCard" + i;
+		var objDiv = new Div();
+		objDiv.init(sDivId, 250, 400, pbase+10, 310);
+			
+		objDiv.set_border("1px solid #000000");
+		objDiv.set_background("lavender");
+        
+		this.addChild(sDivId, objDiv);
+		objDiv.show();
+	}
+	
+	
+	this.resetScroll();
+};
+]]></Script>
+  </Form>
+</FDL>

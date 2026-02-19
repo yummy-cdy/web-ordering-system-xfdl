@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="Work_GoogleMap" width="1280" height="720" titletext="New Form" onload="Work_GoogleMap_onload">
+    <Layouts>
+      <Layout height="720" width="1280">
+        <GoogleMap id="GoogleMap00" taborder="0" left="159" top="18" width="609" height="253"/>
+      </Layout>
+    </Layouts>
+    <Script type="xscript5.1"><![CDATA[this.fvKey = "AIzaSyC1k1rcMm4eGvpoWl146tPiIqsziXgEwCQ";
+
+this.Work_GoogleMap_onload = function(obj:nexacro.GoogleMap,e:nexacro.GoogleMapEventInfo)
+{
+	this.GoogleMap00.apikey = this.fvKey;
+	this.GoogleMap00.showzoom = true;
+	//this.GoogleMap00.load(GPS사용여부, 위도, 경도, 지도모드, 줌레벨)
+	this.GoogleMap00.load(false, 37.514926316709506, 127.06268919384799, 0, 18);  	
+};
+]]></Script>
+  </Form>
+</FDL>

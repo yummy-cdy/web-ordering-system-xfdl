@@ -1,0 +1,16 @@
+# Nexacro N Default Ignore
+*.nlog
+*.temp
+/Output/
+/.metadata/
+/Xeni/
+/temp/
+
+# Local settings (내 컴퓨터에서만 쓰는 설정)
+.settings/
+.project
+.classpath
+
+# OS files
+Thumbs.db
+Desktop.ini

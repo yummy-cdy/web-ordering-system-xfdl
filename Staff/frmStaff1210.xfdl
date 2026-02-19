@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="frmStaff1210" width="1600" height="900" titletext="사이렌 오더(진행 화면)" onload="frmStaff1210_onload">
+    <Layouts>
+      <Layout height="900" mobileorientation="landscape" width="1600">
+        <Static id="Static01_00_00_00_00" taborder="0" text="FRAME" left="0" top="0" width="250" background="red" opacity="20%" textAlign="center" visible="false" bottom="0"/>
+        <Static id="Static01_00_01_00" taborder="1" text="FRAME" left="0" top="880" height="20" background="red" opacity="20%" textAlign="center" visible="false" right="0"/>
+        <Static id="Static01_00_00_00" taborder="2" text="FRAME" left="1350" top="0" width="250" background="red" opacity="20%" textAlign="center" visible="false" bottom="0"/>
+        <Static id="Static01_00_01" taborder="3" text="FRAME" left="0" top="0" height="20" background="red" opacity="20%" textAlign="center" visible="false" right="0"/>
+        <Grid id="grdOrderList" taborder="4" left="257" top="328" width="986" height="332"/>
+      </Layout>
+    </Layouts>
+    <Objects>
+      <XPush id="XPush00" onerror="XPush00_onerror" onkeepalive="XPush00_onkeepalive" onsuccess="XPush00_onsuccess"/>
+      <Dataset id="dsTopic">
+        <ColumnInfo>
+          <Column id="Chk" type="STRING" size="256"/>
+          <Column id="TOPIC_ID" type="STRING" size="256"/>
+          <Column id="TOPIC_NAME" type="STRING" size="256"/>
+        </ColumnInfo>
+        <Rows>
+          <Row>
+            <Col id="TOPIC_ID">ALL</Col>
+            <Col id="TOPIC_NAME">전체</Col>
+          </Row>
+          <Row>
+            <Col id="TOPIC_ID">TOBEEDU01</Col>
+            <Col id="TOPIC_NAME">EDU01</Col>
+          </Row>
+          <Row>
+            <Col id="TOPIC_ID">TOBEEDU02</Col>
+            <Col id="TOPIC_NAME">EDU02</Col>
+          </Row>
+          <Row>
+            <Col id="TOPIC_ID">TOBEEDU03</Col>
+            <Col id="TOPIC_NAME">EDU03</Col>
+          </Row>
+          <Row>
+            <Col id="TOPIC_ID">TOBEEDU04</Col>
+            <Col id="TOPIC_NAME">EDU04</Col>
+          </Row>
+          <Row>
+            <Col id="TOPIC_ID">TOBEEDU05</Col>
+            <Col id="TOPIC_NAME">EDU05</Col>
+          </Row>
+          <Row>
+            <Col id="TOPIC_ID">TOBEEDU06</Col>
+            <Col id="TOPIC_NAME">EDU06</Col>
+          </Row>
+        </Rows>
+      </Dataset>
+      <Dataset id="dsMessage">
+        <ColumnInfo>
+          <Column id="TOPIC_ID" type="STRING" size="256"/>
+          <Column id="TOPIC_TYPE" type="STRING" size="256"/>
+          <Column id="CODE" type="STRING" size="256"/>
+          <Column id="MSG" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+      <Dataset id="dsProvider">
+        <ColumnInfo>
+          <Column id="PROJECT_ID" type="STRING" size="256"/>
+          <Column id="PUSH_TYPE" type="STRING" size="256"/>
+          <Column id="TOPIC_TYPE" type="STRING" size="256"/>
+          <Column id="TOPIC_ID" type="STRING" size="256"/>
+          <Column id="CODE" type="STRING" size="256"/>
+          <Column id="MSG" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+      <Dataset id="ds_orderList"/>
+    </Objects>
+    <Script type="xscript5.1"><![CDATA[/**
+*  Nexacro Professional Training Couse
+*  @MenuPath    개발가이드 > 표준 및 기본 정의 > 그리드 페이징
+*  @FileName 	SamplePaging.xfdl 
+*  @Creator 	TOBESOFT Education
+*  @CreateDate 	2025/01/03
+*  @Desction    
+************** 소스 수정 이력 ***********************************************
+*  date          		Modifier                Description
+*******************************************************************************
+*  2026/02/12      		 이아인	 	  	       최초 생성 
+*******************************************************************************
+*/
+
+
+
+/************************************************************************************************
+ * FORM 변수 선언 영역
+ ************************************************************************************************/
+this.fvApp = nexacro.getApplication();
+
+//var strTopicID = "JKIINZ9T"; // STORE_ID로 추후 수정
+var strTopicID = this.fvApp.gdsAuth.getColumn(0, "STORE_ID");
+var strPushType = "PUSH";
+
+/************************************************************************************************
+ * FORM EVENT 영역(onload, onbeforeclose)
+ ************************************************************************************************/
+/**
+ * @description example: ~하는 부분
+*/
+this.frmStaff1210_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
+{
+    this.dsTopic.clearData();
+    var nRow = this.dsTopic.addRow();
+    this.dsTopic.setColumn(nRow, "TOPIC_ID", strTopicID);
+    this.dsTopic.setColumn(nRow, "TOPIC_NAME", "매장주문알림");
+
+    this.fnXPushStart(); 
+    this.fnGetOrderList();
+};
+
+/************************************************************************************************
+ * CALLBACK 콜백 처리부분(Transaction, Popup)
+ ************************************************************************************************/
+
+
+/************************************************************************************************
+ * CRUD 및 TRANSACTION 서비스 호출 처리
+ ************************************************************************************************/
+
+
+/************************************************************************************************
+ * 사용자 FUNCTION 영역
+ ************************************************************************************************/
+this.XPush00_onsuccess = function(obj:nexacro.XPush,e:nexacro.XPushEventInfo)
+{
+    if(e.action == 0) { // Connect 성공
+        // dsMessage를 수신용 데이터셋으로 지정하여 구독
+        this.XPush00.subscribe("9999", strTopicID, this, this.dsMessage, "append", "fn_push_callback");
+    }
+    if(e.action == 2) this.XPush00.registerTopic("9999", strTopicID);
+};
+
+// 2. 푸시 수신 시 (dsMessage에 데이터가 들어왔을 때)
+this.fn_push_callback = function(Row, ChangeColumn, AllColumns, Type, ActionType, MessageId)
+{
+    if(ActionType == "PUSH") {
+        // dsMessage의 CODE(손님ID)나 MSG(주문번호)를 확인하고 그리드 갱신
+        this.fnGetOrderList(); 
+    }
+};
+
+// 3. 주문 상태 변경 및 손님에게 푸시 전송 (버튼 클릭 이벤트 등)
+this.btnUpdateStatus = function(status) // status: 2(제조중), 4(제조완료), 8(픽업완료)
+{
+    var ordRow = this.ds_orderList.rowposition;
+    var targetCust = this.ds_orderList.getColumn(ordRow, "LOGIN_EMAIL");
+    var orderId = this.ds_orderList.getColumn(ordRow, "ORDER_ID");
+
+    // dsProvider에 규격에 맞춰 데이터 세팅
+    this.dsProvider.clearData();
+    var pRow = this.dsProvider.addRow();
+    this.dsProvider.setColumn(pRow, "PROJECT_ID", "TOBE_EDU");
+    this.dsProvider.setColumn(pRow, "PUSH_TYPE", "PUSH");
+    this.dsProvider.setColumn(pRow, "TOPIC_TYPE", "9999");
+    this.dsProvider.setColumn(pRow, "TOPIC_ID", targetCust); // 타겟: 손님 이메일
+    this.dsProvider.setColumn(pRow, "CODE", orderId);       // 주문번호
+    this.dsProvider.setColumn(pRow, "MSG", status);         // 변경될 상태값 (1, 2, 4, 8)
+
+    // DB 업데이트 트랜잭션과 푸시 전송 트랜잭션 수행
+    this.gfnTransaction("svcUpdateStatus", "p024/updateStatus.do", "dsProvider=dsProvider:U", "", "", "fn_callback");
+};
+
+/************************************************************************************************
+ * 각 COMPONENT 별 EVENT 영역
+ ************************************************************************************************/
+
+]]></Script>
+  </Form>
+</FDL>
