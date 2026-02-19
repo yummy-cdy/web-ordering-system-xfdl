@@ -1,13 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <FDL version="2.1">
-  <Form id="frmStaff1200" width="1600" height="900" titletext="New Form" background="lavender">
+  <Form id="frmStore1200" width="1600" height="770" titletext="New Form" onload="frmStore1200_onload">
     <Layouts>
-      <Layout height="900" mobileorientation="landscape" width="1600">
-        <Button id="btn00" taborder="0" text="staffpage sample" left="208" top="208" width="385" height="105" onclick="btn00_onclick"/>
-        <Button id="btn00_00" taborder="1" text="staffpage sample" left="465" top="415" width="385" height="105" onclick="btn00_onclick"/>
-        <Button id="btn00_01" taborder="2" text="staffpage sample" left="785" top="575" width="385" height="105" onclick="btn00_onclick"/>
+      <Layout height="770" mobileorientation="landscape" width="1600">
+        <GoogleMap id="GoogleMap00" taborder="0" left="250" top="100" width="1100" height="500" border="1px solid black"/>
+        <Static id="Static01_00_00_00_00" taborder="1" text="FRAME" left="0" top="0" width="250" background="red" opacity="40%" textAlign="center" visible="false" bottom="0"/>
+        <Static id="Static01_00_00_00" taborder="2" text="FRAME" left="1350" top="0" width="250" background="red" opacity="40%" textAlign="center" visible="false" bottom="0"/>
+        <Static id="staTitle" taborder="3" text="스타벅스 매장 찾기" left="250" top="0" width="805" height="83" font="normal 600 21pt/normal &quot;KopubWorld&quot;"/>
       </Layout>
     </Layouts>
+    <Objects>
+      <Dataset id="ds_storeList">
+        <ColumnInfo>
+          <Column id="STORE_NAME" type="STRING" size="256"/>
+          <Column id="LAT" type="STRING" size="256"/>
+          <Column id="LON" type="STRING" size="256"/>
+          <Column id="ADDRESS" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+    </Objects>
     <Script type="xscript5.1"><![CDATA[/**
 *  Nexacro Professional Training Couse
 *  @MenuPath    개발가이드 > 표준 및 기본 정의 > 그리드 페이징
@@ -18,7 +29,7 @@
 ************** 소스 수정 이력 ***********************************************
 *  date          		Modifier                Description
 *******************************************************************************
-*  2026/02/02      		 이아인	 	  	       최초 생성 
+*  2026/02/19      		 이아인	 	  	       최초 생성 
 *******************************************************************************
 */
 
@@ -28,6 +39,7 @@
  * FORM 변수 선언 영역
  ************************************************************************************************/
 this.fvApp = nexacro.getApplication();
+this.fvKey = "AIzaSyB04-D-rWfpE8c4YO8GhEiyTM_Yi-y3WCk";
 
 /************************************************************************************************
  * FORM EVENT 영역(onload, onbeforeclose)
@@ -35,17 +47,37 @@ this.fvApp = nexacro.getApplication();
 /**
  * @description example: ~하는 부분
 */
+this.frmStore1200_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
+{
+	this.fnGetStoreList();
+};
 
 
 /************************************************************************************************
  * CALLBACK 콜백 처리부분(Transaction, Popup)
  ************************************************************************************************/
+this.fn_callback = function(svcId, errCd, errMsg)
+{
+	if(errCd < 0){ alert("에러 : " + errMsg); }
+	
+	if(svcId == "svcGetStoreLocation"){
+	
+	}
+}
 
 
 /************************************************************************************************
  * CRUD 및 TRANSACTION 서비스 호출 처리
  ************************************************************************************************/
-
+this.fnGetStoreList = function ()
+{
+	var sSvcId  = "svcGetStoreLocation";
+	var sUrl    = "p024/getStoreLocation.do";
+	var inData  = "";
+	var outData = "ds_storeList=out_data";
+	var sParam  = "";
+	this.gfnTransaction(sSvcId, sUrl, inData, outData, sParam, "fn_callback");
+};
 
 /************************************************************************************************
  * 사용자 FUNCTION 영역
@@ -56,10 +88,7 @@ this.fvApp = nexacro.getApplication();
  * 각 COMPONENT 별 EVENT 영역
  ************************************************************************************************/
 
-this.btn00_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
-{
-	this.fvApp.mainframe.WorkFrame.formurl = "Staff::frmStaff1210.xfdl";
-};
+
 ]]></Script>
   </Form>
 </FDL>

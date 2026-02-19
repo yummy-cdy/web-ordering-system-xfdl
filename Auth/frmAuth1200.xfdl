@@ -87,14 +87,15 @@ this.fn_callback = function(svcId, errCd, errMsg)
 		
 		if(nexacro.getApplication().gdsAuth.getRowCount() > 0){
 			this.fvApp.appStatusAuth = true;
-			this.sleep(500);
-			
 			var userType = this.fvApp.gdsAuth.getColumn(0, "USER_TYPE");
 			
-			if(userType == "Cust")
+			
+			this.sleep(500);
+			if(userType == "Cust"){
 				this.parent.parent.divCenter.url = "Base::frmMain1203.xfdl";
+			}
 			else if(userType == "Staff"){
-				// 여기에 나중에 화면 갈아끼우기
+				this.fvApp.mainframe.WorkFrame.formurl = "Staff::frmStaff1200.xfdl";
 			}	
 		}
 		else	this.divLogin.form.staMsg.visible = true;
