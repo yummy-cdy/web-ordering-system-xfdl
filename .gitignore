@@ -14,3 +14,7 @@
 # OS files
 Thumbs.db
 Desktop.ini
+
+# ★ Google API Key 보안 (기존 google.properties 삭제 후 수정)
+# 만약 globals.properties를 통째로 올리지 않으려면 아래 주석을 해제하세요.
+src/main/resources/egovframework/egovProps/globals.properties
