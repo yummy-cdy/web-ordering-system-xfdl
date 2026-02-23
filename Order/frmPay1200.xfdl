@@ -3,12 +3,12 @@
   <Form id="frmPay1200" width="1600" height="770" titletext="결제 화면" background="white" onload="frmPay1200_onload">
     <Layouts>
       <Layout height="770" mobileorientation="landscape" width="1600">
-        <Button id="btnSendOrder" taborder="0" text="결제" left="925" top="566" width="245" height="74" onclick="btnSendOrder_onclick" enable="true" background="white" border="1px solid black"/>
-        <Static id="Static01_00_00_00" taborder="1" text="FRAME" left="1350" top="0" width="250" background="red" opacity="40%" textAlign="center" visible="false" bottom="0"/>
-        <Static id="Static01_00_01" taborder="2" text="FRAME" left="0" top="0" height="20" background="red" opacity="40%" textAlign="center" visible="false" right="0"/>
-        <Static id="Static01_00_01_00" taborder="3" text="FRAME" left="0" top="750" height="20" background="red" opacity="40%" textAlign="center" visible="false" right="0"/>
-        <Static id="Static01_00_00_00_00" taborder="4" text="FRAME" left="0" top="0" width="250" background="red" opacity="40%" textAlign="center" visible="false" bottom="0"/>
-        <Combo id="cboStore" taborder="5" text="" left="620" top="120" width="280" height="68" value="" index="-1" innerdataset="ds_store" codecolumn="STORE_CODE" datacolumn="STORE_NAME" displaynulltext="매장을 선택해주세요" font="normal bold 13px/normal &quot;KopubWorld&quot;"/>
+        <Button id="btnSendOrder" taborder="0" text="결제" left="925" top="626" width="245" height="74" onclick="btnSendOrder_onclick" enable="true" background="white" border="1px solid black"/>
+        <Static id="Static01_00_00_00" taborder="1" text="FRAME" left="1350" top="0" width="250" background="red" opacity="20%" textAlign="center" visible="false" bottom="0"/>
+        <Static id="Static01_00_01" taborder="2" text="FRAME" left="0" top="0" height="20" background="red" opacity="20%" textAlign="center" visible="false" right="0"/>
+        <Static id="Static01_00_01_00" taborder="3" text="FRAME" left="0" top="750" height="20" background="red" opacity="20%" textAlign="center" visible="false" right="0"/>
+        <Static id="Static01_00_00_00_00" taborder="4" text="FRAME" left="0" top="0" width="250" background="red" opacity="20%" textAlign="center" visible="false" bottom="0"/>
+        <Combo id="cboStore" taborder="5" text="" left="620" top="132" width="220" height="45" value="" index="-1" innerdataset="ds_store" codecolumn="STORE_CODE" datacolumn="STORE_NAME" displaynulltext="매장을 선택해주세요" font="normal bold 13px/normal &quot;KopubWorld&quot;"/>
         <Grid id="Grid00" taborder="6" left="1632" top="606" width="296" height="211" binddataset="ds_store" visible="false">
           <Formats>
             <Format id="default">
@@ -54,9 +54,23 @@
           </Formats>
         </Grid>
         <Static id="staDesc" taborder="8" text="주문할 매장을 선택해주세요" left="425" top="120" width="180" height="68" font="normal bold 13px/normal &quot;KopubWorld&quot;" textAlign="left"/>
-        <ListView id="lvCartList" taborder="9" left="425" top="272" width="750" height="257"/>
-        <Static id="staTitle" taborder="10" text="결제하고 주문하기" left="250" top="20" width="805" height="83" font="normal 600 21pt/normal &quot;KopubWorld&quot;"/>
-        <Static id="staDesc00" taborder="11" text="주문 내역" left="425" top="206" width="180" height="68" font="normal 700 15px/normal &quot;KopubWorld&quot;"/>
+        <Static id="staTitle" taborder="9" text="결제하고 주문하기" left="250" top="20" width="805" height="83" font="normal 600 21pt/normal &quot;KopubWorld&quot;"/>
+        <Static id="staDesc00" taborder="10" text="주문 내역" left="425" top="180" width="180" height="68" font="normal 700 15px/normal &quot;KopubWorld&quot;"/>
+        <ListView id="lvCartList" taborder="11" left="425" top="248" width="750" height="362" binddataset="ds_cartProdInfo" visible="true" oncellclick="lvCartList_oncellclick">
+          <Formats>
+            <Format id="default">
+              <Band id="body" width="100%" height="180">
+                <Cell id="cellProdName" left="250" top="20" width="290" height="42" text="bind:PRODUCT_NAME" border="0px none" font="13px/normal &quot;KopubWorld&quot;"/>
+                <Cell id="cellPrice" left="250" top="52" width="190" height="40" text="expr:PRICE+&quot; 원&quot;" border="0px none" displaytype="text" textAlign="left" font="13px/normal &quot;KopubWorld&quot;"/>
+                <Cell id="cellImage" left="67" top="0" width="173" height="180" displaytype="imagecontrol" text="bind:IMAGE_FILE" imagestretch="fit" border="0px solid"/>
+                <Cell id="cellCount" left="265" top="100" width="60" height="40" text="expr:COUNT+&quot; 개&quot;" border="0px solid" textAlign="center" font="13px/normal &quot;KopubWorld&quot;"/>
+                <Cell id="cellbtnDel" top="83" width="35" height="35" border="0px none" displaytype="buttoncontrol" edittype="button" cssclass="lv_cell_btnDel" right="10"/>
+                <Cell id="cellbtnMinus" left="245" top="110" width="20" height="20" displaytype="buttoncontrol" edittype="button" cssclass="lv_cell_btnMinus" border="0px none"/>
+                <Cell id="cellbtnPlus" left="325" top="110" width="20" height="20" displaytype="buttoncontrol" edittype="button" border="0px none" cssclass="lv_cell_btnPlus"/>
+              </Band>
+            </Format>
+          </Formats>
+        </ListView>
       </Layout>
     </Layouts>
     <Script type="xscript5.1"><![CDATA[/**
@@ -405,6 +419,15 @@ this.fn_push_callback = function(Row, ChangeColumn, AllColumns, Type, ActionType
         </ColumnInfo>
       </Dataset>
       <XPush id="XPush00" onerror="XPush00_onerror" onkeepalive="XPush00_onkeepalive" onsuccess="XPush00_onsuccess"/>
+      <Dataset id="ds_cartProdInfo" onrowsetchanged="ds_cartProdInfo_onrowsetchanged">
+        <ColumnInfo>
+          <Column id="PRODUCT_ID" type="STRING" size="256"/>
+          <Column id="PRODUCT_NAME" type="STRING" size="256"/>
+          <Column id="PRICE" type="INT" size="256"/>
+          <Column id="COUNT" type="INT" size="256"/>
+          <Column id="IMAGE_FILE" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
     </Objects>
     <Bind>
       <BindItem id="item0" compid="cboStore" propid="value" datasetid="ds_selected" columnid="STORE_CODE"/>

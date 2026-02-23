@@ -7,7 +7,20 @@
         <Static id="Static01_00_01" taborder="1" text="FRAME" left="0" top="0" height="20" background="red" opacity="20%" textAlign="center" visible="false" right="0"/>
         <Static id="Static01_00_00_00" taborder="2" text="FRAME" left="1350" top="0" width="250" background="red" opacity="20%" textAlign="center" visible="false" bottom="0"/>
         <Static id="Static01_00_01_00" taborder="3" text="FRAME" left="0" top="750" height="20" background="red" opacity="20%" textAlign="center" visible="false" right="0"/>
-        <ListView id="lvOrderHist" taborder="4" left="250" top="420" width="1100" height="460"/>
+        <ListView id="lvOrderHist" taborder="4" left="250" top="420" width="1100" height="460" binddataset="ds_userHist">
+          <Formats>
+            <Format id="default">
+              <Band id="body" width="100%" height="34">
+                <Cell id="Cell00" left="10" top="5" width="120" height="24" text="ORDER_ID"/>
+                <Cell id="Cell01" left="135" top="5" width="180" height="24" text="bind:ORDER_ID"/>
+                <Cell id="Cell02" left="325" top="5" width="120" height="24" text="STORE_CODE"/>
+                <Cell id="Cell03" left="450" top="5" width="180" height="24" text="bind:STORE_CODE"/>
+                <Cell id="Cell04" left="640" top="5" width="120" height="24" text="LOGIN_EMAIL"/>
+                <Cell id="Cell05" left="765" top="5" width="180" height="24" text="bind:LOGIN_EMAIL"/>
+              </Band>
+            </Format>
+          </Formats>
+        </ListView>
         <Div id="divText" taborder="5" left="350" top="20" width="900" height="360">
           <Layouts>
             <Layout>
@@ -16,10 +29,11 @@
               <Static id="Static00" taborder="2" text="주문 완료" left="75" top="235" width="145" height="48" textAlign="center" font="normal 500 13px/normal &quot;KopubWorld&quot;"/>
               <Static id="Static00_00" taborder="3" text="준비 중" left="378" top="235" width="145" height="48" textAlign="center" font="normal 500 13px/normal &quot;KopubWorld&quot;"/>
               <Static id="Static00_00_00" taborder="4" text="준비 완료" left="675" top="235" width="145" height="48" textAlign="center" font="normal 500 13px/normal &quot;KopubWorld&quot;"/>
-              <ProgressBar id="pgbOrderStatus" taborder="5" max="99" min="0" left="0" top="285" width="900" height="15" pos="66" blockgap="5" blocksize="380" smooth="true" cssclass="pgb_orderStatus" text="" direction="forward"/>
+              <ProgressBar id="pgbOrderStatus" taborder="5" max="99" min="0" left="0" top="285" width="900" height="15" pos="0" blockgap="5" blocksize="380" smooth="true" cssclass="pgb_orderStatus" text="" direction="forward"/>
             </Layout>
           </Layouts>
         </Div>
+        <TextArea id="taLog" taborder="6" left="-393" top="166" width="247" height="79" visible="true"/>
       </Layout>
     </Layouts>
     <Objects>
@@ -81,9 +95,9 @@
       </Dataset>
       <Dataset id="ds_userHist">
         <ColumnInfo>
-          <Column id="LOGIN_EMAIL" type="STRING" size="256"/>
           <Column id="ORDER_ID" type="STRING" size="256"/>
           <Column id="STORE_CODE" type="STRING" size="256"/>
+          <Column id="LOGIN_EMAIL" type="STRING" size="256"/>
         </ColumnInfo>
       </Dataset>
     </Objects>
@@ -97,7 +111,11 @@
 ************** 소스 수정 이력 ***********************************************
 *  date          		Modifier                Description
 *******************************************************************************
-*  2026/02/12      		 이아인	 	  	       최초 생성 
+*  2026/02/12      		 이아인	 	  	        최초 생성 
+*******************************************************************************
+*  2026/02/19      		 이아인	 	  	     XPush 양방향 연결
+*******************************************************************************
+*  2026/02/23      		 이아인	 	  	   사이렌 오더 기능 구현 
 *******************************************************************************
 */
 
@@ -112,10 +130,14 @@ this.contentStore = "";
 this.contentTitle = "";
 this.contentDesc = "";
 
-var strTopicID = "JKIINZ9T"; // STORE_ID 
+this.strStoreName = "";
+
+var strTopicID = ""; // STORE_CODE 
 var strPushType = "PUSH"; // 고객 쪽은 RELI 보낼 필요X
 //var userId = "Edu01"; 
 var userId = this.fvApp.gdsAuth.getColumn(0, "LOGIN_EMAIL");
+var userName = this.fvApp.gdsAuth.getColumn(0, "NAME");
+var strOrderId = this.fvApp.gdsAuth.getColumn(0, "ORDER_ID");
 
 /************************************************************************************************
  * FORM EVENT 영역(onload, onbeforeclose)
@@ -127,11 +149,14 @@ this.frmCust1210_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
 {
 	// dsTopic에 내 토픽 설정
     this.dsTopic.clearData();
+	
+	this.fnGetUserHist();
+	this.fnGetStoreName();
+	
     var nRow = this.dsTopic.addRow();
     this.dsTopic.setColumn(nRow, "TOPIC_ID", userId);
-    
-    this.fnXPushStart();
-    this.fnGetUserHist();
+	
+	this.setTimer(1, 3000);
 };
 
 
@@ -141,9 +166,10 @@ this.frmCust1210_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
 this.fn_push_callback = function(Row, ChangeColumn, AllColumns, Type, ActionType, MessageId)
 {
     if(ActionType == "PUSH") {
-        // dsMessage 구조: TOPIC_ID, TOPIC_TYPE, CODE, MSG
         var pushOrderId = this.dsMessage.getColumn(Row, "CODE"); // 주문번호
         var pushStatus  = this.dsMessage.getColumn(Row, "MSG");  // 상태코드
+		
+		trace("수신된 푸시->주문번호: " + pushOrderId + " >>>> 상태: " + pushStatus);
 
         // 현재 보고 있는 주문내역의 번호와 푸시로 온 번호 대조
         if(this.ds_userHist.getColumn(0, "ORDER_ID") == pushOrderId) {
@@ -156,8 +182,28 @@ this.fn_callback = function(svcId, errCd, errMsg)
 {
 	if(errCd < 0){ alert("에러 : " + errMsg); }
 	
-	if(svcId == "svcGetUserHist"){
+	if(svcId == "svcGetStoreName"){
+		this.divText.form.staStore.text = this.strStoreName+" 점";
+		this.divText.form.staStore.fittocontents = "width";
+		
+		this.divText.form.staTitle.text = userName+" 님의 주문을 1번째 메뉴로 준비 중이에요";
+		this.divText.form.staTitle.fittocontents = "width";
+	}
 	
+	if(svcId == "svcGetUserHist"){
+		
+		var nStatus = this.ds_userHist.getColumn(0, "STATUS_TYPE");
+        this.fn_setProgressBar(nStatus);
+        
+        if(nStatus == "8") {
+            this.killTimer(1);
+            
+            this.fvApp.gdsAuth.setColumn(0, "IS_IN_ORDER", ""); 
+            this.trace("!!!!!!!!!!!!픽업완료");
+        }
+		
+		strTopicID = this.ds_userHist.getColumn(0, "STORE_CODE");
+		this.fnXPushStart()
 	}
 }
 
@@ -170,7 +216,17 @@ this.fnGetUserHist = function ()
 	var sUrl    = "p024/getUserHist.do";
 	var inData  = "";
 	var outData = "ds_userHist=out_data";
-	var sParam  = "";
+	var sParam  = "orderId="+strOrderId;
+	this.gfnTransaction(sSvcId, sUrl, inData, outData, sParam, "fn_callback");
+};
+
+this.fnGetStoreName = function ()
+{
+	var sSvcId  = "svcGetStoreName";
+	var sUrl    = "p024/getStoreName.do";
+	var inData  = "";
+	var outData = "";
+	var sParam  = "storeCode="+strTopicID;
 	this.gfnTransaction(sSvcId, sUrl, inData, outData, sParam, "fn_callback");
 };
 
@@ -191,6 +247,13 @@ this.nowOn = function (obj:nexacro.Static)
 /************************************************************************************************
  * 각 COMPONENT 별 EVENT 영역
  ************************************************************************************************/
+this.frmCust1210_ontimer = function(obj:nexacro.Form,e:nexacro.TimerEventInfo)
+{
+    if (e.timerid == 1) {
+        this.fnGetUserHist(); 
+    }
+};
+ 
 /////////////////////////// !chk : XPush 처리 영역 /////////////////////////// 
 /*
 // e.statuscode------------------------------------

@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <FDL version="2.1">
-  <Form id="frmStaff1200" width="1600" height="900" titletext="New Form" background="lavender">
+  <Form id="frmStaff1200" width="1600" height="900" titletext="Main; 직원 로그인 직후 화면" background="lavender">
     <Layouts>
       <Layout height="900" mobileorientation="landscape" width="1600">
-        <Button id="btn00" taborder="0" text="staffpage sample" left="208" top="208" width="385" height="105" onclick="btn00_onclick"/>
-        <Button id="btn00_00" taborder="1" text="staffpage sample" left="465" top="415" width="385" height="105" onclick="btn00_onclick"/>
-        <Button id="btn00_01" taborder="2" text="staffpage sample" left="785" top="575" width="385" height="105" onclick="btn00_onclick"/>
+        <Button id="btn00" taborder="0" text="사이렌 오더 관리 페이지" left="608" top="208" width="385" height="105" onclick="btn00_onclick" background="white" border="1px solid black"/>
+        <Button id="btn00_00" taborder="1" text="마이페이지" left="608" top="360" width="385" height="105" onclick="btn00_onclick"/>
+        <Button id="btn00_01" taborder="2" text="staffpage sample" left="608" top="515" width="385" height="105" onclick="btn00_onclick"/>
       </Layout>
     </Layouts>
     <Script type="xscript5.1"><![CDATA[/**
