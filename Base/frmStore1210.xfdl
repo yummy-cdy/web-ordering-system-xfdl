@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="frmStore1210" width="580" height="200" titletext="팝업 화면(매장 디테일)" onload="frmStore1210_onload">
+    <Layouts>
+      <Layout height="200" mobileorientation="landscape" width="580">
+        <Grid id="grdProducts" taborder="0" left="1067" top="58" width="507" height="393" binddataset="ds_prodDetail" autofittype="col" positionstep="0" visible="false">
+          <Formats>
+            <Format id="default">
+              <Columns>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+              </Columns>
+              <Rows>
+                <Row band="head" size="24"/>
+                <Row size="24"/>
+              </Rows>
+              <Band id="head">
+                <Cell text="PRODUCT_ID"/>
+                <Cell col="1" text="PRODUCT_NAME"/>
+                <Cell col="2" text="CATEGORY"/>
+                <Cell col="3" text="PRICE"/>
+                <Cell col="4" text="VOLUME"/>
+                <Cell col="5" text="KCAL"/>
+                <Cell col="6" text="SUGARS"/>
+                <Cell col="7" text="PROTEIN"/>
+                <Cell col="8" text="SODIUM"/>
+                <Cell col="9" text="SAT_FAT"/>
+                <Cell col="10" text="CAFFEINE"/>
+                <Cell col="11" text="IMAGE_FILE"/>
+              </Band>
+              <Band id="body">
+                <Cell text="bind:PRODUCT_ID"/>
+                <Cell col="1" text="bind:PRODUCT_NAME"/>
+                <Cell col="2" text="bind:CATEGORY"/>
+                <Cell col="3" text="bind:PRICE"/>
+                <Cell col="4" text="bind:VOLUME"/>
+                <Cell col="5" text="bind:KCAL"/>
+                <Cell col="6" text="bind:SUGARS"/>
+                <Cell col="7" text="bind:PROTEIN"/>
+                <Cell col="8" text="bind:SODIUM"/>
+                <Cell col="9" text="bind:SAT_FAT"/>
+                <Cell col="10" text="bind:CAFFEINE"/>
+                <Cell col="11" text="bind:IMAGE_FILE"/>
+              </Band>
+            </Format>
+          </Formats>
+        </Grid>
+        <Button id="Button00" taborder="1" text="조회" left="1084" top="476" width="212" height="90" onclick="Button00_onclick" positionstep="0" visible="false"/>
+        <Button id="Button01" taborder="2" text="CLOSE" left="1362" top="472" width="201" height="105" onclick="Button01_onclick" visible="false"/>
+        <Static id="staName" taborder="3" text="Name" left="30" top="40" width="509" height="30" font="normal bold 13px/normal &quot;KopubWorld&quot;"/>
+        <Static id="staAddress" taborder="4" text="Price" left="30" top="70" width="509" height="40" font="normal 500 13px/normal &quot;KopubWorld&quot;" color="darkgray"/>
+        <Button id="btn00" taborder="5" text="확인" left="230" top="130" width="120" height="50" background="white" border="1px solid black" onclick="btn00_onclick"/>
+      </Layout>
+    </Layouts>
+    <Script type="xscript5.1"><![CDATA[/**
+*  Nexacro Professional Training Couse
+*  @MenuPath    개발가이드 > 표준 및 기본 정의 > 그리드 페이징
+*  @FileName 	SamplePaging.xfdl 
+*  @Creator 	TOBESOFT Education
+*  @CreateDate 	2025/01/03
+*  @Desction    
+************** 소스 수정 이력 ***********************************************
+*  date          		Modifier                Description
+*******************************************************************************
+*  2026/02/20      		 이아인	 				최초 생성
+*******************************************************************************
+*/
+
+
+/************************************************************************************************
+ * FORM 변수 선언 영역
+ ************************************************************************************************/
+this.statusAuth = false;
+
+/************************************************************************************************
+ * FORM EVENT 영역(onload, onbeforeclose)
+ ************************************************************************************************/
+/**
+ * @description example: ~하는 부분
+*/
+
+this.frmStore1210_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
+{
+    var storeCode = this.getOwnerFrame().paramStoreCode; 
+    
+    trace("넘어온 매장코드: " + storeCode);
+    
+    if(storeCode){
+        this.getStoreDetail(storeCode);
+    }
+};
+
+/************************************************************************************************
+ * CALLBACK 콜백 처리부분(Transaction, Popup)
+ ************************************************************************************************/
+this.fn_callback = function(svcId, errCd, errMsg)
+{
+	if(errCd < 0){ alert("에러 : " + errMsg); }
+	
+}
+
+/************************************************************************************************
+ * CRUD 및 TRANSACTION 서비스 호출 처리
+ ************************************************************************************************/
+
+
+/************************************************************************************************
+ * 사용자 FUNCTION 영역
+ ************************************************************************************************/
+this.getStoreDetail = function (storeCode)
+{
+	var sSvcId  = "svcGetStoreDetail";
+	var sUrl    = "p024/getStoreDetail.do";
+	var inData  = "";
+	var outData = "ds_prodDetail=out_products";
+	var sParam  = "storeCode="+storeCode;
+	this.gfnTransaction(sSvcId, sUrl, inData, outData, sParam, "fn_callback");
+};
+
+/************************************************************************************************
+ * 각 COMPONENT 별 EVENT 영역
+ ************************************************************************************************/
+this.btn00_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	var rtnVal = this.getOwnerFrame().storeCode;
+	this.gfnClosePopup(rtnVal);
+};
+]]></Script>
+    <Objects>
+      <Dataset id="ds_storeDetail">
+        <ColumnInfo>
+          <Column id="STORE_NAME" type="STRING" size="256"/>
+          <Column id="ADDRESS" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+    </Objects>
+    <Bind>
+      <BindItem id="item1" compid="staName" propid="text" datasetid="ds_storeDetail" columnid="STORE_NAME"/>
+      <BindItem id="item0" compid="staAddress" propid="text" datasetid="ds_storeDetail" columnid="ADDRESS"/>
+    </Bind>
+  </Form>
+</FDL>

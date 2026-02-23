@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <FDL version="2.1">
-  <Form id="frmStore1200" width="1600" height="770" titletext="New Form" onload="frmStore1200_onload">
+  <Form id="frmStore1200" width="1600" height="770" titletext="매장 찾기" onload="frmStore1200_onload" background="white">
     <Layouts>
       <Layout height="770" mobileorientation="landscape" width="1600">
         <GoogleMap id="GoogleMap00" taborder="0" left="250" top="100" width="1100" height="500" border="1px solid black" onclick="GoogleMap00_onclick" onload="GoogleMap00_onload"/>
@@ -40,11 +40,10 @@ this.fvKey = ""; // 서버에서 보낸 fvKey를 담을 변수
  ************************************************************************************************/
 this.frmStore1200_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
 {
-
     // 시작하자마자 매장 정보와 API KEY를 요청합니다.
     this.fnGetStoreLocation();
 	
-	trace(this.ds_storeList.saveXML());
+	//trace(this.ds_storeList.saveXML());
 };
 
 /************************************************************************************************
@@ -55,8 +54,7 @@ this.fnGetStoreLocation = function ()
     var sSvcId    = "svcGetStoreLocation";
     var sUrl      = "SvcUrl::p024/getStoreLocation.do";
     var inData    = "";
-    // 서버의 out_data를 이 화면의 ds_storeList 데이터셋에 매핑합니다.
-	var outData = "ds_storeList=out_data fvKey=fvKey"; // out_data 데이터셋은 ds_storeList에, 서버 변수 fvKey는 이 화면의 fvKey 변수에!
+	var outData   = "ds_storeList=out_data fvKey=fvKey";
     var sParam    = "";
     var sCallback = "fn_callback";
     
@@ -69,65 +67,52 @@ this.fnGetStoreLocation = function ()
  ************************************************************************************************/
 this.fn_callback = function(svcId, errCd, errMsg)
 {
-    // 디버깅용 로그
-    trace("====== 서비스 콜백 시작 ======");
-    trace("에러코드: " + errCd);
-    trace("받은 API KEY: " + this.fvKey);
-    
     if(errCd < 0){ 
         alert("데이터 로드 실패 : " + errMsg); 
         return;
     }
-    
-  if(svcId == "svcGetStoreLocation"){
-    if(this.fvKey){
-        // 키 세팅 후 잠시 대기(0.1초)하거나 확실히 세팅되었는지 확인
-        this.GoogleMap00.set_apikey(this.fvKey);
-        trace("지도 로드 시작 - 키: " + this.fvKey);
-        
-        // load()의 첫 번째 인자가 false면 구글 로고/라이브러리만 불러옵니다.
-        // 세 번째 인자부터 위도, 경도입니다.
-        this.GoogleMap00.showzoom = true;
-   //this.GoogleMap00.apikey = nexacro.getApplication().googleMapAPIKey;   
-/*   this.GoogleMap00.apikey =  "AIzaSyBbu28ZSpx371di-YXSVbNEIeZNE2XElwE";*/
+	if(svcId == "svcGetStoreLocation"){
+		if(this.fvKey){
+			this.GoogleMap00.set_apikey(this.fvKey);
+			//trace("지도 로드 시작 - 키: " + this.fvKey);
+			this.GoogleMap00.showzoom = true;
 
-	//alert(">>>>"+this.fvKey);
-	this.GoogleMap00.apikey = this.fvKey;
-   //this.GoogleMap00.load(false, 11.96832946, 121.922996308, 0, 13);  37.514926316709506, 127.06268919384799
-   this.GoogleMap00.load(false, 37.514926316709506, 127.06268919384799, 0, 13);
-    }
-}
+			this.GoogleMap00.apikey = this.fvKey;
+			this.GoogleMap00.load(false, 37.514926316709506, 127.06268919384799, 0, 13);
+		}
+	}
 }
 
 /************************************************************************************************
  * 사용자 FUNCTION 영역
  ************************************************************************************************/
-
 /**
  * @description 매장 데이터셋을 마커로 변환하여 지도에 추가
  */
 this.fnCreateMarkers = function()
 {
     // 지도에 기존 마커가 있다면 초기화 (필요 시)
-    // this.GoogleMap00.items.clear(); 
+    //this.GoogleMap00.items.clear(); 
 
     for (var i = 0; i < this.ds_storeList.rowcount; i++) 
     {
         var nLat       = this.ds_storeList.getColumn(i, "LAT");
         var nLng       = this.ds_storeList.getColumn(i, "LON");
         var sStoreName = this.ds_storeList.getColumn(i, "STORE_NAME");
-        var sStoreId   = this.ds_storeList.getColumn(i, "STORE_CODE");
+        var sStoreCode   = this.ds_storeList.getColumn(i, "STORE_CODE");
 
         // 마커 객체 생성
         var objMarker = new nexacro.GoogleMapMarker();
         objMarker.set_latitude(nLat);
         objMarker.set_longitude(nLng);
         objMarker.set_text(sStoreName); // 마커 밑에 표시될 텍스트
-                
-        // 중요: ID를 StoreId로 설정하여 클릭 이벤트에서 식별하게 함
-        this.GoogleMap00.addItem(sStoreId, objMarker);
+		//objMarker.set_imageurl("imagerc::pin.png");
+
+		objMarker.storeCode = sStoreCode;
 		
-		objMarker.setEventHandler("onclick",this.fn_showDetail, this)
+        // 중요: ID를 StoreId로 설정하여 클릭 이벤트에서 식별하게 함
+        this.GoogleMap00.addItem(sStoreCode, objMarker);
+		
     }
     
     trace(this.ds_storeList.rowcount + "개의 매장 마커가 생성되었습니다.");
@@ -136,8 +121,7 @@ this.fnCreateMarkers = function()
 /************************************************************************************************
  * 각 COMPONENT 별 EVENT 영역
  ************************************************************************************************/
-
-/**
+/*
  * @description 지도가 완전히 로드된 후 마커를 찍습니다.
  */
 this.GoogleMap00_onload = function(obj:nexacro.GoogleMap,e:nexacro.GoogleMapEventInfo)
@@ -152,50 +136,25 @@ this.GoogleMap00_onload = function(obj:nexacro.GoogleMap,e:nexacro.GoogleMapEven
  */
 this.GoogleMap00_onclick = function(obj:nexacro.GoogleMap,e:nexacro.GoogleMapClickEventInfo)
 {
-    // e.markerid는 addItem 시 부여했던 sStoreId 값을 반환합니다.
-    if (e.markerid) {
-        var nRow = this.ds_storeList.findRow("STORE_CODE", e.markerid);
-        if (nRow != -1) {
-			// !chk
-            //this.fnOpenStoreDetail(nRow);
-        }
+	if (e.latitude) {
+        trace("클릭한 마커 ID: " + e.latitude);
+        this.fn_showDetail(e.latitude); 
     }
 };
 
-this.fn_showDetail = function ()
+this.fn_showDetail = function (sStoreCode)
 {
-	
+    trace("팝업 함수 진입 - 전달된 코드: " + sStoreCode);
+
+    var sPopupId = "storeDetailPopup";
+    var sUrl = "Base::frmStore1210.xfdl";
+    var oArg = { paramStoreCode : sStoreCode }; 
+	var sPopupCallback = "fnCallPopup";
+    var oOption = {title: "매장 상세 정보", width: "580", height: "200" };
+	this.gfnOpenPopup(sPopupId, sUrl, oArg, sPopupCallback, oOption);
+    
 };
 
-/**
- * @description 매장 상세 팝업 오픈
- */
- 
-// !chk
-// this.fnOpenStoreDetail = function(nRow)
-// {
-//     var oArg = {
-//         storeName : this.ds_storeList.getColumn(nRow, "STORE_NAME"),
-//         address   : this.ds_storeList.getColumn(nRow, "ADDRESS"),
-//         storeId   : this.ds_storeList.getColumn(nRow, "STORE_CODE")
-//     };
-// 
-//     var sPopupId = "storeDetailPopup"; 
-//     var sUrl     = "Main::Gab4201fm.xfdl"; 
-//     
-//     var oChildFrame = new ChildFrame();
-//     oChildFrame.init(sPopupId, 0, 0, 500, 600, null, null, sUrl);
-//     
-//     oChildFrame.set_showtitlebar(true);
-//     oChildFrame.set_openalign("center middle");
-//     oChildFrame.set_overlaycolor("rgba(0,0,0,0.5)");
-//     
-//     oChildFrame.showModal(this.getOwnerFrame(), oArg, this, "fn_popupCallback");
-// };
-
-this.fn_popupCallback = function(sId, sReturn) {
-    // 팝업 닫힌 후 처리 로직
-};
 ]]></Script>
   </Form>
 </FDL>

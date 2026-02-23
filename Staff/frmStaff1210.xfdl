@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <FDL version="2.1">
-  <Form id="frmStaff1210" width="1600" height="900" titletext="사이렌 오더(진행 화면)" onload="frmStaff1210_onload">
+  <Form id="frmStaff1210" width="1600" height="900" titletext="사이렌 오더(진행 화면)" onload="frmStaff1210_onload" background="white">
     <Layouts>
       <Layout height="900" mobileorientation="landscape" width="1600">
         <Static id="Static01_00_00_00_00" taborder="0" text="FRAME" left="0" top="0" width="250" background="red" opacity="20%" textAlign="center" visible="false" bottom="0"/>
@@ -11,36 +11,38 @@
           <Formats>
             <Format id="default">
               <Columns>
-                <Column size="80"/>
-                <Column size="80"/>
+                <Column size="99"/>
+                <Column size="106"/>
                 <Column size="80"/>
                 <Column size="80"/>
                 <Column size="80"/>
                 <Column size="80"/>
               </Columns>
               <Rows>
-                <Row band="head" size="24"/>
+                <Row size="24" band="head"/>
                 <Row size="24"/>
               </Rows>
               <Band id="head">
                 <Cell text="ORDER_ID"/>
                 <Cell col="1" text="LOGIN_EMAIL"/>
-                <Cell col="2" text="PRODUCT_ID"/>
+                <Cell col="2" text="PRODUCT_NAME"/>
                 <Cell col="3" text="COUNT"/>
-                <Cell col="4" text="STATUS_TYPE"/>
+                <Cell col="4" text="STATUS"/>
                 <Cell col="5" text="ORDERED_AT"/>
               </Band>
               <Band id="body">
                 <Cell text="bind:ORDER_ID"/>
                 <Cell col="1" text="bind:LOGIN_EMAIL"/>
-                <Cell col="2" text="bind:PRODUCT_ID"/>
+                <Cell col="2" text="bind:PRODUCT_NAME"/>
                 <Cell col="3" text="bind:COUNT"/>
-                <Cell col="4" text="bind:STATUS_TYPE"/>
+                <Cell col="4" text="bind:STATUS" displaytype="combocontrol" edittype="combo"/>
                 <Cell col="5" text="bind:ORDERED_AT"/>
               </Band>
             </Format>
           </Formats>
         </Grid>
+        <Static id="staTitle" taborder="5" text="현재 진행 중인 주문" left="250" top="120" width="805" height="83" font="normal 600 21pt/normal &quot;KopubWorld&quot;"/>
+        <Static id="staStore" taborder="6" text="STORE_NAME 점" left="250" top="64" width="301" height="56" font="normal 600 13px/normal &quot;KopubWorld&quot;" color="#01a862"/>
       </Layout>
     </Layouts>
     <Objects>
@@ -110,6 +112,16 @@
           <Column id="ORDERED_AT" type="DATETIME" size="256"/>
         </ColumnInfo>
       </Dataset>
+      <Dataset id="ds_display">
+        <ColumnInfo>
+          <Column id="ORDER_ID" type="STRING" size="256"/>
+          <Column id="LOGIN_EMAIL" type="STRING" size="256"/>
+          <Column id="PRODUCT_NAME" type="STRING" size="256"/>
+          <Column id="COUNT" type="INT" size="256"/>
+          <Column id="STATUS" type="INT" size="256"/>
+          <Column id="ORDERED_AT" type="DATETIME" size="256"/>
+        </ColumnInfo>
+      </Dataset>
     </Objects>
     <Script type="xscript5.1"><![CDATA[/**
 *  Nexacro Professional Training Couse
@@ -133,7 +145,7 @@
 this.fvApp = nexacro.getApplication();
 
 //var strTopicID = "JKIINZ9T"; // STORE_ID로 추후 수정
-var strTopicID = this.fvApp.gdsAuth.getColumn(0, "STORE_ID");
+var strTopicID = this.fvApp.gdsAuth.getColumn(0, "STORE_CODE");
 var strPushType = "PUSH";
 
 /************************************************************************************************
@@ -175,7 +187,7 @@ this.fnGetOrderList = function ()
 	var sUrl    = "p024/getOrderList.do";
 	var inData  = "";
 	var outData = "ds_orderList=out_data";
-	var sParam  = "strTopicId="+this.strTopicID;
+	var sParam  = "strTopicId="+strTopicID;
 	this.gfnTransaction(sSvcId, sUrl, inData, outData, sParam, "fn_callback");
 };
 
@@ -191,7 +203,7 @@ this.fnXPushStart = function ()
     this.XPush00.set_iplist("tcp://localhost:50001, http://localhost:50000, http://172.10.14.128:50000");
     
     // 매장 코드를 ID 삼아 접속
-    this.XPush00.connect(this.strTopicID, "..."); 
+    this.XPush00.connect(strTopicID, "..."); 
 };
 this.XPush00_onsuccess = function(obj:nexacro.XPush,e:nexacro.XPushEventInfo)
 {
@@ -244,5 +256,8 @@ this.btnUpdateStatus = function(status) // status: 2(제조중), 4(제조완료)
  ************************************************************************************************/
 
 ]]></Script>
+    <Bind>
+      <BindItem id="item0" compid="grdOrderList" propid="binddataset" datasetid="ds_orderList" columnid=""/>
+    </Bind>
   </Form>
 </FDL>

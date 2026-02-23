@@ -9,7 +9,7 @@
         <Static id="Static01_00_00_00" taborder="4" text="FRAME" left="1350" top="0" width="250" background="red" opacity="40%" textAlign="center" visible="false" bottom="0"/>
         <ImageViewer id="ivMainLogo" taborder="3" left="15.63%" top="18.75%" width="3.125%" background="url('imagerc::starbucks-roundlogo.png') no-repeat right center /contain" border="0px none" height="62.5%" onclick="ivMainLogo_onclick"/>
         <Button id="btnMenu" taborder="5" text="MENU" top="25%" width="6.875%" height="50%" right="45.625%" background="white" onmouseenter="fn_onmouseenter" onmouseleave="fn_onmouseleave" font="normal bold 13px/normal &quot;KopubWorld&quot;" onclick="btnMenu_onclick" border="1px solid black"/>
-        <Button id="btnStore" taborder="6" text="STORE" top="25%" width="6.875%" height="50%" right="38.75%" background="white" onmouseenter="fn_onmouseenter" onmouseleave="fn_onmouseleave" font="normal bold 13px/normal &quot;KopubWorld&quot;" border="1px solid black"/>
+        <Button id="btnStore" taborder="6" text="STORE" top="25%" width="6.875%" height="50%" right="38.75%" background="white" onmouseenter="fn_onmouseenter" onmouseleave="fn_onmouseleave" font="normal bold 13px/normal &quot;KopubWorld&quot;" border="1px solid black" onclick="btnStore_onclick"/>
         <Button id="btnNotice" taborder="7" text="EVENT &amp; NOTICE" top="25.00%" width="7.5%" height="50%" right="22.50%" background="white" onmouseenter="fn_onmouseenter" onmouseleave="fn_onmouseleave" font="normal bold 12px/normal &quot;KopubWorld&quot;" border="1px solid black"/>
         <Button id="btnAbout" taborder="8" text="ABOUT US" top="25%" height="50%" width="6.875%" right="15.625%" background="white" onmouseenter="fn_onmouseenter" onmouseleave="fn_onmouseleave" font="normal bold 13px/normal &quot;KopubWorld&quot;" border="1px solid black"/>
         <Button id="btnSirenOrder" taborder="9" text="SIREN ORDER" top="25.00%" width="8.75%" height="50%" right="30.00%" background="white" onmouseenter="fn_onmouseenter" onmouseleave="fn_onmouseleave" font="normal bold 13px/normal &quot;KopubWorld&quot;" border="1px solid black" onclick="btnSirenOrder_onclick"/>
@@ -82,6 +82,11 @@ this.btnMenu_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
 this.btnSirenOrder_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
 {
 	this.parent.parent.divCenter.url = "Order::frmCust1210.xfdl"; 
+};
+
+this.btnStore_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	this.parent.parent.divCenter.url = "Base::frmStore1200.xfdl"; 
 };
 ]]></Script>
   </Form>

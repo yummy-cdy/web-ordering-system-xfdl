@@ -3,18 +3,17 @@
   <Form id="frmCart1200" width="1600" height="900" titletext="장바구니" onload="frmCart1200_onload" background="white" scrollbarsize="0" onclose="frmCart1200_onclose">
     <Layouts>
       <Layout height="900" mobileorientation="landscape" width="1600">
-        <ListView id="lvCartList" taborder="0" left="15.625%" top="12.222222222222221%" width="68.75%" height="44.44444444444444%" binddataset="ds_cartProdInfo" visible="true" oncellclick="lvCartList_oncellclick">
+        <ListView id="lvCartList" taborder="0" left="15.63%" top="12.11%" width="68.75%" height="362" binddataset="ds_cartProdInfo" visible="true" oncellclick="lvCartList_oncellclick">
           <Formats>
             <Format id="default">
-              <Band id="body" width="100%" height="200">
-                <Cell id="cellProdName" left="250" top="10" width="290" height="42" text="bind:PRODUCT_NAME" border="0px none" font="13px/normal &quot;KopubWorld&quot;"/>
-                <Cell id="cellPrice" left="250" top="62" width="190" height="40" text="expr:PRICE+&quot; 원&quot;" border="0px none" displaytype="text" textAlign="left" font="13px/normal &quot;KopubWorld&quot;"/>
-                <Cell id="cellImage" left="67" top="10" width="173" height="180" displaytype="imagecontrol" text="bind:IMAGE_FILE" imagestretch="fit" border="0px solid"/>
-                <Cell id="cellCount" left="270" top="110" width="120" height="40" text="expr:COUNT+&quot; 개&quot;" border="0px solid" textAlign="center" font="13px/normal &quot;KopubWorld&quot;"/>
-                <Cell id="cellbtnDel" top="30" width="50" height="50" border="0px none" displaytype="buttoncontrol" edittype="button" cssclass="lv_cell_btnDel" right="30"/>
-                <Cell id="cellchbx" left="0" top="75" width="50" height="50" displaytype="checkboxcontrol" edittype="checkbox"/>
-                <Cell id="cellbtnMinus" left="245" top="115" width="30" height="30" displaytype="buttoncontrol" edittype="button" cssclass="lv_cell_btnMinus" border="0px none"/>
-                <Cell id="cellbtnPlus" left="390" top="115" width="30" height="30" displaytype="buttoncontrol" edittype="button" border="0px none" cssclass="lv_cell_btnPlus"/>
+              <Band id="body" width="100%" height="180">
+                <Cell id="cellProdName" left="250" top="20" width="290" height="42" text="bind:PRODUCT_NAME" border="0px none" font="13px/normal &quot;KopubWorld&quot;"/>
+                <Cell id="cellPrice" left="250" top="52" width="190" height="40" text="expr:PRICE+&quot; 원&quot;" border="0px none" displaytype="text" textAlign="left" font="13px/normal &quot;KopubWorld&quot;"/>
+                <Cell id="cellImage" left="67" top="0" width="173" height="180" displaytype="imagecontrol" text="bind:IMAGE_FILE" imagestretch="fit" border="0px solid"/>
+                <Cell id="cellCount" left="265" top="100" width="60" height="40" text="expr:COUNT+&quot; 개&quot;" border="0px solid" textAlign="center" font="13px/normal &quot;KopubWorld&quot;"/>
+                <Cell id="cellbtnDel" top="83" width="35" height="35" border="0px none" displaytype="buttoncontrol" edittype="button" cssclass="lv_cell_btnDel" right="10"/>
+                <Cell id="cellbtnMinus" left="245" top="110" width="20" height="20" displaytype="buttoncontrol" edittype="button" cssclass="lv_cell_btnMinus" border="0px none"/>
+                <Cell id="cellbtnPlus" left="325" top="110" width="20" height="20" displaytype="buttoncontrol" edittype="button" border="0px none" cssclass="lv_cell_btnPlus"/>
               </Band>
             </Format>
           </Formats>
@@ -49,7 +48,7 @@
         </Grid>
         <Static id="Static01_00_01" taborder="5" text="FRAME" left="0" top="0" height="20" background="red" opacity="40%" textAlign="center" visible="false" right="0"/>
         <Static id="Static01_00_01_00" taborder="6" text="FRAME" left="0" top="880" height="20" background="red" opacity="40%" textAlign="center" visible="false" right="0"/>
-        <Div id="divGoOrder" taborder="7" left="57.5625%" top="56.666666666666664%" width="26.8125%" height="11.11111111111111%">
+        <Div id="divGoOrder" taborder="7" left="57.50%" top="lvCartList:0" width="26.8125%" height="11.11111111111111%">
           <Layouts>
             <Layout>
               <Static id="staGoOrder" taborder="0" text="결제하고 사이렌 오더 하기" left="47.785547785547784%" top="25%" width="39.62703962703963%" font="normal 500 13px/normal &quot;KopubWorld&quot;" height="40%"/>
@@ -206,7 +205,7 @@ this.lvCartList_oncellclick = function(obj:nexacro.ListView,e:nexacro.ListViewCl
 	}
 	if(e.cellid == "cellbtnMinus"){
 		var temp = this.ds_cartProdInfo.getColumn(e.row, "COUNT");
-		if(temp - 1 >= 0){
+		if(temp - 1 <= 0){
 			alert("수량은 1개 미만일 수 없습니다."); //!chk 오류남
 			return;
 		}

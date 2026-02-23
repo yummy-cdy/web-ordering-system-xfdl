@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="frmAuth1201" width="550" height="450" titletext="New Form" background="white">
+    <Layouts>
+      <Layout height="450" mobileorientation="landscape" width="550">
+        <TextField id="TextField00" taborder="0" labeltext="ID(Email)" left="50" top="100" width="300" height="57" color="black"/>
+        <Static id="staTitle" taborder="1" text="비밀번호 찾기" left="10" top="7" width="247" height="40" font="normal 600 18pt/normal &quot;KopubWorld&quot;"/>
+        <Static id="staTitle00" taborder="2" text="아이디(email)를 입력해 주세요" left="10" top="47" width="247" height="40" font="normal 500 9pt/normal &quot;KopubWorld&quot;"/>
+        <Button id="btn00" taborder="3" text="찾기" left="366" top="108" width="115" height="49" background="white" border="1px solid black" borderRadius="5px 5px 5px 5px"/>
+        <Div id="Div00" taborder="4" text="divUpdatePw" left="0" top="186" width="550" height="264" background="lavender">
+          <Layouts>
+            <Layout>
+              <TextField id="TextField00" taborder="0" labeltext="TextField00" left="115" top="43" width="300" height="57"/>
+              <TextField id="TextField00_00" taborder="1" labeltext="TextField00" left="115" top="110" width="300" height="57"/>
+              <Button id="btn00" taborder="2" text="비밀번호 변경" left="115" top="193" width="300" height="27" background="white" border="1px solid black" borderRadius="5px 5px 5px 5px"/>
+            </Layout>
+          </Layouts>
+        </Div>
+      </Layout>
+    </Layouts>
+    <Script type="xscript5.1"><![CDATA[]]></Script>
+  </Form>
+</FDL>
