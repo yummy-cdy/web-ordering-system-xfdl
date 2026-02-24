@@ -41,8 +41,17 @@
             </Format>
           </Formats>
         </Grid>
-        <Static id="staTitle" taborder="5" text="현재 진행 중인 주문" left="250" top="120" width="805" height="83" font="normal 600 21pt/normal &quot;KopubWorld&quot;"/>
-        <Static id="staStore" taborder="6" text="STORE_NAME 점" left="250" top="64" width="301" height="56" font="normal 600 13px/normal &quot;KopubWorld&quot;" color="#01a862"/>
+        <Static id="staTitle" taborder="5" text="현재 진행 중인 주문" left="250" top="120" width="805" height="80" font="normal 600 21pt/normal &quot;KopubWorld&quot;"/>
+        <Static id="staStore" taborder="6" text="STORE_NAME 점" left="250" top="84" width="301" height="56" font="normal 600 13px/normal &quot;KopubWorld&quot;" color="#01a862"/>
+        <TextArea id="taLog" taborder="7" left="-287" top="180" width="247" height="79" visible="true"/>
+        <Div id="divBackTo" taborder="8" text="Div00" left="250" top="20" width="269" height="74">
+          <Layouts>
+            <Layout>
+              <Button id="btnBackToMenu" taborder="0" left="0" top="17" width="40" height="40" background="url('imagerc::left.png') no-repeat center center /contain" border="0px none" onclick="divBackTo_btnBackToMenu_onclick"/>
+              <Static id="staDesc" taborder="1" text="메뉴 화면" left="57" top="19" width="145" height="36" font="normal 600 15px/normal &quot;KopubWorld&quot;"/>
+            </Layout>
+          </Layouts>
+        </Div>
       </Layout>
     </Layouts>
     <Objects>
@@ -102,7 +111,7 @@
           <Column id="MSG" type="STRING" size="256"/>
         </ColumnInfo>
       </Dataset>
-      <Dataset id="ds_orderList" oncolumnchanged="ds_orderList_oncolumnchanged">
+      <Dataset id="ds_orderList">
         <ColumnInfo>
           <Column id="ORDER_ID" type="STRING" size="256"/>
           <Column id="LOGIN_EMAIL" type="STRING" size="256"/>
@@ -169,8 +178,8 @@
  ************************************************************************************************/
 this.fvApp = nexacro.getApplication();
 
-//var strTopicID = "JKIINZ9T"; // STORE_ID로 추후 수정
 this.strStoreName = "";
+
 var strTopicID = this.fvApp.gdsAuth.getColumn(0, "STORE_CODE");
 var strPushType = "PUSH";
 
@@ -212,7 +221,6 @@ this.fn_callback = function(svcId, errCd, errMsg)
 	
 	if(svcId == "svcGetOrderList"){
 		this.setProdList();
-		//this.resetScroll();
 	}
 }
 
@@ -255,66 +263,11 @@ this.frmCust1210_ontimer = function(obj:nexacro.Form,e:nexacro.TimerEventInfo)
     }
 };
 
-this.fnXPushStart = function ()
+this.makeTitle = function (objDiv, sOrderId, sUserName)
 {
-    this.XPush00.set_projectid("TOBE_EDU");
-    // 사용 가능한 모든 프로토콜/IP 리스트 세팅
-    this.XPush00.set_iplist("tcp://localhost:50001, http://localhost:50000, http://172.10.14.128:50000");
-    
-    // 매장 코드를 ID 삼아 접속
-    this.XPush00.connect(strTopicID, "..."); 
-};
-this.XPush00_onsuccess = function(obj:nexacro.XPush,e:nexacro.XPushEventInfo)
-{
-    if(e.action == 0) { // Connect 성공
-        // dsMessage를 수신용 데이터셋으로 지정하여 구독
-        this.XPush00.subscribe("9999", strTopicID, this, this.dsMessage, "append", "fn_push_callback");
-    }
-    if(e.action == 2) this.XPush00.registerTopic("9999", strTopicID);
-};
-
-// 2. 푸시 수신 시 (dsMessage에 데이터가 들어왔을 때)
-this.fn_push_callback = function(Row, ChangeColumn, AllColumns, Type, ActionType, MessageId)
-{
-    if(ActionType == "PUSH") {
-        // dsMessage의 CODE(손님ID)나 MSG(주문번호)를 확인하고 그리드 갱신
-        this.fnGetOrderList(); 
-    }
-};
-
-// 3. 주문 상태 변경 및 손님에게 푸시 전송 (버튼 클릭 이벤트 등)
-this.btnUpdateStatus = function(status) // status: 2(제조중), 4(제조완료), 8(픽업완료)
-{
-    var ordRow = this.ds_orderList.rowposition;
-    var targetCust = this.ds_orderList.getColumn(ordRow, "LOGIN_EMAIL");
-    var orderId = this.ds_orderList.getColumn(ordRow, "ORDER_ID");
-
-    this.dsProvider.clearData();
-    var pRow = this.dsProvider.addRow();
-    this.dsProvider.setColumn(pRow, "PROJECT_ID", "TOBE_EDU");
-    this.dsProvider.setColumn(pRow, "PUSH_TYPE", "PUSH");
-    this.dsProvider.setColumn(pRow, "TOPIC_TYPE", "9999"); // 모르셨던 부분
-    this.dsProvider.setColumn(pRow, "TOPIC_ID", targetCust); // 수신자: 손님 이메일
-    this.dsProvider.setColumn(pRow, "CODE", orderId);       // 어떤 주문인지
-    this.dsProvider.setColumn(pRow, "MSG", status);         // 변경된 상태값
-
-    var sSvcId  = "svcUpdateStatus";
-    var sUrl    = "p024/updateStatus.do";
-    var inData  = "dsProvider=dsProvider:u"; // 변경된 dsProvider 전달
-    var outData = "";
-    var sParam  = "";
-    
-    this.gfnTransaction(sSvcId, sUrl, inData, outData, sParam, "fn_callback");
-
-};
-
-/************************************************************************************************
- * 각 COMPONENT 별 EVENT 영역
- ************************************************************************************************/
-this.makeTitle = function (objDiv, sOrderId)
-{
-    var staTitle = new Static();
-    var sStaId = "staProdTitle_" + sOrderId;
+    // 주문 번호
+	var staTitle = new Static();
+    var sStaId = "staOrderTitle_" + sOrderId;
     
     // 부모 Div 내부 상단에 고정 (0, 0 위치)
     staTitle.init(sStaId, 0, 0, null, 50, 0); 
@@ -327,9 +280,27 @@ this.makeTitle = function (objDiv, sOrderId)
     
     objDiv.form.addChild(sStaId, staTitle);
     staTitle.show();
+	
+	
+	// 주문자명
+	var staName = new Static();
+    var sStaId2 = "staUserTitle_" + sOrderId;
+    
+    // 부모 Div 내부 상단에 고정 (0, 0 위치)
+    staName.init(sStaId2, null, 0, 400, 50, 10, null); 
+        
+    staName.set_text(" 주문자명 : " + sUserName); // !chk
+    staName.set_textAlign("right");
+    staName.set_font("normal bold 16px/normal 'KopubWorld'");
+    staName.set_background("#f4f4f2");
+    staName.set_padding("0px 0px 0px 10px");
+    
+    objDiv.form.addChild(sStaId2, staName);
+    staName.show();
+	
+	
 };
 
-// 1. 상품명 생성
 this.makeStaName = function (objDiv, objDs, i, nItemY) // 인자 순서와 개수 확인!
 {
     var sId = "staProdName_" + objDs.getColumn(i, "ORDER_ID") + "_" + i;
@@ -345,7 +316,6 @@ this.makeStaName = function (objDiv, objDs, i, nItemY) // 인자 순서와 개�
     staProdName.show();
 };
 
-// 2. 수량 생성
 this.makeStaCount = function (objDiv, objDs, i, nItemY)
 {
     var sId = "staProdCount_" + i;
@@ -360,7 +330,6 @@ this.makeStaCount = function (objDiv, objDs, i, nItemY)
     staCount.show();
 };
 
-// 3. 버튼 생성
 this.makeBtnStatus = function (objDiv, i)
 {
     var sId = "btnStatus_" + i;
@@ -371,10 +340,7 @@ this.makeBtnStatus = function (objDiv, i)
     btnStatus.set_background("white");
     btnStatus.set_border("1px solid black");
     
-    // 주의: ds_drinkInfo가 없으면 에러 납니다. ds_orderList로 확인해보세요.
-    // btnStatus.prodId = this.ds_orderList.getColumn(i, "STATUS_TYPE"); 
-    
-    btnStatus.addEventHandler("onclick", this.btnUpdateStatus, this);
+    btnStatus.addEventHandler("onclick", this.fnUpdateStatus, this);
     
     objDiv.form.addChild(sId, btnStatus);
     btnStatus.show();
@@ -386,11 +352,13 @@ this.setProdList = function ()
     
     var objDs = this.ds_orderList;
     if (objDs == null || objDs.getRowCount() == 0) return;
+	
+	objDs.set_keystring("S:+ORDERED_AT");
 
     var nCardW   = 1100;
-    var nGapY    = 20;
+    var nGapY    = 30;
     var nStartX  = 250;
-    var nTop     = 400;
+    var nTop     = 210;
     
     var sPrevOrderId = "";
     var objDiv = null;
@@ -399,13 +367,18 @@ this.setProdList = function ()
     for(var i=0; i < objDs.getRowCount(); i++)
     {
         var sCurrOrderId = objDs.getColumn(i, "ORDER_ID");
+		var sCurrUserName = objDs.getColumn(i, "LOGIN_EMAIL");
 
         // [STEP 1] 새로운 주문번호가 등장하면 큰 도화지(Div) 생성
         if (sCurrOrderId != sPrevOrderId) 
         {
             // 이전 주문의 버튼을 생성 (첫 번째 루프 제외)
-            if(objDiv != null) this.makeBtnStatus(objDiv, i-1);
-
+            if(objDiv != null) {
+                this.makeBtnStatus(objDiv, i-1);
+                nTop = objDiv.getOffsetBottom() + nGapY;
+            }
+			
+			
             var sDivId = "divCard_" + sCurrOrderId;
             objDiv = new Div();
             // 높이는 일단 작게 잡고, 상품 개수에 따라 늘리거나 고정
@@ -416,13 +389,10 @@ this.setProdList = function ()
             objDiv.show();
 
             // 주문번호 제목 생성
-            this.makeTitle(objDiv, sCurrOrderId);
+            this.makeTitle(objDiv, sCurrOrderId, sCurrUserName);
             
             nItemY = 60; // 타이틀 아래부터 상품 시작
             sPrevOrderId = sCurrOrderId;
-            
-            // 다음 Div를 위한 좌표 계산 (현재는 임시 높이 200 기준)
-            nTop += (200 + nGapY); 
         }
 
         // [STEP 2] 동일한 주문번호 내에서 상품들 나열
@@ -447,7 +417,7 @@ this.deleteDiv = function ()
     for(var i = this.components.length - 1; i >= 0; i--) // 컴포넌트 삭제 시 id 충돌 때문에 역순 삭제
     {
         var obj = this.components[i];
-		if(obj instanceof nexacro.Static && obj.id.indexOf("staProdTitle") == 0)
+		if(obj instanceof nexacro.Static && obj.id.indexOf("staOrderTitle_") == 0)
         {
             this.removeChild(obj.id).destroy();
         }
@@ -459,13 +429,72 @@ this.deleteDiv = function ()
 };
 
 
-// this.ds_orderList_oncolumnchanged = function(obj:nexacro.NormalDataset,e:nexacro.DSColChangeEventInfo)
-// {
-// 	if(e.columnid == "STATUS_TYPE") {
-//         var nStatus = e.newvalue; // 변경된 상태값 (2, 4, 8 등)
-//         this.btnUpdateStatus(nStatus); // 서버로 전송 및 푸시 요청
-//     }
-// };
+// @cate push
+this.fnXPushStart = function ()
+{
+    this.XPush00.set_projectid("TOBE_EDU");
+    // 사용 가능한 모든 프로토콜/IP 리스트 세팅
+    this.XPush00.set_iplist("tcp://localhost:50001, http://localhost:50000, http://172.10.14.128:50000");
+    
+    // 매장 코드를 ID 삼아 접속
+    this.XPush00.connect(strTopicID, "..."); 
+};
+this.XPush00_onsuccess = function(obj:nexacro.XPush,e:nexacro.XPushEventInfo)
+{
+    if(e.action == 0) { // Connect 성공
+        // dsMessage를 수신용 데이터셋으로 지정하여 구독
+        this.XPush00.subscribe("9999", strTopicID, this, this.dsMessage, "append", "fn_push_callback");
+    }
+    if(e.action == 2) this.XPush00.registerTopic("9999", strTopicID);
+};
+
+// dsMessage에 데이터가 들어왔을 때
+this.fn_push_callback = function(Row, ChangeColumn, AllColumns, Type, ActionType, MessageId)
+{
+    if(ActionType == "PUSH") {
+        // dsMessage의 CODE(손님ID)나 MSG(주문번호)를 확인하고 그리드 갱신
+        this.fnGetOrderList(); 
+    }
+};
+
+this.fnUpdateStatus = function (obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	
+};
+
+// ??????????????????? 주문 상태 변경 및 손님에게 푸시 전송 (버튼 클릭 이벤트 등)
+this.btnUpdateStatus = function(status) // status: 2(제조중), 4(제조완료), 8(픽업완료) btnUpdateStatus
+{
+    var ordRow = this.ds_orderList.rowposition;
+    var targetCust = this.ds_orderList.getColumn(ordRow, "LOGIN_EMAIL");
+    var orderId = this.ds_orderList.getColumn(ordRow, "ORDER_ID");
+
+    this.dsProvider.clearData();
+    var pRow = this.dsProvider.addRow();
+    this.dsProvider.setColumn(pRow, "PROJECT_ID", "TOBE_EDU");
+    this.dsProvider.setColumn(pRow, "PUSH_TYPE", "PUSH");
+    this.dsProvider.setColumn(pRow, "TOPIC_TYPE", "9999"); // 모르셨던 부분
+    this.dsProvider.setColumn(pRow, "TOPIC_ID", targetCust); // 수신자: 손님 이메일
+    this.dsProvider.setColumn(pRow, "CODE", orderId);       // 어떤 주문인지
+    this.dsProvider.setColumn(pRow, "MSG", status);         // 변경된 상태값
+
+    var sSvcId  = "svcUpdateStatus";
+    var sUrl    = "p024/updateStatus.do";
+    var inData  = "dsProvider=dsProvider:u"; // 변경된 dsProvider 전달
+    var outData = "";
+    var sParam  = "";
+    
+    this.gfnTransaction(sSvcId, sUrl, inData, outData, sParam, "fn_callback");
+
+};		
+
+/************************************************************************************************
+ * 각 COMPONENT 별 EVENT 영역
+ ************************************************************************************************/
+this.divBackTo_btnBackToMenu_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	this.fvApp.mainframe.WorkFrame.formurl = "Staff::frmStaff1200.xfdl";
+};
 ]]></Script>
     <Bind>
       <BindItem id="item0" compid="grdOrderList" propid="binddataset" datasetid="ds_orderList" columnid=""/>

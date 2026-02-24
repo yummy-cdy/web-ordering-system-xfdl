@@ -476,7 +476,7 @@
         <Column id="USER_TYPE" type="STRING" size="256"/>
         <Column id="CREATED_AT" type="DATETIME" size="256"/>
         <Column id="STORE_CODE" type="STRING" size="256"/>
-        <Column id="ORDER_ID" type="STRING" size="256"/>
+        <Column id="IS_IN_ORDER" type="STRING" size="256"/>
       </ColumnInfo>
     </Dataset>
     <Dataset id="gdsXPushMessage">

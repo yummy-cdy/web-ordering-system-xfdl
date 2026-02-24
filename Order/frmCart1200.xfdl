@@ -115,6 +115,7 @@
 /************************************************************************************************
  * FORM 변수 선언 영역
  ************************************************************************************************/
+this.fvApp = nexacro.getApplication();
 this.fvImgPath = "http://172.10.14.128:8088/edupack_egov/upload/p02/p024/";
 
 /************************************************************************************************
@@ -227,6 +228,12 @@ this.divGoOrder_btnGoOrder_onclick = function(obj:nexacro.Button,e:nexacro.Click
 {
 	if(! this.checkMaxCount()){
 		alert("주문 가능한 수량은 최대 20개 입니다.");
+		return;
+	}
+	
+	var isInOrder = this.fvApp.gdsAuth.getColumn(0, "IS_IN_ORDER");
+	if(isInOrder!=null || isInOrder == "undefined"){
+		alert("사이렌 오더 진행 중에는 추가 주문이 불가합니다");
 		return;
 	}
 	

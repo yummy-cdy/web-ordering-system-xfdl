@@ -194,6 +194,7 @@ this.btnSendOrder_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo
 	if(!this.fnCheckValidation()){
 		return;
 	}
+	
 	var isLogin = this.fvApp.gdsAuth.getRowCount();
 	if(isLogin < 1){
 		alert("로그인 오류입니다");

@@ -137,7 +137,7 @@ var strPushType = "PUSH"; // 고객 쪽은 RELI 보낼 필요X
 //var userId = "Edu01"; 
 var userId = this.fvApp.gdsAuth.getColumn(0, "LOGIN_EMAIL");
 var userName = this.fvApp.gdsAuth.getColumn(0, "NAME");
-var strOrderId = this.fvApp.gdsAuth.getColumn(0, "ORDER_ID");
+var strOrderId = this.fvApp.gdsAuth.getColumn(0, "IS_IN_ORDER");
 
 /************************************************************************************************
  * FORM EVENT 영역(onload, onbeforeclose)
@@ -151,7 +151,7 @@ this.frmCust1210_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
     this.dsTopic.clearData();
 	
 	this.fnGetUserHist();
-	this.fnGetStoreName();
+	// this.fnGetStoreName();
 	
     var nRow = this.dsTopic.addRow();
     this.dsTopic.setColumn(nRow, "TOPIC_ID", userId);
@@ -172,7 +172,7 @@ this.fn_push_callback = function(Row, ChangeColumn, AllColumns, Type, ActionType
 		trace("수신된 푸시->주문번호: " + pushOrderId + " >>>> 상태: " + pushStatus);
 
         // 현재 보고 있는 주문내역의 번호와 푸시로 온 번호 대조
-        if(this.ds_userHist.getColumn(0, "ORDER_ID") == pushOrderId) {
+        if(this.ds_userHist.getColumn(0, "IS_IN_ORDER") == pushOrderId) {
             this.fn_setProgressBar(pushStatus);
         }
     }
@@ -191,6 +191,8 @@ this.fn_callback = function(svcId, errCd, errMsg)
 	}
 	
 	if(svcId == "svcGetUserHist"){
+		strTopicID = this.ds_userHist.getColumn(0, "STORE_CODE");
+		this.fnGetStoreName();
 		
 		var nStatus = this.ds_userHist.getColumn(0, "STATUS_TYPE");
         this.fn_setProgressBar(nStatus);
@@ -201,9 +203,7 @@ this.fn_callback = function(svcId, errCd, errMsg)
             this.fvApp.gdsAuth.setColumn(0, "IS_IN_ORDER", ""); 
             this.trace("!!!!!!!!!!!!픽업완료");
         }
-		
-		strTopicID = this.ds_userHist.getColumn(0, "STORE_CODE");
-		this.fnXPushStart()
+		this.fnXPushStart();
 	}
 }
 
