@@ -52,6 +52,7 @@
             </Layout>
           </Layouts>
         </Div>
+        <Button id="btn00" taborder="9" text="btn00" left="1261" top="34" width="64" height="60" onclick="btn00_onclick"/>
       </Layout>
     </Layouts>
     <Objects>
@@ -93,7 +94,7 @@
           </Row>
         </Rows>
       </Dataset>
-      <Dataset id="dsMessage">
+      <Dataset id="dsMessage" onrowposchanged="dsMessage_onrowposchanged">
         <ColumnInfo>
           <Column id="TOPIC_ID" type="STRING" size="256"/>
           <Column id="TOPIC_TYPE" type="STRING" size="256"/>
@@ -201,7 +202,7 @@ this.frmStaff1210_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
 
 	this.setStoreName();
 
-    //this.fnXPushStart(); 
+    this.fnXPushStart(); 
     this.fnGetOrderList();
 	
 	//this.setTimer(2, 5000); 
@@ -222,7 +223,27 @@ this.fn_callback = function(svcId, errCd, errMsg)
 	if(svcId == "svcGetOrderList"){
 		this.setProdList();
 	}
+	
+	if(svcId == "svcUpdateStatus") {
+        this.fnGetOrderList(); // 목록 새로고침 (직원 화면 갱신)
+    }
+	
+	if(svcId =="svcClearOrder"){
+		this.fnGetOrderList();
+	}
 }
+
+// dsMessage에 데이터가 들어왔을 때
+this.fn_push_callback = function(Row, ChangeColumn, AllColumns, Type, ActionType, MessageId)
+{
+    if(ActionType == "PUSH") {
+        // 새 주문 신호(MSG가 "1")가 오면 목록 갱신
+        var msg = this.dsMessage.getColumn(Row, "MSG");
+        if(msg == "1") {
+            this.fnGetOrderList(); 
+        }
+    }
+};
 
 
 /************************************************************************************************
@@ -336,15 +357,25 @@ this.makeBtnStatus = function (objDiv, i)
     var btnStatus = new Button();
     
     btnStatus.init(sId, null, null, 100, 35, 20, 10); // 우측 하단 배치
-    btnStatus.set_text("주문 수락");
+    
+    // 현재 데이터셋의 상태값 가져오기
+    var nStatus = nexacro.toNumber(this.ds_orderList.getColumn(i, "STATUS_TYPE"));
+    
+    // 상태값에 따른 버튼 텍스트 정의
+    if(nStatus == 0) btnStatus.set_text("주문 수락");
+    else if(nStatus == 1) btnStatus.set_text("제조 시작");
+    else if(nStatus == 2) btnStatus.set_text("제조 완료");
+    else if(nStatus == 4) btnStatus.set_text("픽업 완료");
+
     btnStatus.set_background("white");
     btnStatus.set_border("1px solid black");
     
+    btnStatus.identf = this.ds_orderList.getColumn(i, "LOGIN_EMAIL");
+    btnStatus.status = nStatus;
+    btnStatus.orderidentf = this.ds_orderList.getColumn(i, "ORDER_ID");
+    
     btnStatus.addEventHandler("onclick", this.fnUpdateStatus, this);
-	
-	btnStatus.identf = this.ds_orderList.getColumn(i, "LOGIN_EMAIL");
-    btnStatus.status = this.ds_orderList.getColumn(i, "STATUS_TYPE");
-	
+    
     objDiv.form.addChild(sId, btnStatus);
     btnStatus.show();
 };
@@ -384,10 +415,11 @@ this.setProdList = function ()
 			
             var sDivId = "divCard_" + sCurrOrderId;
             objDiv = new Div();
-            // 높이는 일단 작게 잡고, 상품 개수에 따라 늘리거나 고정
             objDiv.init(sDivId, nStartX, nTop, nCardW, 200); 
+			
             objDiv.set_border("2px solid #2d2d2d");
             objDiv.set_background("#ffffff");
+			
             this.addChild(sDivId, objDiv);
             objDiv.show();
 
@@ -431,7 +463,106 @@ this.deleteDiv = function ()
     }
 };
 
+this.deleteOneDiv = function (targetId)
+{
+	// targetId가 객체일 수도 있고, ID(문자열)일 수도 있으므로 체크
+    var objDelete;
+    if (typeof targetId == "string") {
+        objDelete = this.components[targetId];
+    } else {
+        objDelete = targetId;
+    }
 
+    if (objDelete) {
+        var sId = objDelete.id;
+        this.removeChild(sId); 
+        objDelete.destroy();    
+        
+        this.fnGetOrderList(); 
+    }
+	
+	this.resetScroll();
+};
+
+
+this.fnClearOrder = function (target)
+{
+	//  DB(user의 isinorder를 null, storeorders delete)
+	var sSvcId  = "svcClearOrder";
+	var sUrl    = "p024/clearOrder.do";
+	var inData  = "";
+	var outData = "";
+	var sParam  = "orderId="+target;
+	this.gfnTransaction(sSvcId, sUrl, inData, outData, sParam, "fn_callback");
+};
+
+this.fnUpdateStatus = function (obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	var targetIdentf = obj.identf; // LOGIN_EMAIL
+	var currentStatus = nexacro.toNumber(obj.status); // STATUS TYPE
+    var nextStatus;
+    var orderId = obj.orderidentf; // ORDER_ID
+	
+	
+	switch(currentStatus) {
+	case 0:
+		nextStatus = 1;
+		break;
+	case 1:
+		nextStatus = 2;
+		break;
+	case 2:
+		nextStatus = 4;
+		break;
+	case 4:
+		nextStatus = 8;
+		this.deleteOneDiv(obj.parent.parent) // !chk
+		this.fnClearOrder(orderId); // DB(user의 isinorder를 null, storeorders delete)
+		return;
+	default:
+		return;
+	}
+
+    // 1. 먼저 DB 업데이트
+	var sSvcId  = "svcUpdateStatus";
+    var sUrl    = "p024/updateStatus.do"; 
+    var inData  = ""; 
+    var outData = "";
+    var sParam  = "orderId=" + orderId + " nextStatus=" + nextStatus;
+    this.gfnTransaction(sSvcId, sUrl, inData, outData, sParam, "fn_callback");
+
+	// 2. Push
+	this.dsProvider.clearData();
+    var pRow = this.dsProvider.addRow();
+    this.dsProvider.setColumn(pRow, "PROJECT_ID", "TOBE_EDU");
+    this.dsProvider.setColumn(pRow, "PUSH_TYPE", "PUSH");
+    this.dsProvider.setColumn(pRow, "TOPIC_TYPE", "9999");
+    this.dsProvider.setColumn(pRow, "TOPIC_ID", targetIdentf); 
+    this.dsProvider.setColumn(pRow, "CODE", orderId);       
+    this.dsProvider.setColumn(pRow, "MSG", nextStatus);    
+
+    // SvcXpushUrl은 Prefix이므로 gfnTransaction 내부 로직에 따라 EduUrl 분기를 타지 않게 주의
+    var sPushSvcId = "svcSendPush";
+    var sPushUrl   = "SvcXpushUrl::Service_XPush.jsp"; 
+    var sPushInDs  = "in_Provider=dsProvider:U";
+    var sPushArg   = "argPUSH_TYPE=" + nexacro.wrapQuote("PUSH") 
+                   + " argPUSH_MSG=" + nexacro.wrapQuote(nextStatus); // 필요한 메시지 내용
+	// 안전하게 기본 transaction 호출 (gfn의 prefix 강제결합 방지)
+    this.transaction(sPushSvcId, sPushUrl, sPushInDs, "", sPushArg, "fn_callback");
+	
+};	
+
+/************************************************************************************************
+ * 각 COMPONENT 별 EVENT 영역
+ ************************************************************************************************/
+this.divBackTo_btnBackToMenu_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	this.fvApp.mainframe.WorkFrame.formurl = "Staff::frmStaff1200.xfdl";
+};
+
+/************************************************************************************************
+ * XPush 처리 영역
+ ************************************************************************************************/
 // @cate push
 this.fnXPushStart = function ()
 {
@@ -450,75 +581,19 @@ this.XPush00_onsuccess = function(obj:nexacro.XPush,e:nexacro.XPushEventInfo)
     }
     if(e.action == 2) this.XPush00.registerTopic("9999", strTopicID);
 };
-
-// dsMessage에 데이터가 들어왔을 때
-this.fn_push_callback = function(Row, ChangeColumn, AllColumns, Type, ActionType, MessageId)
+this.dsMessage_onrowposchanged = function(obj:nexacro.NormalDataset,e:nexacro.DSRowPosChangeEventInfo)
 {
-    if(ActionType == "PUSH") {
-        // dsMessage의 CODE(손님ID)나 MSG(주문번호)를 확인하고 그리드 갱신
-        this.fnGetOrderList(); 
+	if(obj.rowcount > 0){
+        var msg = obj.getColumn(e.newrow, "MSG");
+        if(msg == "1") { // 새 주문
+            this.fnGetOrderList();
+        }
     }
 };
 
-this.fnUpdateStatus = function (obj:nexacro.Button,e:nexacro.ClickEventInfo)
+this.btn00_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
 {
-	var targetIdentf = obj.identf;
-	var targetStatus = obj.status; // 0, 1, 2, 4, 8
-	
-	switch(targetStatus) {
-	case 0: // 최초로 주문을 넣은 상태
-		obj.status = 1; // 주문 확인(수락)
-		obj.set_text("제조 시작");
-		break;
-	case 1:
-		obj.status = 2; // 제조 중
-		obj.set_text("제조 완료");
-		break;
-	case 2:
-		obj.status = 4; // 제조 완료(픽업 대기 중)
-		obj.set_text("픽업 완료");
-		break;
-	case 4:
-		obj.status = 8; // 픽업 완료
-		// 여기서 div+title delete 해버려야만......... 
-		break;
-	}
-	// 그리고 strTopicID = obj.status로 하여 여기에서 푸시
-	// 받는 쪽(cust)에서 트랜잭션 or 푸시와 동시에 트랜잭션
-};
-
-// ??????????????????? 주문 상태 변경 및 손님에게 푸시 전송 (버튼 클릭 이벤트 등)
-// this.btnUpdateStatus = function(status) // status: 2(제조중), 4(제조완료), 8(픽업완료) btnUpdateStatus
-// {
-//     var ordRow = this.ds_orderList.rowposition;
-//     var targetCust = this.ds_orderList.getColumn(ordRow, "LOGIN_EMAIL");
-//     var orderId = this.ds_orderList.getColumn(ordRow, "ORDER_ID");
-// 
-//     this.dsProvider.clearData();
-//     var pRow = this.dsProvider.addRow();
-//     this.dsProvider.setColumn(pRow, "PROJECT_ID", "TOBE_EDU");
-//     this.dsProvider.setColumn(pRow, "PUSH_TYPE", "PUSH");
-//     this.dsProvider.setColumn(pRow, "TOPIC_TYPE", "9999"); // 모르셨던 부분
-//     this.dsProvider.setColumn(pRow, "TOPIC_ID", targetCust); // 수신자: 손님 이메일
-//     this.dsProvider.setColumn(pRow, "CODE", orderId);       // 어떤 주문인지
-//     this.dsProvider.setColumn(pRow, "MSG", status);         // 변경된 상태값
-// 
-//     var sSvcId  = "svcUpdateStatus";
-//     var sUrl    = "p024/updateStatus.do";
-//     var inData  = "dsProvider=dsProvider:u"; // 변경된 dsProvider 전달
-//     var outData = "";
-//     var sParam  = "";
-//     
-//     this.gfnTransaction(sSvcId, sUrl, inData, outData, sParam, "fn_callback");
-// 
-// };		
-
-/************************************************************************************************
- * 각 COMPONENT 별 EVENT 영역
- ************************************************************************************************/
-this.divBackTo_btnBackToMenu_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
-{
-	this.fvApp.mainframe.WorkFrame.formurl = "Staff::frmStaff1200.xfdl";
+	this.resetScroll();
 };
 ]]></Script>
     <Bind>

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <FDL version="2.1">
-  <Form id="frmAuth1201" width="550" height="450" titletext="New Form" background="white">
+  <Form id="frmAuth1201" width="550" height="450" titletext="비밀번호 찾기 팝업차" background="white">
     <Layouts>
       <Layout height="450" mobileorientation="landscape" width="550">
         <TextField id="TextField00" taborder="0" labeltext="ID(Email)" left="50" top="100" width="300" height="57" color="black"/>

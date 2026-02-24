@@ -97,7 +97,7 @@
 this.fvApp = nexacro.getApplication(); 
 this.orderId = "";
 
-var strTopicID = ""; // STORE_ID
+var strTopicID = ""; // STORE_CODE
 var strPushType = "PUSH";
 var userId = this.fvApp.gdsAuth.getColumn(0, "LOGIN_EMAIL");
 
@@ -126,11 +126,28 @@ this.fn_callback = function(svcId, errCd, errMsg)
 	}
 	
 	if(svcId == "svcProgSirenOrder"){
-		alert("주문 번호는 "+this.orderId+"입니다.");
-		this.fvApp.gdsAuth.setColumn(0, "ORDER_ID", this.orderId);
+		//alert("주문 번호는 "+this.orderId+"입니다.");
+		this.fvApp.gdsAuth.setColumn(0, "IS_IN_ORDER", this.orderId);
+		this.fnSendPushToStaff();
+		this.sleep(500);
+		this.parent.parent.divCenter.url = "Order::frmCust1210.xfdl";
 	}
+	
 }
 
+this.fnSendPushToStaff = function()
+{
+    this.dsProvider.clearData();
+    var nRow = this.dsProvider.addRow();
+    this.dsProvider.setColumn(nRow, "PROJECT_ID", "TOBE_EDU");
+    this.dsProvider.setColumn(nRow, "PUSH_TYPE", "PUSH");
+    this.dsProvider.setColumn(nRow, "TOPIC_TYPE", "9999");
+    this.dsProvider.setColumn(nRow, "TOPIC_ID", this.ds_selected.getColumn(0, "STORE_CODE")); // 매장ID
+    this.dsProvider.setColumn(nRow, "CODE", userId); // 손님ID (누가 주문했는지)
+    this.dsProvider.setColumn(nRow, "MSG", "1");    // "1"은 새 주문 발생 신호
+
+    this.transaction("svcSendPush", "SvcXpushUrl::Service_XPush.jsp", "in_Provider=dsProvider:U", "", "", "fn_callback");
+};
 
 /************************************************************************************************
  * CRUD 및 TRANSACTION 서비스 호출 처리
@@ -427,6 +444,16 @@ this.fn_push_callback = function(Row, ChangeColumn, AllColumns, Type, ActionType
           <Column id="PRICE" type="INT" size="256"/>
           <Column id="COUNT" type="INT" size="256"/>
           <Column id="IMAGE_FILE" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+      <Dataset id="dsProvider">
+        <ColumnInfo>
+          <Column id="PROJECT_ID" type="STRING" size="256"/>
+          <Column id="PUSH_TYPE" type="STRING" size="256"/>
+          <Column id="TOPIC_TYPE" type="STRING" size="256"/>
+          <Column id="TOPIC_ID" type="STRING" size="256"/>
+          <Column id="CODE" type="STRING" size="256"/>
+          <Column id="MSG" type="STRING" size="256"/>
         </ColumnInfo>
       </Dataset>
     </Objects>

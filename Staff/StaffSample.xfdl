@@ -353,7 +353,12 @@ this.btnSend_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
 		this.dsProvider.setColumn(this.dsProvider.rowposition,"MSG", this.taSendStaff.text);
 
 		trace(this.dsProvider.saveXML());
-		this.transaction("SendMsg","SvcXpushUrl::Service_XPush.jsp","in_Provider=dsProvider:U","","argPUSH_TYPE=" + nexacro.wrapQuote(strPushType) + " argPUSH_MSG=" + this.taSendStaff.text,"fn_callback");
+		this.transaction("SendMsg",
+						"SvcXpushUrl::Service_XPush.jsp",
+						"in_Provider=dsProvider:U",
+						"",
+						"argPUSH_TYPE=" + nexacro.wrapQuote(strPushType) + " argPUSH_MSG=" + this.taSendStaff.text,
+						"fn_callback");
 	}
 };
 

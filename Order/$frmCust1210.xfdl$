@@ -7,6 +7,21 @@
         <Static id="Static01_00_01" taborder="1" text="FRAME" left="0" top="0" height="20" background="red" opacity="20%" textAlign="center" visible="false" right="0"/>
         <Static id="Static01_00_00_00" taborder="2" text="FRAME" left="1350" top="0" width="250" background="red" opacity="20%" textAlign="center" visible="false" bottom="0"/>
         <Static id="Static01_00_01_00" taborder="3" text="FRAME" left="0" top="750" height="20" background="red" opacity="20%" textAlign="center" visible="false" right="0"/>
+        <Div id="divText" taborder="5" left="350" top="20" width="900" height="360" background="white">
+          <Layouts>
+            <Layout>
+              <Static id="staTitle" taborder="0" text="NAME 님의 주문을 n번째 메뉴로 준비 중이에요" left="0" top="56" width="805" height="83" font="normal 600 21pt/normal &quot;KopubWorld&quot;"/>
+              <Static id="staStore" taborder="1" text="STORE_NAME 점" left="0" top="0" width="301" height="56" font="normal 600 13px/normal &quot;KopubWorld&quot;" color="#01a862"/>
+              <Static id="Static00" taborder="2" text="주문 완료" left="75" top="235" width="145" height="48" textAlign="center" font="normal 500 13px/normal &quot;KopubWorld&quot;"/>
+              <Static id="Static00_00" taborder="3" text="준비 중" left="378" top="235" width="145" height="48" textAlign="center" font="normal 500 13px/normal &quot;KopubWorld&quot;"/>
+              <Static id="Static00_00_00" taborder="4" text="준비 완료" left="675" top="235" width="145" height="48" textAlign="center" font="normal 500 13px/normal &quot;KopubWorld&quot;"/>
+              <Static id="staDesc" taborder="6" text="주문 승인 즉시 메뉴 준비가 시작돼요. 완성 후 빠르게 픽업해 주세요." left="0" top="119" width="805" height="54" font="normal 500 13px/normal &quot;KopubWorld&quot;" color="darkgray"/>
+              <ProgressBar id="pgbOrderStatus" taborder="5" max="99" min="0" left="0" top="285" width="900" height="15" pos="0" blockgap="5" blocksize="380" smooth="true" cssclass="pgb_orderStatus" text="" direction="forward"/>
+            </Layout>
+          </Layouts>
+        </Div>
+        <TextArea id="taLog" taborder="7" left="747" top="531" width="247" height="79" visible="true"/>
+        <Button id="btn00" taborder="6" text="btn00" left="1266" top="47" width="60" height="64" onclick="btn00_onclick"/>
         <ListView id="lvOrderHist" taborder="4" left="250" top="420" width="1100" height="460" binddataset="ds_userHist">
           <Formats>
             <Format id="default">
@@ -21,19 +36,6 @@
             </Format>
           </Formats>
         </ListView>
-        <Div id="divText" taborder="5" left="350" top="20" width="900" height="360">
-          <Layouts>
-            <Layout>
-              <Static id="staTitle" taborder="0" text="NAME 님의 주문을 n번째 메뉴로 준비 중이에요" left="0" top="56" width="805" height="83" font="normal 600 21pt/normal &quot;KopubWorld&quot;"/>
-              <Static id="staStore" taborder="1" text="STORE_NAME 점" left="0" top="0" width="301" height="56" font="normal 600 13px/normal &quot;KopubWorld&quot;" color="#01a862"/>
-              <Static id="Static00" taborder="2" text="주문 완료" left="75" top="235" width="145" height="48" textAlign="center" font="normal 500 13px/normal &quot;KopubWorld&quot;"/>
-              <Static id="Static00_00" taborder="3" text="준비 중" left="378" top="235" width="145" height="48" textAlign="center" font="normal 500 13px/normal &quot;KopubWorld&quot;"/>
-              <Static id="Static00_00_00" taborder="4" text="준비 완료" left="675" top="235" width="145" height="48" textAlign="center" font="normal 500 13px/normal &quot;KopubWorld&quot;"/>
-              <ProgressBar id="pgbOrderStatus" taborder="5" max="99" min="0" left="0" top="285" width="900" height="15" pos="0" blockgap="5" blocksize="380" smooth="true" cssclass="pgb_orderStatus" text="" direction="forward"/>
-            </Layout>
-          </Layouts>
-        </Div>
-        <TextArea id="taLog" taborder="6" left="-393" top="166" width="247" height="79" visible="true"/>
       </Layout>
     </Layouts>
     <Objects>
@@ -75,7 +77,7 @@
           </Row>
         </Rows>
       </Dataset>
-      <Dataset id="dsMessage">
+      <Dataset id="dsMessage" oncolumnchanged="dsMessage_oncolumnchanged">
         <ColumnInfo>
           <Column id="TOPIC_ID" type="STRING" size="256"/>
           <Column id="TOPIC_TYPE" type="STRING" size="256"/>
@@ -83,7 +85,7 @@
           <Column id="MSG" type="STRING" size="256"/>
         </ColumnInfo>
       </Dataset>
-      <Dataset id="dsProvider">
+      <Dataset id="dsProvider" cancolumnchange="dsProvider_cancolumnchange">
         <ColumnInfo>
           <Column id="PROJECT_ID" type="STRING" size="256"/>
           <Column id="PUSH_TYPE" type="STRING" size="256"/>
@@ -163,18 +165,78 @@ this.frmCust1210_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
 /************************************************************************************************
  * CALLBACK 콜백 처리부분(Transaction, Popup)
  ************************************************************************************************/
+// this.fn_push_callback = function(Row, ChangeColumn, AllColumns, Type, ActionType, MessageId)
+// {
+// 	trace("Push 수신 완료! 데이터 건수: " + this.dsMessage.rowcount);
+// 	
+//     if(ActionType == "PUSH") {
+//         var nRow = this.dsMessage.rowcount - 1;
+// 		var pushOrderId = this.dsMessage.getColumn(nRow, "CODE"); // 주문번호
+// 		var pushStatus  = this.dsMessage.getColumn(nRow, "MSG"); // 상태코드
+// 		
+// 		trace("수신된 푸시->주문번호: " + pushOrderId + " >>>> 상태: " + pushStatus);
+// 		
+// 
+//         if(this.ds_userHist.getColumn(0, "IS_IN_ORDER") == pushOrderId) {
+//             this.fn_setProgressBar(pushStatus);
+// 			
+//             if(pushStatus == "8") {
+//                 this.killTimer(1);
+//                 this.fvApp.gdsAuth.setColumn(0, "IS_IN_ORDER", null); //!chk null 대신 ""도 고려 가능
+// 				this.fvApp.gdsAuth.applyChange(); // 변경사항 강제 적용
+// 				
+// 				this.XPush00.unsubscribe("9999", userId);
+// 				this.XPush00.disconnect(); // 아예 연결을 끊어버리세요.
+// 				
+// 				this.parent.parent.divCenter.url = "Base::frmMain1203.xfdl"; 
+//             }
+// 			this.resetScroll();
+//         }	
+//     }
+// };
+
 this.fn_push_callback = function(Row, ChangeColumn, AllColumns, Type, ActionType, MessageId)
 {
-    if(ActionType == "PUSH") {
-        var pushOrderId = this.dsMessage.getColumn(Row, "CODE"); // 주문번호
-        var pushStatus  = this.dsMessage.getColumn(Row, "MSG");  // 상태코드
-		
-		trace("수신된 푸시->주문번호: " + pushOrderId + " >>>> 상태: " + pushStatus);
+    // 1. 수신 확인 로그
+    trace("Push 수신 발생! 이벤트 ActionType: " + ActionType + " | 데이터 건수: " + this.dsMessage.rowcount);
+    
+    // ActionType이 "PUSH"이거나 "RELI"(신뢰성)인 경우 모두 처리 가능하도록 체크
+    if(ActionType == "PUSH" || ActionType == "RELI") {
+        
+        // 2. append 방식이므로 무조건 마지막 행 데이터 추출
+        var nRow = this.dsMessage.rowcount - 1;
+        if(nRow < 0) return; // 방어 코드
 
-        // 현재 보고 있는 주문내역의 번호와 푸시로 온 번호 대조
-        if(this.ds_userHist.getColumn(0, "IS_IN_ORDER") == pushOrderId) {
+        var pushOrderId = String(this.dsMessage.getColumn(nRow, "CODE")); // 주문번호 (문자열 변환)
+        var pushStatus  = String(this.dsMessage.getColumn(nRow, "MSG"));  // 상태코드 (문자열 변환)
+        
+        // 내 화면의 주문번호와 비교 (gdsAuth 혹은 변수)
+        var myOrderId = String(this.fvApp.gdsAuth.getColumn(0, "IS_IN_ORDER"));
+
+        trace("비교로그 -> 수신ID: " + pushOrderId + " | 내ID: " + myOrderId + " | 상태: " + pushStatus);
+
+        // 3. 주문번호가 일치할 때만 UI 업데이트
+        if(myOrderId == pushOrderId) {
             this.fn_setProgressBar(pushStatus);
-        }
+            
+            // 4. 종료 상태(8) 처리
+            if(pushStatus == "8") {
+                trace("주문 종료 처리 시작");
+                this.killTimer(1);
+                
+                // GDS 데이터 정리
+                this.fvApp.gdsAuth.setColumn(0, "IS_IN_ORDER", ""); 
+                this.fvApp.gdsAuth.applyChange(); 
+                
+                // XPush 연결 해제
+                this.XPush00.unsubscribe("9999", userId);
+                this.XPush00.disconnect(); 
+                
+                // 화면 이동 (부모 경로 확인 필요)
+                this.parent.parent.divCenter.set_url("Base::frmMain1203.xfdl"); 
+            }
+            this.resetScroll();
+        }   
     }
 };
 
@@ -186,7 +248,8 @@ this.fn_callback = function(svcId, errCd, errMsg)
 		this.divText.form.staStore.text = this.strStoreName+" 점";
 		this.divText.form.staStore.fittocontents = "width";
 		
-		this.divText.form.staTitle.text = userName+" 님의 주문을 1번째 메뉴로 준비 중이에요";
+		this.divText.form.staTitle.text = "주문을 확인하고 있어요!";
+		// this.divText.form.staTitle.text = userName+" 님의 주문을 1번째 메뉴로 준비 중이에요";
 		this.divText.form.staTitle.fittocontents = "width";
 	}
 	
@@ -199,9 +262,7 @@ this.fn_callback = function(svcId, errCd, errMsg)
         
         if(nStatus == "8") {
             this.killTimer(1);
-            
-            this.fvApp.gdsAuth.setColumn(0, "IS_IN_ORDER", ""); 
-            this.trace("!!!!!!!!!!!!픽업완료");
+            this.fvApp.gdsAuth.setColumn(0, "IS_IN_ORDER", null); 
         }
 		this.fnXPushStart();
 	}
@@ -370,9 +431,10 @@ this.XPush00_onsuccess = function(obj:nexacro.XPush,e:nexacro.XPushEventInfo)
 	if( e.action == 0 ) {
 		this.taLog.set_value("connect() success");
 		
-//		this.XPush00.subscribe("9999", strTopicID, this, nexacro.getApplication().gdsXPushMessage, "append", "fn_push_callback");
-		this.XPush00.subscribe("9999", userId, this, nexacro.getApplication().gdsXPushMessage, "append", "fn_push_callback");
-		
+//		this.XPush00.subscribe("9999", userId, this, nexacro.getApplication().gdsXPushMessage, "append", "fn_push_callback");
+		this.XPush00.subscribe("9999", userId, this, this.dsMessage, "append", "fn_push_callback");
+
+
 	}
 	if( e.action == 1 ) {
 		this.taLog.set_value("disconnect() success");
@@ -400,7 +462,6 @@ this.XPush00_onsuccess = function(obj:nexacro.XPush,e:nexacro.XPushEventInfo)
 	}
 	if( e.action == 8) {
 		this.taLog.set_value("reqisterUser() success");
-//		this.XPush00.requestMessage("9999",strTopicID);
 		this.XPush00.requestMessage("9999", userId);
 	}
 	if( e.action == 9) {
@@ -428,15 +489,48 @@ this.fnXPushStart = function ()
 
 this.fn_setProgressBar = function(status)
 {
+	var nStatus = nexacro.toNumber(status); 
     var nPos = 0;
-    if(status == "1") nPos = 0;
-    else if(status == "2") nPos = 33;
-    else if(status == "4") nPos = 66;
-    else if(status == "8") nPos = 99;
+	
+	this.set_enableevent(false);
+	
+    if(nStatus == "1") nPos = 0;
+    else if(nStatus == "2") {
+		nPos = 33;
+		this.divText.form.staTitle.text = userName+" 님의 주문을 준비 중이에요";
+	}
+    else if(nStatus == "4") {
+		nPos = 66;
+		this.divText.form.staTitle.text = userName+" 님, 메뉴가 모두 준비되었어요";
+		this.divText.form.staDesc.text = "픽업대에서 메뉴를 픽업해 주세요";
+	}
+    else if(nStatus == "8") {
+		nPos = 99;
+		this.fvApp.gdsAuth.setColumn(0, "IS_IN_ORDER", null);
+	}
 
     this.divText.form.pgbOrderStatus.set_pos(nPos);
+// 	this.resetScroll();
+//     this.divText.form.pgbOrderStatus.set_pos(nPos);
+//     this.divText.form.resetScroll();
+	this.set_enableevent(true); 
+    this.divText.form.resetScroll();
     
-    if(status == "4") this.alert("메뉴가 준비되었습니다!");
-};]]></Script>
+};
+this.dsProvider_cancolumnchange = function(obj:nexacro.NormalDataset,e:nexacro.DSColChangeEventInfo)
+{
+	this.resetScroll();
+};
+
+this.dsMessage_oncolumnchanged = function(obj:nexacro.NormalDataset,e:nexacro.DSColChangeEventInfo)
+{
+	this.fn_push_callback(e.row, e.columnid, null, null, "PUSH", null);
+};
+
+this.btn00_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	this.resetScroll();
+};
+]]></Script>
   </Form>
 </FDL>
