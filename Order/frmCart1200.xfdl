@@ -108,6 +108,8 @@
 *******************************************************************************
 *  2026/02/10      		 이아인	 	  	     cellbtn등 CSS 적용 일부
 *******************************************************************************
+*  2026/02/24      		 이아인	 	  	 중복 주문이 불가하도록 조건 추가
+*******************************************************************************
 */
 
 
@@ -117,6 +119,9 @@
  ************************************************************************************************/
 this.fvApp = nexacro.getApplication();
 this.fvImgPath = "http://172.10.14.128:8088/edupack_egov/upload/p02/p024/";
+
+this.originCount = 0;
+this.presentCount = 0;
 
 /************************************************************************************************
  * FORM EVENT 영역(onload, onbeforeclose)
@@ -135,8 +140,10 @@ this.fn_callback = function(svcId, errCd, errMsg)
 {
 	if(errCd < 0){ alert("에러 : " + errMsg); }
 	
-	if(svcId == "svcCheckId"){
-	
+	if(svcId == "svcGetCartProdInfo"){
+		for(var i=0; i<this.ds_cartProdInfo.rowcount;i++){
+			this.originCount += this.ds_cartProdInfo.getColumn(i, "COUNT");
+		}
 	}
 }
 
@@ -144,7 +151,6 @@ this.fn_callback = function(svcId, errCd, errMsg)
 /************************************************************************************************
  * CRUD 및 TRANSACTION 서비스 호출 처리
  ************************************************************************************************/
-
 this.getCartProdInfo = function ()
 {
 	var userId = nexacro.getApplication().gdsAuth.getColumn(0, "LOGIN_EMAIL");
@@ -220,6 +226,11 @@ this.lvCartList_oncellclick = function(obj:nexacro.ListView,e:nexacro.ListViewCl
 
 this.ds_cartProdInfo_onrowsetchanged = function(obj:nexacro.NormalDataset,e:nexacro.DSRowsetChangeEventInfo)
 {
+	if(svcId == "svcGetCartProdInfo"){
+		for(var i=0; i<this.ds_cartProdInfo.rowcount;i++){
+			this.presentCount += this.ds_cartProdInfo.getColumn(i, "COUNT");
+		}
+	}
 	this.resetScroll();
 };
 

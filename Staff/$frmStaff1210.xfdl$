@@ -289,9 +289,9 @@ this.makeTitle = function (objDiv, sOrderId, sUserName)
     // 부모 Div 내부 상단에 고정 (0, 0 위치)
     staName.init(sStaId2, null, 0, 400, 50, 10, null); 
         
-    staName.set_text(" 주문자명 : " + sUserName); // !chk
+    staName.set_text(" 주문자명 : " + sUserName+" 님"); // !chk
     staName.set_textAlign("right");
-    staName.set_font("normal bold 16px/normal 'KopubWorld'");
+    staName.set_font("normal bold 14px/normal 'KopubWorld'");
     staName.set_background("#f4f4f2");
     staName.set_padding("0px 0px 0px 10px");
     
@@ -341,7 +341,10 @@ this.makeBtnStatus = function (objDiv, i)
     btnStatus.set_border("1px solid black");
     
     btnStatus.addEventHandler("onclick", this.fnUpdateStatus, this);
-    
+	
+	btnStatus.identf = this.ds_orderList.getColumn(i, "LOGIN_EMAIL");
+    btnStatus.status = this.ds_orderList.getColumn(i, "STATUS_TYPE");
+	
     objDiv.form.addChild(sId, btnStatus);
     btnStatus.show();
 };
@@ -367,7 +370,7 @@ this.setProdList = function ()
     for(var i=0; i < objDs.getRowCount(); i++)
     {
         var sCurrOrderId = objDs.getColumn(i, "ORDER_ID");
-		var sCurrUserName = objDs.getColumn(i, "LOGIN_EMAIL");
+		var sCurrUserName = objDs.getColumn(i, "NAME");
 
         // [STEP 1] 새로운 주문번호가 등장하면 큰 도화지(Div) 생성
         if (sCurrOrderId != sPrevOrderId) 
@@ -459,34 +462,56 @@ this.fn_push_callback = function(Row, ChangeColumn, AllColumns, Type, ActionType
 
 this.fnUpdateStatus = function (obj:nexacro.Button,e:nexacro.ClickEventInfo)
 {
+	var targetIdentf = obj.identf;
+	var targetStatus = obj.status; // 0, 1, 2, 4, 8
 	
+	switch(targetStatus) {
+	case 0: // 최초로 주문을 넣은 상태
+		obj.status = 1; // 주문 확인(수락)
+		obj.set_text("제조 시작");
+		break;
+	case 1:
+		obj.status = 2; // 제조 중
+		obj.set_text("제조 완료");
+		break;
+	case 2:
+		obj.status = 4; // 제조 완료(픽업 대기 중)
+		obj.set_text("픽업 완료");
+		break;
+	case 4:
+		obj.status = 8; // 픽업 완료
+		// 여기서 div+title delete 해버려야만......... 
+		break;
+	}
+	// 그리고 strTopicID = obj.status로 하여 여기에서 푸시
+	// 받는 쪽(cust)에서 트랜잭션 or 푸시와 동시에 트랜잭션
 };
 
 // ??????????????????? 주문 상태 변경 및 손님에게 푸시 전송 (버튼 클릭 이벤트 등)
-this.btnUpdateStatus = function(status) // status: 2(제조중), 4(제조완료), 8(픽업완료) btnUpdateStatus
-{
-    var ordRow = this.ds_orderList.rowposition;
-    var targetCust = this.ds_orderList.getColumn(ordRow, "LOGIN_EMAIL");
-    var orderId = this.ds_orderList.getColumn(ordRow, "ORDER_ID");
-
-    this.dsProvider.clearData();
-    var pRow = this.dsProvider.addRow();
-    this.dsProvider.setColumn(pRow, "PROJECT_ID", "TOBE_EDU");
-    this.dsProvider.setColumn(pRow, "PUSH_TYPE", "PUSH");
-    this.dsProvider.setColumn(pRow, "TOPIC_TYPE", "9999"); // 모르셨던 부분
-    this.dsProvider.setColumn(pRow, "TOPIC_ID", targetCust); // 수신자: 손님 이메일
-    this.dsProvider.setColumn(pRow, "CODE", orderId);       // 어떤 주문인지
-    this.dsProvider.setColumn(pRow, "MSG", status);         // 변경된 상태값
-
-    var sSvcId  = "svcUpdateStatus";
-    var sUrl    = "p024/updateStatus.do";
-    var inData  = "dsProvider=dsProvider:u"; // 변경된 dsProvider 전달
-    var outData = "";
-    var sParam  = "";
-    
-    this.gfnTransaction(sSvcId, sUrl, inData, outData, sParam, "fn_callback");
-
-};		
+// this.btnUpdateStatus = function(status) // status: 2(제조중), 4(제조완료), 8(픽업완료) btnUpdateStatus
+// {
+//     var ordRow = this.ds_orderList.rowposition;
+//     var targetCust = this.ds_orderList.getColumn(ordRow, "LOGIN_EMAIL");
+//     var orderId = this.ds_orderList.getColumn(ordRow, "ORDER_ID");
+// 
+//     this.dsProvider.clearData();
+//     var pRow = this.dsProvider.addRow();
+//     this.dsProvider.setColumn(pRow, "PROJECT_ID", "TOBE_EDU");
+//     this.dsProvider.setColumn(pRow, "PUSH_TYPE", "PUSH");
+//     this.dsProvider.setColumn(pRow, "TOPIC_TYPE", "9999"); // 모르셨던 부분
+//     this.dsProvider.setColumn(pRow, "TOPIC_ID", targetCust); // 수신자: 손님 이메일
+//     this.dsProvider.setColumn(pRow, "CODE", orderId);       // 어떤 주문인지
+//     this.dsProvider.setColumn(pRow, "MSG", status);         // 변경된 상태값
+// 
+//     var sSvcId  = "svcUpdateStatus";
+//     var sUrl    = "p024/updateStatus.do";
+//     var inData  = "dsProvider=dsProvider:u"; // 변경된 dsProvider 전달
+//     var outData = "";
+//     var sParam  = "";
+//     
+//     this.gfnTransaction(sSvcId, sUrl, inData, outData, sParam, "fn_callback");
+// 
+// };		
 
 /************************************************************************************************
  * 각 COMPONENT 별 EVENT 영역
