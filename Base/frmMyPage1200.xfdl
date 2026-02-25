@@ -18,7 +18,7 @@
             </Layout>
           </Layouts>
         </Div>
-        <Grid id="Grid00" taborder="6" left="480" top="265" width="638" height="213" binddataset="ds_userHist" autofittype="col">
+        <Grid id="grdAllHist" taborder="6" left="480" top="265" width="638" height="213" binddataset="ds_userHist" autofittype="col">
           <Formats>
             <Format id="default">
               <Columns>
@@ -56,7 +56,7 @@
       <Dataset id="ds_userInfo">
         <ColumnInfo>
           <Column id="LOGIN_EMAIL" type="STRING" size="256"/>
-          <Column id="CREATED_AT" type="STRING" size="256"/>
+          <Column id="CREATED_AT" type="DATETIME" size="256"/>
         </ColumnInfo>
       </Dataset>
       <Dataset id="ds_userHist">
@@ -92,7 +92,7 @@
 /************************************************************************************************
  * FORM 변수 선언 영역
  ************************************************************************************************/
-
+this.userId = nexacro.getApplication().gdsAuth.getColumn(0, "LOGIN_EMAIL");
 
 /************************************************************************************************
  * FORM EVENT 영역(onload, onbeforeclose)
@@ -102,12 +102,25 @@
 */
 this.frmMyPage1200_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
 {
-	
+	this.fnGetUserInfo();
+	this.fnGetAllUserHist();
 };
 
 /************************************************************************************************
  * CALLBACK 콜백 처리부분(Transaction, Popup)
  ************************************************************************************************/
+this.fn_callback = function(svcId, errCd, errMsg)
+{
+	if(errCd < 0){ alert("에러 : " + errMsg); }
+	
+	if(svcId == "svcGetUserSmry"){
+		this.resetScroll();
+	}
+	
+	if(svcId == "svcGetAllUserHist"){
+		this.resetScroll();
+	}
+}
 
 
 /************************************************************************************************
@@ -118,7 +131,25 @@ this.frmMyPage1200_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
 /************************************************************************************************
  * 사용자 FUNCTION 영역
  ************************************************************************************************/
+this.fnGetUserInfo = function ()
+{
+	var sSvcId  = "svcGetUserSmry";
+	var sUrl    = "p024/getUserSmry.do";
+	var inData  = "";
+	var outData = "ds_userInfo=out_data";
+	var sParam  = "userId="+this.userId;
+	this.gfnTransaction(sSvcId, sUrl, inData, outData, sParam, "fn_callback");
+};
 
+this.fnGetAllUserHist = function ()
+{
+	var sSvcId  = "svcGetAllUserHist";
+	var sUrl    = "p024/getAllUserHist.do";
+	var inData  = "";
+	var outData = "ds_userHist=out_data";
+	var sParam  = "userId="+this.userId;
+	this.gfnTransaction(sSvcId, sUrl, inData, outData, sParam, "fn_callback");
+};
 
 /************************************************************************************************
  * 각 COMPONENT 별 EVENT 영역
