@@ -214,8 +214,7 @@ this.frmStaff1210_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
 
     this.fnXPushStart(); 
     this.fnGetOrderList();
-	
-	//this.setTimer(2, 5000); 
+
 };
 
 /************************************************************************************************
@@ -230,7 +229,7 @@ this.fn_callback = function(svcId, errCd, errMsg)
 	if(svcId === "svcSendPush"){
 		if(errCd >= 0){ trace("메시지를 정상적으로 발송하였습니다.");}
 		else { trace("메시지 전달실패 : " + errMsg);}
-		// this.reload();
+		this.reload();
 	}
 	
 	if(svcId == "svcGetStoreName"){
@@ -253,6 +252,7 @@ this.fn_callback = function(svcId, errCd, errMsg)
 
 this.fn_push_callback = function(Row, ChangeColumn, AllColumns, Type, ActionType, MessageId)
 {		
+	// push callback을 타는 시점 -> gdsXPushMessage에 구독한 topic
 	trace("!!!!!!!staff>>pushcallback");
     if(ActionType == "PUSH") {
         // 새 주문 신호(MSG가 "1")가 오면 목록 갱신
@@ -295,12 +295,12 @@ this.setStoreName = function ()
 	this.fnGetStoreName();
 };
 
-this.frmCust1210_ontimer = function(obj:nexacro.Form,e:nexacro.TimerEventInfo)
-{
-    if (e.timerid == 2) {
-        this.fnGetOrderList();
-    }
-};
+// this.frmCust1210_ontimer = function(obj:nexacro.Form,e:nexacro.TimerEventInfo)
+// {
+//     if (e.timerid == 2) {
+//         this.fnGetOrderList();
+//     }
+// };
 
 this.makeTitle = function (objDiv, sOrderId, sUserName)
 {
@@ -336,8 +336,6 @@ this.makeTitle = function (objDiv, sOrderId, sUserName)
     
     objDiv.form.addChild(sStaId2, staName);
     staName.show();
-	
-	
 };
 
 this.makeStaName = function (objDiv, objDs, i, nItemY) // 인자 순서와 개수 확인!
@@ -521,11 +519,6 @@ this.fnUpdateStatus = function (obj:nexacro.Button,e:nexacro.ClickEventInfo)
     var nextStatus;
     var orderId = obj.orderidentf; // ORDER_ID
 	
-	this.ds_sendPush.clearData();
-	this.ds_sendPush.setColumn(0, "TARGET_ID", targetIdentf);
-	this.ds_sendPush.setColumn(0, "ORDER_ID", orderId);
-	this.ds_sendPush.setColumn(0, "STATUS", nextStatus);
-	
 	switch(currentStatus) {
 	case 0:
 		nextStatus = 1;
@@ -544,6 +537,13 @@ this.fnUpdateStatus = function (obj:nexacro.Button,e:nexacro.ClickEventInfo)
 	default:
 		return;
 	}
+	
+	// push로 보낼 데이터셋(box) 세팅
+	this.ds_sendPush.clearData();
+	this.ds_sendPush.addRow();
+	this.ds_sendPush.setColumn(0, "TARGET_ID", targetIdentf);
+	this.ds_sendPush.setColumn(0, "ORDER_ID", orderId);
+	this.ds_sendPush.setColumn(0, "STATUS", nextStatus);
 
     // 1. 먼저 DB 업데이트
 	var sSvcId  = "svcUpdateStatus";
@@ -559,7 +559,7 @@ this.fnSendPushStatus = function ()
 {
 	var targetIdentf = this.ds_sendPush.getColumn(0, "TARGET_ID");
 	var orderId = this.ds_sendPush.getColumn(0, "ORDER_ID");
-	var nextStatus = this.ds_sendPush.getColumn(0, "STATUS");
+	var nextStatus = this.ds_sendPush.getColumn(0, "STATUS"); // undefined
 	
 	trace(">>>>> ds_sendPush>>>"+targetIdentf+" 덧 "+orderId+" 덧 "+nextStatus);
 	
@@ -613,12 +613,6 @@ this.fnXPushStart = function ()
    
    this.XPush00.set_iplist("tcp://localhost:50001, http://localhost:50000, http://172.10.14.128:50000");
    
-   
-// 	
-//     this.XPush00.set_projectid("TOBE_EDU");
-//     // 사용 가능한 모든 프로토콜/IP 리스트 세팅
-//     this.XPush00.set_iplist("tcp://localhost:50001, http://localhost:50000, http://172.10.14.128:50000");
-    
     // 매장 코드를 ID 삼아 접속
     this.XPush00.connect(strTopicID, "..."); 
 	
@@ -645,13 +639,7 @@ this.dsMessage_onrowposchanged = function(obj:nexacro.NormalDataset,e:nexacro.DS
 this.btn00_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
 {
 	this.reload();
-};
-
-this.frmStaff1210_ontimer = function(obj:nexacro.Form,e:nexacro.TimerEventInfo)
-{
-	
-};
-]]></Script>
+};]]></Script>
     <Bind>
       <BindItem id="item0" compid="grdOrderList" propid="binddataset" datasetid="ds_orderList" columnid=""/>
     </Bind>

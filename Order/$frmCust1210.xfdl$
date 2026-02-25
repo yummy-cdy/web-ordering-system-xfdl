@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <FDL version="2.1">
-  <Form id="frmCust1210" width="1600" height="770" titletext="사이렌 오더(진행 화면)" onload="frmCust1210_onload" background="white" ontimer="frmCust1210_ontimer">
+  <Form id="frmCust1210" width="1600" height="770" titletext="사이렌 오더(진행 화면)" onload="frmCust1210_onload" background="white" ontimer="frmCust1210_ontimer" scrollbarsize="0">
     <Layouts>
       <Layout height="770" mobileorientation="landscape" width="1600">
         <Static id="Static01_00_00_00_00" taborder="0" text="FRAME" left="0" top="0" width="250" background="red" opacity="20%" textAlign="center" visible="false" bottom="0"/>
@@ -77,7 +77,7 @@
           </Row>
         </Rows>
       </Dataset>
-      <Dataset id="dsMessage" oncolumnchanged="dsMessage_oncolumnchanged">
+      <Dataset id="dsMessage" onrowposchanged="dsMessage_onrowposchanged">
         <ColumnInfo>
           <Column id="TOPIC_ID" type="STRING" size="256"/>
           <Column id="TOPIC_TYPE" type="STRING" size="256"/>
@@ -154,48 +154,17 @@ this.frmCust1210_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
     this.dsTopic.clearData();
 	
 	this.fnGetUserHist();
-	// this.fnGetStoreName();
+	// push subscribe()는, 주문 정보에서 받아와야하므로 callback에서 처리한다 
 	
     var nRow = this.dsTopic.addRow();
     this.dsTopic.setColumn(nRow, "TOPIC_ID", userId);
 	
-	//this.setTimer(1, 3000);
 };
 
 
 /************************************************************************************************
  * CALLBACK 콜백 처리부분(Transaction, Popup)
  ************************************************************************************************/
-// this.fn_push_callback = function(Row, ChangeColumn, AllColumns, Type, ActionType, MessageId)
-// {
-// 	trace("Push 수신 완료! 데이터 건수: " + this.dsMessage.rowcount);
-// 	
-//     if(ActionType == "PUSH") {
-//         var nRow = this.dsMessage.rowcount - 1;
-// 		var pushOrderId = this.dsMessage.getColumn(nRow, "CODE"); // 주문번호
-// 		var pushStatus  = this.dsMessage.getColumn(nRow, "MSG"); // 상태코드
-// 		
-// 		trace("수신된 푸시->주문번호: " + pushOrderId + " >>>> 상태: " + pushStatus);
-// 		
-// 
-//         if(this.ds_userHist.getColumn(0, "IS_IN_ORDER") == pushOrderId) {
-//             this.fn_setProgressBar(pushStatus);
-// 			
-//             if(pushStatus == "8") {
-//                 this.killTimer(1);
-//                 this.fvApp.gdsAuth.setColumn(0, "IS_IN_ORDER", null); //!chk null 대신 ""도 고려 가능
-// 				this.fvApp.gdsAuth.applyChange(); // 변경사항 강제 적용
-// 				
-// 				this.XPush00.unsubscribe("9999", userId);
-// 				this.XPush00.disconnect(); // 아예 연결을 끊어버리세요.
-// 				
-// 				this.parent.parent.divCenter.url = "Base::frmMain1203.xfdl"; 
-//             }
-// 			this.resetScroll();
-//         }	
-//     }
-// };
-
 this.fn_push_callback = function(Row, ChangeColumn, AllColumns, Type, ActionType, MessageId)
 {
     // 1. 수신 확인 로그
@@ -277,14 +246,9 @@ this.fn_callback = function(svcId, errCd, errMsg)
 //             this.killTimer(1);
 //             this.fvApp.gdsAuth.setColumn(0, "IS_IN_ORDER", null); 
 //         }
-// 		this.fnXPushStart();
-// 		this.resetScroll();
-// 		
-		if(nStatus == "8" || nStatus == 8) {
-            trace("▶ 주문 종료 상태(8) 감지! 메인으로 이동합니다.");
-            
-            this.killTimer(1); // 더 이상 DB 안 긁음
-            
+ 		this.fnXPushStart();
+
+		if(nStatus == "8" || nStatus == 8) {    
             // 전역 정보 초기화
             this.fvApp.gdsAuth.setColumn(0, "IS_IN_ORDER", ""); 
             this.fvApp.gdsAuth.applyChange();
@@ -353,6 +317,90 @@ this.frmCust1210_ontimer = function(obj:nexacro.Form,e:nexacro.TimerEventInfo)
     }
 };
  
+this.XPush00_onsuccess = function(obj:nexacro.XPush,e:nexacro.XPushEventInfo)
+{
+	trace("!!!!!!!!!!!!!"+e.action);
+	if(e.action == 0) { // 접속 성공 시
+        trace("XPush Connect Success! Subscribing...");
+        this.XPush00.subscribe("9999", userId, this, nexacro.getApplication().gdsXPushMessage, "append", "fn_push_callback");
+    }
+    if(e.action == 2) { // 구독 성공 시
+        this.XPush00.registerTopic("9999", userId);
+    }
+}
+
+this.fnXPushStart = function ()
+{
+	if ((nexacro._OS == "Android" || nexacro._OS == "iOS") && (nexacro._Browser == "Runtime"))  
+	{      
+		this.XPush00.set_layouturl("%USERAPP%XPushUrl/XPush_Message_Layout.xml");
+	} else   
+	{    
+		this.XPush00.set_layouturl("XPushUrl::XPush_Message_Layout.xml");
+	}   
+	
+	
+    this.XPush00.set_projectid("TOBE_EDU");
+	this.XPush00.set_protocolversion(3);
+    this.XPush00.set_iplist("tcp://localhost:50001, http://localhost:50000, http://172.10.14.128:50000");
+    this.XPush00.connect(userId, "..."); 
+	
+	trace("!!!!!! cust의 xpushstart / userId: "+userId);
+};
+
+
+this.fn_setProgressBar = function(status)
+{
+	var nStatus = nexacro.toNumber(status); 
+    var nPos = 0;
+	
+	this.set_enableevent(false);
+	
+    if(nStatus == "1") nPos = 0;
+    else if(nStatus == "2") {
+		nPos = 33;
+		this.divText.form.staTitle.text = userName+" 님의 주문을 준비 중이에요";
+	}
+    else if(nStatus == "4") {
+		nPos = 66;
+		this.divText.form.staTitle.text = userName+" 님, 메뉴가 모두 준비되었어요";
+		this.divText.form.staDesc.text = "픽업대에서 메뉴를 픽업해 주세요";
+	}
+    else if(nStatus == "8") {
+		nPos = 99;
+		this.fvApp.gdsAuth.setColumn(0, "IS_IN_ORDER", null);
+	}
+
+    this.divText.form.pgbOrderStatus.set_pos(nPos);
+// 	this.resetScroll();
+//     this.divText.form.pgbOrderStatus.set_pos(nPos);
+//     this.divText.form.resetScroll();
+	this.set_enableevent(true); 
+    this.divText.form.resetScroll();
+    
+};
+this.dsProvider_cancolumnchange = function(obj:nexacro.NormalDataset,e:nexacro.DSColChangeEventInfo)
+{
+	this.resetScroll();
+	this.reload();
+};
+
+this.btn00_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	this.reload();
+};
+
+this.dsMessage_onrowposchanged = function(obj:nexacro.NormalDataset,e:nexacro.DSRowPosChangeEventInfo)
+{
+	if(obj.rowcount > 0){
+        var msg = obj.getColumn(e.newrow, "MSG");
+        if(msg == "1") { this.fnGetUserHist(); }
+    }
+};
+
+
+
+/////// Xpush
 /////////////////////////// !chk : XPush 처리 영역 /////////////////////////// 
 /*
 // e.statuscode------------------------------------
@@ -442,160 +490,6 @@ this.XPush00_onkeepalive = function(obj:nexacro.XPush,e:nexacro.XPushKeepAliveEv
 		this.taLog.set_value("KEEP");      
 };
 */
-this.XPush00_onsuccess = function(obj:nexacro.XPush,e:nexacro.XPushEventInfo)
-{
-	trace("!!!!!!!!!!!!!"+e.action);
-	if(e.action == 0) { // 접속 성공 시
-        trace("XPush Connect Success! Subscribing...");
-        this.XPush00.subscribe("9999", userId, this, nexacro.getApplication().gdsXPushMessage, "append", "fn_push_callback");
-    }
-    if(e.action == 2) { // 구독 성공 시
-        this.XPush00.registerTopic("9999", userId);
-    }
-}
-
-/*
-this.XPush00_onsuccess = function(obj:nexacro.XPush,e:nexacro.XPushEventInfo)
-{
-	//trace(this.dsMessage.saveXML());
-/*
-	alert("XPush00_onsuccess Event\n" + 
-			" - eventid: " + e.eventid + "\n" +
-			" - statuscode: " + e.statuscode + "\n" +
-			" - errormsg: " + e.errormsg + "\n" +
-			" - reason: " + e.reason + "\n" +
-			" - action: " + e.action + "\n" +
-			" - serverip: " + e.serverip + "\n" +
-			" - serverport: " + e.serverport + "\n" +
-			" - e.message: " + e.message + "\n" +
-			" - e.command : " + e.command + "\n" +
-			" - e.message : " + e.message + "\n" +
-			" - e.returnvalue : " + e.returnvalue);
-*//*			
-	if(e.message != null) {
-		this.taLog.set_value( "e.message != null\n" + 
-			" - e.message.messagetype: " + e.message.messagetype + "\n" +
-			" - e.message.messagekey: " + e.message.messagekey + "\n" +
-			" - e.message.messageid: " + e.message.messageid + "\n" +
-			" - e.message.returnvalue: " + e.message.returnvalue + "\n" +
-			" - e.message.devicetoken: " + e.message.devicetoken
-		) 
-	}
-	
-	if( e.action == 0 ) {
-		this.taLog.set_value("connect() success");
-		
-//		this.XPush00.subscribe("9999", userId, this, nexacro.getApplication().gdsXPushMessage, "append", "fn_push_callback");
-		this.XPush00.subscribe("9999", userId, this, this.dsMessage, "append", "fn_push_callback");
-
-
-	}
-	if( e.action == 1 ) {
-		this.taLog.set_value("disconnect() success");
-	}
-	if( e.action == 2) {
-		this.taLog.set_value("subscribe() success");
-//		var ret = this.XPush00.registerTopic("9999", strTopicID);
-		var ret = this.XPush00.registerTopic("9999", userId);
-	}
-	if( e.action == 3) {
-		this.taLog.set_value("unsubscribe() success");
-	}
-	if( e.action == 4) {
-		this.taLog.set_value("requestMessage() success");
-	//	trace("e4 : " + this.dsMessage.saveXML());
-	}
-	if( e.action == 5) {
-		this.taLog.set_value("sendResponse() success");
-	}
-	if( e.action == 6) {
-		this.taLog.set_value("reqisterDevice() success");
-	}
-	if( e.action == 7) {
-		this.taLog.set_value("unreqisterDevice() success");
-	}
-	if( e.action == 8) {
-		this.taLog.set_value("reqisterUser() success");
-		this.XPush00.requestMessage("9999", userId);
-	}
-	if( e.action == 9) {
-		this.taLog.set_value("unreqisterUser() success");
-	}
-	if( e.action == 10) {
-		this.taLog.set_value("requestMessageCount() success");
-		if(e.message.returnvalue != undefined || e.message.returnvalue != null) {
-			var returnvalue = e.message.returnvalue;
-			this.taLog.set_value("length : " + returnvalue.length);
-			for(var i = 0; i < returnvalue.length; i++) {
-				this.taLog.set_value("index:" + i + " : " + returnvalue[i].topictype + " : " + returnvalue[i].topicid + " : " + returnvalue[i].count);
-			}
-		}
-	}
-};
-*/
-this.fnXPushStart = function ()
-{
-	if ((nexacro._OS == "Android" || nexacro._OS == "iOS") && (nexacro._Browser == "Runtime"))  
-	{      
-		this.XPush00.set_layouturl("%USERAPP%XPushUrl/XPush_Message_Layout.xml");
-	} else   
-	{    
-		this.XPush00.set_layouturl("XPushUrl::XPush_Message_Layout.xml");
-	}   
-	
-	
-    this.XPush00.set_projectid("TOBE_EDU");
-	this.XPush00.set_protocolversion(3);
-    this.XPush00.set_iplist("tcp://localhost:50001, http://localhost:50000, http://172.10.14.128:50000");
-    this.XPush00.connect(userId, "..."); 
-};
-
-
-this.fn_setProgressBar = function(status)
-{
-	var nStatus = nexacro.toNumber(status); 
-    var nPos = 0;
-	
-	this.set_enableevent(false);
-	
-    if(nStatus == "1") nPos = 0;
-    else if(nStatus == "2") {
-		nPos = 33;
-		this.divText.form.staTitle.text = userName+" 님의 주문을 준비 중이에요";
-	}
-    else if(nStatus == "4") {
-		nPos = 66;
-		this.divText.form.staTitle.text = userName+" 님, 메뉴가 모두 준비되었어요";
-		this.divText.form.staDesc.text = "픽업대에서 메뉴를 픽업해 주세요";
-	}
-    else if(nStatus == "8") {
-		nPos = 99;
-		this.fvApp.gdsAuth.setColumn(0, "IS_IN_ORDER", null);
-	}
-
-    this.divText.form.pgbOrderStatus.set_pos(nPos);
-// 	this.resetScroll();
-//     this.divText.form.pgbOrderStatus.set_pos(nPos);
-//     this.divText.form.resetScroll();
-	this.set_enableevent(true); 
-    this.divText.form.resetScroll();
-    
-};
-this.dsProvider_cancolumnchange = function(obj:nexacro.NormalDataset,e:nexacro.DSColChangeEventInfo)
-{
-	this.resetScroll();
-	this.reload();
-};
-
-this.dsMessage_oncolumnchanged = function(obj:nexacro.NormalDataset,e:nexacro.DSColChangeEventInfo)
-{
-	this.fn_push_callback(e.row, e.columnid, null, null, "PUSH", null);
-};
-
-this.btn00_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
-{
-	this.reload();
-};
 ]]></Script>
   </Form>
 </FDL>
