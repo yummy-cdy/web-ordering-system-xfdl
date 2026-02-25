@@ -30,15 +30,23 @@
 /***********************************************************************************************/
 this.form_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
 {
-	this.gfnFormOnLoad(this);
-	var sUrl = this.getOwnerFrame().paramUrl;
-	trace("paramUrl : " + sUrl);
+// 	this.gfnFormOnLoad(this);
+// 	var sUrl = this.getOwnerFrame().paramUrl;
+// 	trace("paramUrl : " + sUrl);
+// 	
+// 	//webBrowser url 세팅
+// 	if (!this.gfnIsNull(sUrl)) { 
+// 		this.web00.url = sUrl;
+// 	}
+
+	this.web00.move(0, 0, this.width, this.height);
+    
+    var sUrl = this.getOwnerFrame().pUrl; 
+    alert("Target URL: " + sUrl);
+    this.web00.set_url(sUrl);
 	
-	//webBrowser url 세팅
-	if (!this.gfnIsNull(sUrl)) {
-		this.web00.url = sUrl;
-	}
-};
+	
+}; 
 
 /************************************************************************************************
 * TRANSACTION 서비스 호출 처리
@@ -51,7 +59,13 @@ this.form_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
  /************************************************************************************************
  * 사용자 FUNCTION 영역
  ************************************************************************************************/
- 
+ // HTML에서 window.NEXACROWEBBROWSER.onusernotify()를 호출하면 발생
+this.web00_onusernotify = function(obj:nexacro.WebBrowser,e:nexacro.WebUserNotifyEventInfo)
+{
+    // HTML에서 보낸 sData가 e.userdata에 담겨 옴
+    this.close(e.userdata); 
+};
+
  /************************************************************************************************
  * 각 COMPONENT 별 EVENT 영역
  ************************************************************************************************/

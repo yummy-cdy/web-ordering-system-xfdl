@@ -8,11 +8,44 @@
         <Static id="Static01_00_01" taborder="2" text="FRAME" left="0" top="0" height="20" background="red" opacity="40%" textAlign="center" visible="false" right="0"/>
         <Static id="Static01_00_00_00" taborder="4" text="FRAME" left="1350" top="0" width="250" background="red" opacity="40%" textAlign="center" visible="false" bottom="0"/>
         <ImageViewer id="ivMainLogo" taborder="3" left="15.63%" top="18.75%" width="3.125%" background="url('imagerc::starbucks-roundlogo.png') no-repeat right center /contain" border="0px none" height="62.5%" onclick="ivMainLogo_onclick"/>
-        <Button id="btnMenu" taborder="5" text="MENU" top="25.00%" width="6.875%" height="50%" right="45.25%" background="white" onmouseenter="fn_onmouseenter" onmouseleave="fn_onmouseleave" font="normal bold 13px/normal &quot;KopubWorld&quot;" onclick="btnMenu_onclick" border="1px solid black"/>
-        <Button id="btnStore" taborder="6" text="STORE" top="25.00%" width="6.875%" height="50%" right="38.50%" background="white" onmouseenter="fn_onmouseenter" onmouseleave="fn_onmouseleave" font="normal bold 13px/normal &quot;KopubWorld&quot;" border="1px solid black" onclick="btnStore_onclick"/>
-        <Button id="btnNotice" taborder="7" text="EVENT &amp; NOTICE" top="25.00%" width="7.5%" height="50%" right="22.44%" background="white" onmouseenter="fn_onmouseenter" onmouseleave="fn_onmouseleave" font="normal bold 12px/normal &quot;KopubWorld&quot;" border="1px solid black"/>
-        <Button id="btnAbout" taborder="8" text="ABOUT US" top="25.00%" height="50%" width="6.875%" right="15.63%" background="white" onmouseenter="fn_onmouseenter" onmouseleave="fn_onmouseleave" font="normal bold 13px/normal &quot;KopubWorld&quot;" border="1px solid black"/>
-        <Button id="btnSirenOrder" taborder="9" text="SIREN ORDER" top="25.00%" width="8.75%" height="50%" right="29.88%" background="white" onmouseenter="fn_onmouseenter" onmouseleave="fn_onmouseleave" font="normal bold 13px/normal &quot;KopubWorld&quot;" border="1px solid black" onclick="btnSirenOrder_onclick"/>
+        <Button id="btnMenu" taborder="5" text="MENU" top="25.00%" width="6.875%" height="50%" right="38.63%" background="white" onmouseenter="fn_onmouseenter" onmouseleave="fn_onmouseleave" font="normal bold 13px/normal &quot;KopubWorld&quot;" onclick="btnMenu_onclick" border="1px solid black"/>
+        <Button id="btnStore" taborder="6" text="STORE" top="25.00%" width="6.875%" height="50%" right="31.88%" background="white" onmouseenter="fn_onmouseenter" onmouseleave="fn_onmouseleave" font="normal bold 13px/normal &quot;KopubWorld&quot;" border="1px solid black" onclick="btnStore_onclick"/>
+        <Button id="btnNotice" taborder="7" text="EVENT &amp; NOTICE" top="25.00%" width="7.5%" height="50%" right="15.63%" background="white" onmouseenter="fn_onmouseenter" onmouseleave="fn_onmouseleave" font="normal bold 12px/normal &quot;KopubWorld&quot;" border="1px solid black"/>
+        <Button id="btnSirenOrder" taborder="8" text="SIREN ORDER" top="25.00%" width="8.75%" height="50%" right="23.13%" background="white" onmouseenter="fn_onmouseenter" onmouseleave="fn_onmouseleave" font="normal bold 13px/normal &quot;KopubWorld&quot;" border="1px solid black" onclick="btnSirenOrder_onclick"/>
+        <Grid id="Grid00" taborder="9" left="250" top="160" width="560" height="72" binddataset="gdsAuth" visible="false">
+          <Formats>
+            <Format id="default">
+              <Columns>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+                <Column size="80"/>
+              </Columns>
+              <Rows>
+                <Row band="head" size="24"/>
+                <Row size="24"/>
+              </Rows>
+              <Band id="head">
+                <Cell text="LOGIN_EMAIL"/>
+                <Cell col="1" text="NAME"/>
+                <Cell col="2" text="USER_TYPE"/>
+                <Cell col="3" text="CREATED_AT"/>
+                <Cell col="4" text="STORE_CODE"/>
+                <Cell col="5" text="IS_IN_ORDER"/>
+              </Band>
+              <Band id="body">
+                <Cell text="bind:LOGIN_EMAIL"/>
+                <Cell col="1" text="bind:NAME"/>
+                <Cell col="2" text="bind:USER_TYPE"/>
+                <Cell col="3" text="bind:CREATED_AT"/>
+                <Cell col="4" text="bind:STORE_CODE"/>
+                <Cell col="5" text="bind:IS_IN_ORDER"/>
+              </Band>
+            </Format>
+          </Formats>
+        </Grid>
       </Layout>
     </Layouts>
     <Script type="xscript5.1"><![CDATA[/**
@@ -90,7 +123,8 @@ this.btnSirenOrder_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInf
 	}
 
 	var isInOrder = this.fvApp.gdsAuth.getColumn(0, "IS_IN_ORDER");
-	if(isInOrder == null || isInOrder == "undefined"){
+	alert("isInorder>>"+isInOrder);
+	if(isInOrder == null || isInOrder == "undefined"|| isInOrder == ""){
 		alert("사이렌 오더 주문 시 이용할 수 있습니다.");
 		return;
 	}

@@ -21,11 +21,11 @@
           </Layouts>
         </Div>
         <TextArea id="taLog" taborder="7" left="747" top="531" width="247" height="79" visible="true"/>
-        <Button id="btn00" taborder="6" text="새로고침" left="1266" top="47" width="60" height="64" onclick="btn00_onclick"/>
+        <Button id="btnReload" taborder="6" top="20" width="25" height="25" onclick="btn00_onclick" border="0px none" background="url('imagerc::reload.png') no-repeat center center /contain" right="250"/>
         <ListView id="lvOrderHist" taborder="4" left="250" top="420" width="1100" height="460" binddataset="ds_userHist">
           <Formats>
             <Format id="default">
-              <Band id="body" width="100%" height="34">
+              <Band id="body" width="100%" height="100">
                 <Cell id="Cell00" left="10" top="5" width="120" height="24" text="ORDER_ID"/>
                 <Cell id="Cell01" left="135" top="5" width="180" height="24" text="bind:ORDER_ID"/>
                 <Cell id="Cell02" left="325" top="5" width="120" height="24" text="STORE_CODE"/>
@@ -116,9 +116,9 @@
 *******************************************************************************
 *  2026/02/12      		 이아인	 	  	        최초 생성 
 *******************************************************************************
-*  2026/02/19      		 이아인	 	  	     XPush 양방향 연결
+*  2026/02/19      		 이아인	 	  	        XPush 연결
 *******************************************************************************
-*  2026/02/23      		 이아인	 	  	   사이렌 오더 기능 구현 
+*  2026/02/25      		 이아인	 	  	   사이렌 오더 기능 구현 
 *******************************************************************************
 */
 
@@ -170,13 +170,12 @@ this.fn_push_callback = function(Row, ChangeColumn, AllColumns, Type, ActionType
     // 1. 수신 확인 로그
     trace("Push 수신 >> 이벤트 ActionType: " + ActionType + " | 데이터 건수: " + nexacro.getApplication().gdsXPushMessage.rowcount);
     
-    // ActionType이 "PUSH"이거나 "RELI"(신뢰성)인 경우 모두 처리 가능하도록 체크
     if(ActionType == "PUSH" || ActionType == "RELI") {
         
+trace("1");
         // 2. append 방식이므로 무조건 마지막 행 데이터 추출
-        var nRow = nexacro.getApplication().gdsXPushMessage.rowcount - 1;
-        if(nRow < 0) return;
-
+		var nRow = nexacro.getApplication().gdsXPushMessage.rowposition;
+		
         var pushOrderId = String(nexacro.getApplication().gdsXPushMessage.getColumn(nRow, "CODE")); // 주문번호 (문자열 변환)
         var pushStatus  = String(nexacro.getApplication().gdsXPushMessage.getColumn(nRow, "MSG"));  // 상태코드 (문자열 변환)
         
@@ -184,40 +183,33 @@ this.fn_push_callback = function(Row, ChangeColumn, AllColumns, Type, ActionType
         var myOrderId = String(this.fvApp.gdsAuth.getColumn(0, "IS_IN_ORDER"));
 
         trace("비교로그 -> 수신ID: " + pushOrderId + " | 내ID: " + myOrderId + " | 상태: " + pushStatus);
-
+trace("2");
+trace("======================>>"+pushStatus);
         // 3. 주문번호가 일치할 때만 UI 업데이트
         if(myOrderId == pushOrderId) {
             this.fn_setProgressBar(pushStatus);
             
 			if(pushStatus != "8") {
-                this.resetScroll();
-                // this.reload(); // XPush 연결이 끊길 수 있으니 주의
+  //              this.resetScroll();
             }
-			
+trace("3");			
             // 4. 종료 상태(8) 처리
             if(pushStatus == "8") {
                 trace("주문 종료 처리 시작");
-                this.killTimer(1);
                 
                 // GDS 데이터 정리
+				trace("8!! from pushcallback");
                 this.fvApp.gdsAuth.setColumn(0, "IS_IN_ORDER", ""); 
                 this.fvApp.gdsAuth.applyChange(); 
                 
                 // XPush 연결 해제
                 this.XPush00.unsubscribe("9999", userId);
                 this.XPush00.disconnect(); 
-                
-				
-				if(this.parent.name == "divCenter"){
-					this.parent.set_url("Base::frmMain1203.xfdl"); // 화면 이동 
-				} else {
-					// 부모의 부모를 찾아가는 가장 안전한 방법
-					this.getOwnerFrame().form.divCenter.set_url("Base::frmMain1203.xfdl");
-				}
-				return;
+ trace("4");               
+//				return;
 				////
             }
-            this.resetScroll();
+ //           this.resetScroll();
         }   
     }
 };
@@ -239,7 +231,7 @@ this.fn_callback = function(svcId, errCd, errMsg)
 		strTopicID = this.ds_userHist.getColumn(0, "STORE_CODE");
 		this.fnGetStoreName();
 		
-		var nStatus = this.ds_userHist.getColumn(0, "STATUS_TYPE");
+		var nStatus = nexacro.getApplication().gdsXPushMessage.getColumn(0, "STATUS_TYPE"); 
         this.fn_setProgressBar(nStatus);
         
 //         if(nStatus == "8") {
@@ -250,6 +242,7 @@ this.fn_callback = function(svcId, errCd, errMsg)
 
 		if(nStatus == "8" || nStatus == 8) {    
             // 전역 정보 초기화
+			trace("8!! from just callback");
             this.fvApp.gdsAuth.setColumn(0, "IS_IN_ORDER", ""); 
             this.fvApp.gdsAuth.applyChange();
             
@@ -367,7 +360,9 @@ this.fn_setProgressBar = function(status)
 		this.divText.form.staDesc.text = "픽업대에서 메뉴를 픽업해 주세요";
 	}
     else if(nStatus == "8") {
-		this.fvApp.gdsAuth.setColumn(0, "IS_IN_ORDER", null);
+		trace("8!! from progressBar");
+		this.fvApp.gdsAuth.setColumn(0, "IS_IN_ORDER", "");
+		this.fvApp.gdsAuth.applyChange();
 	}
 
     this.divText.form.pgbOrderStatus.set_pos(nPos);

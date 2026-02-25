@@ -3,14 +3,14 @@
   <Form id="frmAuth1231" width="1600" height="770" titletext="회원가입 화면(분기점)" onload="frmAuth1231_onload" background="white">
     <Layouts>
       <Layout height="770" mobileorientation="landscape" width="1600">
-        <ImageViewer id="imgvCust" taborder="0" left="330" top="130" width="400" height="400" background="url('imagerc::customer.png') no-repeat center center /50%" border="1px solid black"/>
+        <ImageViewer id="imgvCust" taborder="0" left="330" top="130" width="400" height="400" background="url('imagerc::customer.png') no-repeat center center /50%" border="1px solid black" text="" borderRadius="10px 10px 10px 10px"/>
         <Static id="Static01_00_01_00" taborder="1" text="FRAME" left="0" top="750" height="20" background="red" opacity="40%" textAlign="center" visible="false" right="0"/>
         <Static id="Static01_00_01" taborder="2" text="FRAME" left="0" top="0" height="20" background="red" opacity="40%" textAlign="center" visible="false" right="0"/>
         <Static id="Static01_00_00_00" taborder="3" text="FRAME" left="1350" top="0" width="250" background="red" opacity="40%" textAlign="center" visible="false" bottom="0"/>
         <Static id="Static01_00_00_00_00" taborder="4" text="FRAME" left="0" top="0" width="250" background="red" opacity="40%" textAlign="center" visible="false" bottom="0"/>
-        <ImageViewer id="imgvStaff" taborder="5" top="130" width="400" height="400" background="url('imagerc::staff.png') no-repeat center center /50%" border="1px solid black" right="330"/>
-        <Button id="btnCust" taborder="6" text="고객으로 회원가입" left="345" top="567" width="384" height="71" onclick="btnCust_onclick" border="1px solid black" background="white" font="normal bold 13px/normal &quot;KopubWorld&quot;"/>
-        <Button id="btnStaff" taborder="7" text="파트너로 회원가입" left="878" top="567" width="384" height="71" border="1px solid black" background="white" font="normal bold 13px/normal &quot;KopubWorld&quot;" onclick="btnStaff_onclick"/>
+        <ImageViewer id="imgvStaff" taborder="5" top="130" width="400" height="400" background="url('imagerc::staff.png') no-repeat center center /50%" border="1px solid black" text="" left="830" borderRadius="10px 10px 10px 10px"/>
+        <Button id="btnCust" taborder="6" text="고객으로 회원가입" left="338" top="550" width="384" height="71" onclick="btnCust_onclick" border="1px solid black" background="white" font="normal bold 13px/normal &quot;KopubWorld&quot;" borderRadius="10px 10px 10px 10px"/>
+        <Button id="btnStaff" taborder="7" text="파트너로 회원가입" left="838" top="550" width="384" height="71" border="1px solid black" background="white" font="normal bold 13px/normal &quot;KopubWorld&quot;" onclick="btnStaff_onclick" borderRadius="10px 10px 10px 10px"/>
       </Layout>
     </Layouts>
     <Script type="xscript5.1"><![CDATA[/**

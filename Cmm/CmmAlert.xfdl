@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <FDL version="2.1">
-  <Form id="CmmAlert" width="360" height="200" titletext="알림창" onload="form_onload">
+  <Form id="CmmAlert" width="360" height="200" titletext="알림창" onload="form_onload" background="white" scrollbarsize="0">
     <Layouts>
       <Layout height="200" width="360">
-        <Static id="Static00" taborder="1" left="0" top="40" cssclass="sta_POP_Bg" right="0" bottom="0" text=""/>
-        <Button id="btnOk" taborder="0" text="확인" width="70" height="34" bottom="9" onclick="btnOk_onclick" uWord="popup.ok" cssclass="btn_WF_FillBlue" right="15"/>
-        <TextArea id="txtMsgContent" taborder="3" left="0" top="20" cssclass="txt_POP_Message" value="해당 row의 위치를 이동하면 변경된 데이터가 사라집니다. \n계속 진행 하시겠습니까?" readonly="true" height="125" width="360"/>
+        <Static id="Static00" taborder="1" left="0" top="40" cssclass="sta_POP_Bg" right="0" bottom="0" text="" background="white"/>
+        <Button id="btnOk" taborder="0" text="확인" width="70" height="34" bottom="15" onclick="btnOk_onclick" uWord="popup.ok" cssclass="btn_WF_FillBlue" right="145" border="2px solid black" background="white" font="normal 500 11px/normal &quot;KopubWorld&quot;" borderRadius="10px 10px 10px 10px"/>
+        <TextArea id="txtMsgContent" taborder="3" left="0" top="10" cssclass="txt_POP_Message" value="해당 row의 위치를 이동하면 변경된 데이터가 사라집니다. \n계속 진행 하시겠습니까?" readonly="true" height="125" width="360" background="white" border="0px none" scrollbarsize="0" font="normal 500 13px/normal &quot;KopubWorld&quot;" textAlign="center"/>
         <Static id="staIcon" taborder="2" left="15" top="40" width="50" height="50" cssclass="sta_POP_Info"/>
       </Layout>
     </Layouts>

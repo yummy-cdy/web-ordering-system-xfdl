@@ -8,7 +8,7 @@
         <Static id="Static01_00_01_00" taborder="2" text="FRAME" left="0" top="750" height="20" background="red" opacity="40%" textAlign="center" visible="false" right="0"/>
         <Static id="Static01_00_00_00_00" taborder="3" text="FRAME" left="0" top="0" width="250" background="red" opacity="40%" textAlign="center" visible="false" bottom="0"/>
         <Static id="Static00" taborder="4" text="(홍보 이미지/문구) 메인화면" left="614" top="310" width="373" height="150" textAlign="center" font="normal 15pt/normal &quot;Arial&quot;"/>
-        <ImageViewer id="ImageViewer00" taborder="5" left="0" top="0" width="1620" height="2680" text=" " image="url('imagerc::MainScreen-sample.png')" stretch="fixaspectratio"/>
+        <ImageViewer id="ImageViewer00" taborder="5" left="-10" top="0" width="1620" height="2680" text=" " image="url('imagerc::MainScreen-sample.png')" stretch="fixaspectratio"/>
       </Layout>
     </Layouts>
     <Script type="xscript5.1"><![CDATA[

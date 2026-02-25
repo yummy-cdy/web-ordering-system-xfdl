@@ -247,10 +247,10 @@ this.setProdList = function ()
 
     var nCardW   = 260;
     var nCardH   = 310;
-    var nGapX    = 25;
+    var nGapX    = 20;
     var nGapY    = 25;
     var nStartX  = 250;
-    var nStartY  = 400;
+    var nStartY  = 350;
     var nColCnt  = 4;
 	var nTitleH  = 60;
 	

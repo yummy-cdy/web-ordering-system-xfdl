@@ -52,7 +52,7 @@
             </Layout>
           </Layouts>
         </Div>
-        <Button id="btn00" taborder="9" text="btn00" left="1261" top="34" width="64" height="60" onclick="btn00_onclick"/>
+        <Button id="btnReload" taborder="9" top="175" width="25" height="25" onclick="btn00_onclick" border="0px none" background="url('imagerc::reload.png') no-repeat center center /contain" right="250"/>
       </Layout>
     </Layouts>
     <Objects>
@@ -190,6 +190,7 @@
 this.fvApp = nexacro.getApplication();
 
 this.strStoreName = "";
+this.isClear = -1;
 
 var strTopicID = this.fvApp.gdsAuth.getColumn(0, "STORE_CODE");
 var strPushType = "PUSH";
@@ -243,6 +244,15 @@ this.fn_callback = function(svcId, errCd, errMsg)
 	
 	if(svcId == "svcUpdateStatus") {
 		this.fnSendPushStatus();
+		
+		trace("-------isClear------------>"+this.isClear);
+		if(this.isClear > 0){
+			trace("--------in isclear if----->"+this.objDivIdentf.parent.parent+"+"+this.objOrderIdentf);
+			this.deleteOneDiv(this.objDivIdentf.parent.parent); // 해당 주문을 화면에서 삭제
+			this.fnClearOrder(this.objOrderIdentf); // DB(user의 isinorder를 null, storeorders delete)
+			this.isClear = -1;
+		
+		}
     }
 	
 	if(svcId =="svcClearOrder"){
@@ -531,9 +541,10 @@ this.fnUpdateStatus = function (obj:nexacro.Button,e:nexacro.ClickEventInfo)
 		break;
 	case 4:
 		nextStatus = 8;
-		this.deleteOneDiv(obj.parent.parent) // 해당 주문을 화면에서 삭제
-		this.fnClearOrder(orderId); // DB(user의 isinorder를 null, storeorders delete)
-		return;
+		this.objDivIdentf = obj;
+		this.objOrderIdentf = orderId;
+		this.isClear = 100;
+		break;
 	default:
 		return;
 	}

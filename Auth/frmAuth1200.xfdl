@@ -12,15 +12,16 @@
             <Layout>
               <TextField id="tfEmail" taborder="0" labeltext="ID (Email)" left="20.91%" top="25.64%" width="31.818181818181817%" height="18.244803695150114%" font="normal bold 13px/normal &quot;KopubWorld&quot;normal bold 13px/normal &quot;KopubWorld&quot;" inputtype="email"/>
               <TextField id="tfPassword" taborder="1" labeltext="Password" left="20.91%" top="46.19%" width="31.818181818181817%" height="18.244803695150114%" font="normal bold 13px/normal &quot;KopubWorld&quot;" inputtype="password"/>
-              <Button id="btnLogin" taborder="2" text="로그인" left="57.27272727272727%" top="28.637413394919168%" width="28.181818181818183%" height="23.556581986143186%" background="white" font="normal bold 13px/normal &quot;KopubWorld&quot;" border="1px solid #000000" borderRadius="5px 5px 5px 5px" onclick="divLogin_btnLogin_onclick"/>
-              <Button id="btnNaverLogin" taborder="3" left="57.27272727272727%" top="54.50346420323326%" width="28.181818181818183%" height="13.856812933025404%" background="url('imagerc::NAVER_login_Light_KR_green_wide_H56.png') no-repeat left top /contain" border="0px none"/>
-              <Static id="staFindPW" taborder="4" text="비밀번호 찾기" left="63.91%" top="70.45%" width="7.454545454545454%" height="5.66869619987403%" textAlign="center" font="normal 700 11px/normal &quot;KopubWorld&quot;" onclick="divLogin_staFindPW_onclick"/>
-              <Static id="staSignUp" taborder="5" text="회원가입" left="73.18%" top="70.45%" width="6.363636363636363%" height="5.66869619987403%" textAlign="center" font="normal 700 11px/normal &quot;KopubWorld&quot;" onclick="divLogin_staSignUp_onclick"/>
-              <Static id="staMsg" taborder="6" left="20.90909090909091%" top="64.43418013856812%" width="31.636363636363637%" height="12.009237875288683%" font="normal 500 11px/normal &quot;KopubWorld&quot;" color="red" text="이메일(로그인 아이디) 또는 비밀번호가 잘못 되었습니다. 이메일과 비밀번호를 정확히 입력해 주세요." textAlign="left" tooltiptype="default" wordWrap="char" visible="false" padding="0px"/>
+              <Button id="btnLogin" taborder="2" text="로그인" left="57.36%" top="33.47%" width="28.181818181818183%" height="23.484598542335267%" background="white" font="normal bold 13px/normal &quot;KopubWorld&quot;" border="1px solid #000000" borderRadius="5px 5px 5px 5px" onclick="divLogin_btnLogin_onclick"/>
+              <Static id="staFindPW" taborder="3" text="비밀번호 찾기" left="64.00%" top="59.66%" width="7.454545454545454%" height="5.66869619987403%" textAlign="center" font="normal 700 11px/normal &quot;KopubWorld&quot;" onclick="divLogin_staFindPW_onclick"/>
+              <Static id="staSignUp" taborder="4" text="회원가입" left="72.27%" top="59.66%" width="6.363636363636363%" height="5.66869619987403%" textAlign="center" font="normal 700 11px/normal &quot;KopubWorld&quot;" onclick="divLogin_staSignUp_onclick"/>
+              <Static id="staMsg" taborder="5" left="20.90909090909091%" top="64.43418013856812%" width="31.636363636363637%" height="12.009237875288683%" font="normal 500 11px/normal &quot;KopubWorld&quot;" color="red" text="이메일(로그인 아이디) 또는 비밀번호가 잘못 되었습니다. 이메일과 비밀번호를 정확히 입력해 주세요." textAlign="left" tooltiptype="default" wordWrap="char" visible="false" padding="0px"/>
             </Layout>
           </Layouts>
         </Div>
         <ImageViewer id="staLogo" taborder="5" left="36.1875%" top="19.444444444444443%" width="27.6875%" height="8.333333333333334%" background="url('imagerc::starbucks-seeklogo.png') no-repeat center center /contain" border="0px none"/>
+        <Button id="btnNaverLogin" taborder="6" left="58.75%" top="103.25%" width="19.3125%" height="6.623376623376624%" background="url('imagerc::NAVER_login_Light_KR_green_wide_H56.png') no-repeat left top /contain" border="0px none" onclick="divLogin_btnNaverLogin_onclick" text="" visible="false"/>
+        <WebView id="webviewNaver" taborder="7" left="615" top="790" width="310" height="51" url="http://172.10.14.128:8088/edupack_egov/external/p02/naverlogin.html" visible="false"/>
       </Layout>
     </Layouts>
     <Script type="xscript5.1"><![CDATA[
@@ -125,6 +126,17 @@ this.fnCheckValidation = function ()
 	return true;
 };
 
+this.fn_popupCallback = function(strId, strVal)
+{
+    if(strVal) {
+        var objData = JSON.parse(strVal);
+        alert("네이버 로그인 성공 데이터: " + objData.user_email);
+        // 이후 로그인 처리 로직 진행 (gdsAuth에 데이터 세팅 등)
+		
+		// email 기준으로 트랜잭션 날리기
+    }
+};
+
 /************************************************************************************************
  * 각 COMPONENT 별 EVENT 영역
  ************************************************************************************************/
@@ -155,6 +167,28 @@ this.divLogin_btnLogin_onclick = function(obj:nexacro.Button,e:nexacro.ClickEven
 this.divLogin_staFindPW_onclick = function(obj:nexacro.Static,e:nexacro.ClickEventInfo)
 {
 	// popup 띄우기
+};
+
+this.divLogin_btnNaverLogin_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	var strUrl = "http://172.10.14.128:8088/edupack_egov/external/p02/naverlogin.html"; // 실제 네이버 로그인 연동 HTML 경로
+    //var strUrl = "https://www.naver.com/";
+	
+//     var objChildFrame = new ChildFrame();
+//     objChildFrame.init("chf_popup", 0, 0, 500, 600); // 팝업 사이즈 조절
+//     objChildFrame.set_formurl("Cmm::CmmWebpage.xfdl"); // 아래에서 만들 공통 웹브라우저 폼
+//     objChildFrame.set_openalign("center middle");
+//     
+    // HTML URL을 파라미터로 전달
+    
+   // objChildFrame.showModal(this.getOwnerFrame(), oArg, this, "fn_popupCallback");
+	//
+	var sPopupId = "chf_popup";
+    var sUrl = "Cmm::CmmWebpage.xfdl";
+    var oArg = {pUrl: strUrl};
+    var sPopupCallback = "fnCallPopup";
+    var oOption = {title: "제품 상세 정보", width: "580", height: "630" };
+    this.gfnOpenPopup(sPopupId, sUrl, oArg, sPopupCallback, oOption);
 };
 ]]></Script>
     <Objects>

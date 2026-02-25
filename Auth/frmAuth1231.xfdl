@@ -10,14 +10,13 @@
         <Div id="divSignUp" taborder="4" text="Div00" left="15.63%" top="2.2222222222222223%" width="68.75%" formscrollbarsize="0" bottom="2.2222222222222223%">
           <Layouts>
             <Layout>
-              <TextField id="tfEmail" taborder="0" labeltext="ID (Email)" left="31.00%" top="32.48%" width="28.09090909090909%" height="7.746904258532165%" font="normal bold 13px/normal &quot;KopubWorld&quot;normal bold 13px/normal &quot;KopubWorld&quot;" inputtype="email"/>
-              <Button id="btnNaverSignUp" taborder="1" left="31.00%" top="22.79%" width="37.36363636363637%" height="5.813953488372093%" font="normal bold 13px/normal &quot;KopubWorld&quot;" border="0px none" background="url('imagerc::NAVER_signup_Light_KR_green_wide_H56.png') no-repeat center center /contain"/>
-              <TextField id="tfPW" taborder="2" labeltext="Password" left="31.00%" top="41.05%" width="37.36363636363637%" height="7.746904258532165%" font="normal bold 13px/normal &quot;KopubWorld&quot;normal bold 13px/normal &quot;KopubWorld&quot;" onchanged="divSignUp_tfPW_onchanged" inputtype="text"/>
-              <ImageViewer id="staLogo" taborder="3" left="342" top="8.02%" width="37.36363636363637%" height="11.627906976744185%" border="0px none" background="url('imagerc::starbucks-seeklogo.png') no-repeat left center /contain" text=""/>
-              <TextField id="tfPWChk" taborder="4" labeltext="Password Check" left="31.00%" top="50.29%" width="37.36363636363637%" height="7.746904258532165%" font="normal bold 13px/normal &quot;KopubWorld&quot;normal bold 13px/normal &quot;KopubWorld&quot;" inputtype="password" canchange="divSignUp_tfPWChk_canchange"/>
-              <TextField id="tfName" taborder="5" labeltext="Name" left="31.00%" top="59.53%" width="37.36363636363637%" height="7.610993657505285%" font="normal bold 13px/normal &quot;KopubWorld&quot;normal bold 13px/normal &quot;KopubWorld&quot;"/>
-              <Button id="btnSignUp" taborder="6" text="회원가입" left="31.00%" top="69.59%" width="37.36363636363637%" height="3.8054968287526423%" onclick="divSignUp_btnSignUp_onclick" enable="true" font="normal bold 13px/normal &quot;KopubWorld&quot;" borderRadius="5px 5px 5px 5px" border="1px solid #000000" background="white"/>
-              <Button id="btnValidEmail" taborder="7" left="60.00%" top="33.98%" width="8%" height="5.844155844155844%" onclick="divSignUp_btnValidEmail_onclick" font="normal bold 13px/normal &quot;KopubWorld&quot;" border="1px solid black" text="중복 체크" background="white"/>
+              <TextField id="tfEmail" taborder="0" labeltext="ID (Email)" left="31.00%" top="25.01%" width="28.09090909090909%" height="7.746904258532165%" font="normal bold 13px/normal &quot;KopubWorld&quot;normal bold 13px/normal &quot;KopubWorld&quot;" inputtype="email" oninput="divSignUp_tfEmail_oninput"/>
+              <TextField id="tfPW" taborder="1" labeltext="Password" left="31.00%" top="32.75%" width="37.36363636363637%" height="7.746904258532165%" font="normal bold 13px/normal &quot;KopubWorld&quot;normal bold 13px/normal &quot;KopubWorld&quot;" onchanged="divSignUp_tfPW_onchanged" inputtype="text"/>
+              <ImageViewer id="staLogo" taborder="2" left="342" top="8.02%" width="37.36363636363637%" height="11.627906976744185%" border="0px none" background="url('imagerc::starbucks-seeklogo.png') no-repeat left center /contain" text=""/>
+              <TextField id="tfPWChk" taborder="3" labeltext="Password Check" left="31.00%" top="42.00%" width="37.36363636363637%" height="7.746904258532165%" font="normal bold 13px/normal &quot;KopubWorld&quot;normal bold 13px/normal &quot;KopubWorld&quot;" inputtype="password" canchange="divSignUp_tfPWChk_canchange"/>
+              <TextField id="tfName" taborder="4" labeltext="Name" left="31.00%" top="51.24%" width="37.36363636363637%" height="7.610993657505285%" font="normal bold 13px/normal &quot;KopubWorld&quot;normal bold 13px/normal &quot;KopubWorld&quot;"/>
+              <Button id="btnSignUp" taborder="5" text="회원가입" left="31.00%" top="61.30%" width="37.36363636363637%" height="3.8054968287526423%" onclick="divSignUp_btnSignUp_onclick" enable="true" font="normal bold 13px/normal &quot;KopubWorld&quot;" borderRadius="5px 5px 5px 5px" border="1px solid #000000" background="white"/>
+              <Button id="btnValidEmail" taborder="6" left="60.00%" top="26.77%" width="8%" height="5.844155844155844%" onclick="divSignUp_btnValidEmail_onclick" font="normal bold 13px/normal &quot;KopubWorld&quot;" border="1px solid black" text="중복 체크" background="white" borderRadius="5px 5px 5px 5px"/>
             </Layout>
           </Layouts>
         </Div>
@@ -49,6 +48,7 @@
             </Format>
           </Formats>
         </Grid>
+        <Button id="btnNaverSignUp" taborder="6" left="37.19%" top="105.06%" width="25.6875%" height="5.454545454545454%" font="normal bold 13px/normal &quot;KopubWorld&quot;" border="0px none" background="url('imagerc::NAVER_signup_Light_KR_green_wide_H56.png') no-repeat center center /contain" visible="false"/>
       </Layout>
     </Layouts>
     <Script type="xscript5.1"><![CDATA[/**
@@ -151,7 +151,9 @@ this.fnCheckIsBlankIn = function (purpose)
         var sColId = arrCheckCols[i];
         var sVal = this.ds_signUp.getColumn(0, sColId);
         
-        if(this.gfnIsNull(sVal)) continue; 
+        if(this.gfnIsNull(sVal)){ 
+            return false; 
+        }
         
         if(regex.test(sVal.toString())){ // 공백이 나온다면
             return false; 
@@ -184,12 +186,12 @@ this.fnCheckValidation = function ()
 
 this.fnItIsValidEmail = function ()
 {
-	this.divSignUp.form.btnValidEmail.background = "yellowgreen";
+	this.divSignUp.form.btnValidEmail.background = "green";
 	this.divSignUp.form.btnValidEmail.color = "white";
 	this.ds_signUp.setColumn(0,"IS_VALID_EMAIL","Clear");
 	//alert("true>>"+this.bValidEmail);
-	this.divSignUp.form.btnValidEmail.enable = false;
-	this.divSignUp.form.tfEmail.enable = false;
+	//this.divSignUp.form.btnValidEmail.enable = false;
+	//this.divSignUp.form.tfEmail.enable = false;
 	alert("사용 가능한 이메일 입니다");
 };
 
@@ -211,6 +213,7 @@ this.divSignUp_btnSignUp_onclick = function(obj:nexacro.Button,e:nexacro.ClickEv
 	// (이메일 양식, 중복, 패스워드 재입력 일치, 이름에 숫자 들어가진 않았는가 등)
 	
 	if(this.bValidEmail == false){
+		alert("이메일 중복 체크는 필수입니다.");
 		return;
 	}
 	
@@ -235,6 +238,11 @@ this.divSignUp_btnValidEmail_onclick = function(obj:nexacro.Button,e:nexacro.Cli
 		return;
 	}
 	
+	this.gfnClearValidation(this.ds_signUp);
+    this.gfnSetValidation(this.ds_signUp, "LOGIN_EMAIL", "이메일(ID)", "isemail");
+    // 이메일 형식에 맞지 않으면 여기서 걸러짐
+    if (this.gfnValidation(this.ds_signUp, "U") == false) return;
+	
 	trace("1. valid email btn>>"+this.ds_signUp.getColumn(0, "IS_VALID_EMAIL"));
 	
 	var sSvcId  = "svcIsValidEmail";
@@ -248,9 +256,29 @@ this.divSignUp_btnValidEmail_onclick = function(obj:nexacro.Button,e:nexacro.Cli
 
 
 
+this.ds_signUp_cancolumnchange = function(obj:nexacro.NormalDataset,e:nexacro.DSColChangeEventInfo)
+{
+	this.bValidEmail= false;
+	this.divSignUp.form.btnValidEmail.background = "white";
+	this.divSignUp.form.btnValidEmail.color = "black";
+	this.ds_signUp.setColumn(0,"IS_VALID_EMAIL", "");
+};
+
+this.ds_signUp_canrowposchange = function(obj:nexacro.NormalDataset,e:nexacro.DSRowPosChangeEventInfo)
+{
+	this.bValidEmail= false;
+	this.divSignUp.form.btnValidEmail.background = "white";
+	this.divSignUp.form.btnValidEmail.color = "black";
+	this.ds_signUp.setColumn(0,"IS_VALID_EMAIL", "");
+};
+
+this.divSignUp_tfEmail_oninput = function(obj:nexacro.TextField,e:nexacro.InputEventInfo)
+{
+	obj.updateToDataset();
+};
 ]]></Script>
     <Objects>
-      <Dataset id="ds_signUp">
+      <Dataset id="ds_signUp" cancolumnchange="ds_signUp_cancolumnchange" canrowposchange="ds_signUp_canrowposchange">
         <ColumnInfo>
           <Column id="LOGIN_EMAIL" type="STRING" size="256"/>
           <Column id="LOGIN_PW" type="STRING" size="256"/>
