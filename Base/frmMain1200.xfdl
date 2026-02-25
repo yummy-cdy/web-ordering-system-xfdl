@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <FDL version="2.1">
-  <Form id="frmMain1200" width="1600" height="900" titletext="Main; 최초접속화면" background="gold" onload="frmMain1200_onload">
+  <Form id="frmMain1200" width="1600" height="900" titletext="Main; 최초접속화면" onload="frmMain1200_onload" background="white">
     <Layouts>
       <Layout height="900" mobileorientation="landscape" width="1600" stepcount="0">
-        <Div id="divCenter" taborder="0" text="510 center; display promotion" left="0" top="130" background="lightblue" height="770" right="0"/>
+        <Div id="divCenter" taborder="0" text="510 center; display promotion" left="0" top="130" height="770" right="0"/>
         <Static id="Static00" taborder="1" text="화면 1600*900 // 메인화면(최초접속)" left="30" top="928" width="322" height="92" visible="false" background="white"/>
-        <Div id="divTop" taborder="2" text="50 top; logo, btnLogin" height="50" background="lavender" top="0" left="0" right="0" formscrollbarsize="0">
+        <Div id="divTop" taborder="2" text="50 top; logo, btnLogin" height="50" top="0" left="0" right="0" formscrollbarsize="0">
           <Layouts>
             <Layout/>
           </Layouts>
         </Div>
-        <Div id="divMenuBar" taborder="3" text="80 mid; menubar" top="50" background="yellowgreen" height="80" left="0" right="0">
+        <Div id="divMenuBar" taborder="3" text="80 mid; menubar" top="50" height="80" left="0" right="0">
           <Layouts>
             <Layout/>
           </Layouts>

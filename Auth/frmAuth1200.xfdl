@@ -166,7 +166,13 @@ this.divLogin_btnLogin_onclick = function(obj:nexacro.Button,e:nexacro.ClickEven
 
 this.divLogin_staFindPW_onclick = function(obj:nexacro.Static,e:nexacro.ClickEventInfo)
 {
-	// popup 띄우기
+	 
+	var sPopupId = "sPopupId";
+    var sUrl = "Auth::frmAuth1201.xfdl";
+    var oArg = "";
+    var sPopupCallback = "fnCallPopup";
+    var oOption = {title: "비밀번호 찾기", width: "550", height: "450" };
+    this.gfnOpenPopup(sPopupId, sUrl, oArg, sPopupCallback, oOption);
 };
 
 this.divLogin_btnNaverLogin_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)

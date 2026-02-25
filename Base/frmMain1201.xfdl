@@ -7,7 +7,7 @@
         <Button id="btnCart" taborder="1" left="71.875%" top="26%" height="50%" width="1.5625%" onclick="btnCart_onclick" background="url('imagerc::shopping-cart.png') no-repeat center center /contain" border="0px none"/>
         <Static id="Static01_00_01" taborder="2" text="FRAME" left="0" top="0" height="10" background="red" opacity="40%" textAlign="center" visible="false" right="0"/>
         <Static id="staAuth" taborder="3" text="로그인" left="81.25%" top="36%" height="28%" onclick="staAuth_onclick" textAlign="center" width="2.25%" background="" textDecoration="underline" font="normal 12px/normal &quot;KopubWorld&quot;"/>
-        <Static id="staMyPage" taborder="4" text="마이페이지" left="75.63%" top="36.00%" width="4.375%" height="28%" textDecoration="underline" textAlign="center" onclick="staMyPage_onclick" font="normal 12px/normal &quot;KopubWorld&quot;"/>
+        <Static id="staMyPage" taborder="4" text="마이페이지" left="75.63%" top="36.00%" width="4.375%" height="28%" textDecoration="underline" textAlign="center" font="normal 12px/normal &quot;KopubWorld&quot;" onclick="staMyPage_onclick"/>
         <Static id="Static01_00_00" taborder="5" text="FRAME" left="0" top="0" width="250" background="red" opacity="40%" textAlign="center" visible="false" bottom="0"/>
         <Static id="Static01_00_00_00" taborder="6" text="FRAME" top="0" background="red" opacity="40%" textAlign="center" visible="false" onclick="Static01_00_00_00_onclick" bottom="0" right="0" width="250"/>
       </Layout>
@@ -122,6 +122,17 @@ this.btnCart_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
 	}
 };
 
+
+this.staMyPage_onclick = function(obj:nexacro.Static,e:nexacro.ClickEventInfo)
+{
+	var statusAuth = nexacro.getApplication().appStatusAuth;
+	if(statusAuth==true){
+		this.parent.parent.divCenter.url = "Base::frmMyPage1200.xfdl";
+	}
+	else if(statusAuth=="false"){
+		this.alert("로그인해야 사용할 수 있습니다."); // false=로그아웃 상태일 때
+	}
+};
 ]]></Script>
   </Form>
 </FDL>

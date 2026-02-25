@@ -1,23 +1,136 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <FDL version="2.1">
-  <Form id="frmAuth1201" width="550" height="450" titletext="비밀번호 찾기 팝업차" background="white">
+  <Form id="frmAuth1201" width="550" height="450" titletext="비밀번호 찾기 팝업차" background="white" onload="frmAuth1201_onload">
     <Layouts>
       <Layout height="450" mobileorientation="landscape" width="550">
-        <TextField id="TextField00" taborder="0" labeltext="ID(Email)" left="50" top="100" width="300" height="57" color="black"/>
+        <TextField id="tfEmail" taborder="0" labeltext="ID(Email)" left="50" top="100" width="300" height="57" color="black" font="normal 500 13px/normal &quot;KopubWorld&quot;"/>
         <Static id="staTitle" taborder="1" text="비밀번호 찾기" left="10" top="7" width="247" height="40" font="normal 600 18pt/normal &quot;KopubWorld&quot;"/>
         <Static id="staTitle00" taborder="2" text="아이디(email)를 입력해 주세요" left="10" top="47" width="247" height="40" font="normal 500 9pt/normal &quot;KopubWorld&quot;"/>
-        <Button id="btn00" taborder="3" text="찾기" left="366" top="108" width="115" height="49" background="white" border="1px solid black" borderRadius="5px 5px 5px 5px"/>
-        <Div id="Div00" taborder="4" text="divUpdatePw" left="0" top="186" width="550" height="264" background="lavender">
+        <Button id="btnFind" taborder="3" text="찾기" left="366" top="108" width="115" height="49" background="white" border="1px solid black" borderRadius="5px 5px 5px 5px" onclick="btnFind_onclick" font="normal bold 13px/normal &quot;KopubWorld&quot;"/>
+        <Div id="divUpdatePW" taborder="4" text="divUpdatePw" left="0" top="186" width="550" height="264" background="white" visible="false">
           <Layouts>
             <Layout>
-              <TextField id="TextField00" taborder="0" labeltext="TextField00" left="115" top="43" width="300" height="57"/>
-              <TextField id="TextField00_00" taborder="1" labeltext="TextField00" left="115" top="110" width="300" height="57"/>
-              <Button id="btn00" taborder="2" text="비밀번호 변경" left="115" top="193" width="300" height="27" background="white" border="1px solid black" borderRadius="5px 5px 5px 5px"/>
+              <TextField id="tfPW" taborder="0" labeltext="Password" left="115" top="43" width="300" height="57" font="normal 500 13px/normal &quot;KopubWorld&quot;"/>
+              <TextField id="tfPWChk" taborder="1" labeltext="Password Check" left="115" top="110" width="300" height="57" font="normal 500 13px/normal &quot;KopubWorld&quot;"/>
+              <Button id="btnUpdatePW" taborder="2" text="비밀번호 변경" left="115" top="193" width="300" height="27" background="white" border="1px solid black" borderRadius="5px 5px 5px 5px" onclick="divUpdatePW_btnUpdatePW_onclick" font="normal bold 13px/normal &quot;KopubWorld&quot;"/>
             </Layout>
           </Layouts>
         </Div>
+        <Static id="staAlert" taborder="5" text="등록된 아이디가 아닙니다." left="53" top="156" width="300" height="29" font="normal 500 11px/normal &quot;KopubWorld&quot;" color="red" visible="false"/>
       </Layout>
     </Layouts>
-    <Script type="xscript5.1"><![CDATA[]]></Script>
+    <Script type="xscript5.1"><![CDATA[/**
+*  Nexacro Professional Training Couse
+*  @MenuPath    개발가이드 > 표준 및 기본 정의 > 그리드 페이징
+*  @FileName 	SamplePaging.xfdl 
+*  @Creator 	TOBESOFT Education
+*  @CreateDate 	2025/01/03
+*  @Desction    
+************** 소스 수정 이력 ***********************************************
+*  date          		Modifier                Description
+*******************************************************************************
+*  2026/02/25      		 이아인	 	  	       최초 생성 
+*******************************************************************************
+*/
+
+ 
+
+/************************************************************************************************
+ * FORM 변수 선언 영역
+ ************************************************************************************************/
+this.isUserRegistered = false; 
+
+/************************************************************************************************
+ * FORM EVENT 영역(onload, onbeforeclose)
+ ************************************************************************************************/
+/**
+ * @description example: ~하는 부분
+*/
+
+
+/************************************************************************************************
+ * CALLBACK 콜백 처리부분(Transaction, Popup)
+ ************************************************************************************************/
+this.fn_callback = function(svcId, errCd, errMsg)
+{
+	if(errCd < 0){ alert("에러 : " + errMsg); }
+	
+	if(svcId == "svcFindPassword"){
+	
+		trace("---hello------->"+this.isUserRegistered);
+		
+		if(this.isUserRegistered == true || this.isUserRegistered =="true"){
+			this.staAlert.visible = false;
+			this.divUpdatePW.visible = true;
+			this.divUpdatePW.top = 100;
+			this.resetScroll();
+		}
+		else if(this.isUserRegistered == false || this.isUserRegistered == "false"){
+			this.staAlert.visible = true;
+			this.resetScroll();
+		}
+	}
+	
+	if(svcId == "svcUpdatePassword"){
+		this.sleep(500);
+		this.gfnClosePopup();
+	}
+}
+
+
+/************************************************************************************************
+ * CRUD 및 TRANSACTION 서비스 호출 처리
+ ************************************************************************************************/
+
+
+/************************************************************************************************
+ * 사용자 FUNCTION 영역
+ ************************************************************************************************/
+
+
+/************************************************************************************************
+ * 각 COMPONENT 별 EVENT 영역
+ ************************************************************************************************/
+
+this.btnFind_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	var sSvcId  = "svcFindPassword";
+	var sUrl    = "p024/findPassword.do";
+	var inData  = "";
+	var outData = "";
+	var sParam  = "inputEmail="+this.tfEmail.value;
+	this.gfnTransaction(sSvcId, sUrl, inData, outData, sParam, "fn_callback");
+};
+
+this.divUpdatePW_btnUpdatePW_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	// chk validation 후에 transaction으로 업데이트 
+	// 사정상 정규식 표현은 패스
+	
+	var sSvcId  = "svcUpdatePassword";
+	var sUrl    = "p024/updatePassword.do";
+	var inData  = "";
+	var outData = "";
+	var sParam  = "newPW="+this.divUpdatePW.form.tfPW.value+" userId="+this.tfEmail.value;
+	this.gfnTransaction(sSvcId, sUrl, inData, outData, sParam, "fn_callback");
+};
+
+this.frmAuth1201_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
+{
+	this.ds_pw.addRow();
+};
+]]></Script>
+    <Objects>
+      <Dataset id="ds_pw">
+        <ColumnInfo>
+          <Column id="LOGIN_PW" type="STRING" size="256"/>
+          <Column id="CHECK_PW" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+    </Objects>
+    <Bind>
+      <BindItem id="item0" compid="divUpdatePW.form.tfPW" propid="value" datasetid="ds_pw" columnid="LOGIN_PW"/>
+      <BindItem id="item1" compid="divUpdatePW.form.tfPWChk" propid="value" datasetid="ds_pw" columnid="CHECK_PW"/>
+    </Bind>
   </Form>
 </FDL>
