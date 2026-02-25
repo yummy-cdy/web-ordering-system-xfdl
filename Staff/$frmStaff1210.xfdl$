@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <FDL version="2.1">
-  <Form id="frmStaff1210" width="1600" height="900" titletext="사이렌 오더(진행 화면)" onload="frmStaff1210_onload" background="white">
+  <Form id="frmStaff1210" width="1600" height="900" titletext="사이렌 오더(진행 화면)" onload="frmStaff1210_onload" background="white" ontimer="frmStaff1210_ontimer">
     <Layouts>
       <Layout height="900" mobileorientation="landscape" width="1600">
         <Static id="Static01_00_00_00_00" taborder="0" text="FRAME" left="0" top="0" width="250" background="red" opacity="20%" textAlign="center" visible="false" bottom="0"/>
@@ -157,6 +157,16 @@
           </Row>
         </Rows>
       </Dataset>
+      <Dataset id="ds_sendPush">
+        <ColumnInfo>
+          <Column id="TARGET_ID" type="STRING" size="256"/>
+          <Column id="ORDER_ID" type="STRING" size="256"/>
+          <Column id="STATUS" type="STRING" size="256"/>
+        </ColumnInfo>
+        <Rows>
+          <Row/>
+        </Rows>
+      </Dataset>
     </Objects>
     <Script type="xscript5.1"><![CDATA[/**
 *  Nexacro Professional Training Couse
@@ -215,6 +225,14 @@ this.fn_callback = function(svcId, errCd, errMsg)
 {
 	if(errCd < 0){ alert("에러 : " + errMsg); }
 	
+	trace("svcId>>>>>>>>>"+svcId);
+	
+	if(svcId === "svcSendPush"){
+		if(errCd >= 0){ trace("메시지를 정상적으로 발송하였습니다.");}
+		else { trace("메시지 전달실패 : " + errMsg);}
+		// this.reload();
+	}
+	
 	if(svcId == "svcGetStoreName"){
 		this.staStore.text = this.strStoreName+" 점";
 		this.staStore.fittocontents = "width";
@@ -225,20 +243,20 @@ this.fn_callback = function(svcId, errCd, errMsg)
 	}
 	
 	if(svcId == "svcUpdateStatus") {
-        this.fnGetOrderList(); // 목록 새로고침 (직원 화면 갱신)
+		this.fnSendPushStatus();
     }
 	
 	if(svcId =="svcClearOrder"){
-		this.fnGetOrderList();
+		this.reload();
 	}
 }
 
-// dsMessage에 데이터가 들어왔을 때
 this.fn_push_callback = function(Row, ChangeColumn, AllColumns, Type, ActionType, MessageId)
-{
+{		
+	trace("!!!!!!!staff>>pushcallback");
     if(ActionType == "PUSH") {
         // 새 주문 신호(MSG가 "1")가 오면 목록 갱신
-        var msg = this.dsMessage.getColumn(Row, "MSG");
+        var msg = nexacro.getApplication().gdsXPushMessage.getColumn(Row, "MSG");
         if(msg == "1") {
             this.fnGetOrderList(); 
         }
@@ -503,6 +521,10 @@ this.fnUpdateStatus = function (obj:nexacro.Button,e:nexacro.ClickEventInfo)
     var nextStatus;
     var orderId = obj.orderidentf; // ORDER_ID
 	
+	this.ds_sendPush.clearData();
+	this.ds_sendPush.setColumn(0, "TARGET_ID", targetIdentf);
+	this.ds_sendPush.setColumn(0, "ORDER_ID", orderId);
+	this.ds_sendPush.setColumn(0, "STATUS", nextStatus);
 	
 	switch(currentStatus) {
 	case 0:
@@ -516,7 +538,7 @@ this.fnUpdateStatus = function (obj:nexacro.Button,e:nexacro.ClickEventInfo)
 		break;
 	case 4:
 		nextStatus = 8;
-		this.deleteOneDiv(obj.parent.parent) // !chk
+		this.deleteOneDiv(obj.parent.parent) // 해당 주문을 화면에서 삭제
 		this.fnClearOrder(orderId); // DB(user의 isinorder를 null, storeorders delete)
 		return;
 	default:
@@ -530,27 +552,37 @@ this.fnUpdateStatus = function (obj:nexacro.Button,e:nexacro.ClickEventInfo)
     var outData = "";
     var sParam  = "orderId=" + orderId + " nextStatus=" + nextStatus;
     this.gfnTransaction(sSvcId, sUrl, inData, outData, sParam, "fn_callback");
+	// callback에서 push를 쏴준다. 
+};	
 
-	// 2. Push
-	this.dsProvider.clearData();
+this.fnSendPushStatus = function ()
+{
+	var targetIdentf = this.ds_sendPush.getColumn(0, "TARGET_ID");
+	var orderId = this.ds_sendPush.getColumn(0, "ORDER_ID");
+	var nextStatus = this.ds_sendPush.getColumn(0, "STATUS");
+	
+	trace(">>>>> ds_sendPush>>>"+targetIdentf+" 덧 "+orderId+" 덧 "+nextStatus);
+	
+	// 2. push 
+    this.dsProvider.clearData();
     var pRow = this.dsProvider.addRow();
     this.dsProvider.setColumn(pRow, "PROJECT_ID", "TOBE_EDU");
     this.dsProvider.setColumn(pRow, "PUSH_TYPE", "PUSH");
     this.dsProvider.setColumn(pRow, "TOPIC_TYPE", "9999");
-    this.dsProvider.setColumn(pRow, "TOPIC_ID", targetIdentf); 
-    this.dsProvider.setColumn(pRow, "CODE", orderId);       
-    this.dsProvider.setColumn(pRow, "MSG", nextStatus);    
+    this.dsProvider.setColumn(pRow, "TOPIC_ID", targetIdentf); // 고객 ID
+    this.dsProvider.setColumn(pRow, "CODE", orderId);          // 주문 번호
+    this.dsProvider.setColumn(pRow, "MSG", nextStatus);        // 바뀐 상태값
 
-    // SvcXpushUrl은 Prefix이므로 gfnTransaction 내부 로직에 따라 EduUrl 분기를 타지 않게 주의
     var sPushSvcId = "svcSendPush";
     var sPushUrl   = "SvcXpushUrl::Service_XPush.jsp"; 
     var sPushInDs  = "in_Provider=dsProvider:U";
     var sPushArg   = "argPUSH_TYPE=" + nexacro.wrapQuote("PUSH") 
-                   + " argPUSH_MSG=" + nexacro.wrapQuote(nextStatus); // 필요한 메시지 내용
-	// 안전하게 기본 transaction 호출 (gfn의 prefix 강제결합 방지)
-    this.transaction(sPushSvcId, sPushUrl, sPushInDs, "", sPushArg, "fn_callback");
-	
-};	
+                   + " argPUSH_MSG=" + nexacro.wrapQuote(nextStatus);
+    
+	trace(this.dsProvider.saveXML());
+	trace("push this.trans 직전");
+    this.transaction(sPushSvcId, sPushUrl, sPushInDs, "", sPushArg, "fn_callback"); // !260225
+};
 
 /************************************************************************************************
  * 각 COMPONENT 별 EVENT 영역
@@ -566,18 +598,37 @@ this.divBackTo_btnBackToMenu_onclick = function(obj:nexacro.Button,e:nexacro.Cli
 // @cate push
 this.fnXPushStart = function ()
 {
-    this.XPush00.set_projectid("TOBE_EDU");
-    // 사용 가능한 모든 프로토콜/IP 리스트 세팅
-    this.XPush00.set_iplist("tcp://localhost:50001, http://localhost:50000, http://172.10.14.128:50000");
+
+	if ((nexacro._OS == "Android" || nexacro._OS == "iOS") && (nexacro._Browser == "Runtime"))  
+	{      
+		this.XPush00.set_layouturl("%USERAPP%XPushUrl/XPush_Message_Layout.xml");
+	} else   
+	{    
+		this.XPush00.set_layouturl("XPushUrl::XPush_Message_Layout.xml");
+	}   
+	
+//Connection 
+   this.XPush00.set_projectid("TOBE_EDU");
+   this.XPush00.set_protocolversion(3);
+   
+   this.XPush00.set_iplist("tcp://localhost:50001, http://localhost:50000, http://172.10.14.128:50000");
+   
+   
+// 	
+//     this.XPush00.set_projectid("TOBE_EDU");
+//     // 사용 가능한 모든 프로토콜/IP 리스트 세팅
+//     this.XPush00.set_iplist("tcp://localhost:50001, http://localhost:50000, http://172.10.14.128:50000");
     
     // 매장 코드를 ID 삼아 접속
     this.XPush00.connect(strTopicID, "..."); 
+	
+	   
 };
 this.XPush00_onsuccess = function(obj:nexacro.XPush,e:nexacro.XPushEventInfo)
 {
+trace("onsuccesss===" + e.action); 
     if(e.action == 0) { // Connect 성공
-        // dsMessage를 수신용 데이터셋으로 지정하여 구독
-        this.XPush00.subscribe("9999", strTopicID, this, this.dsMessage, "append", "fn_push_callback");
+		this.XPush00.subscribe("9999", strTopicID, this, nexacro.getApplication().gdsXPushMessage, "append", "fn_push_callback");
     }
     if(e.action == 2) this.XPush00.registerTopic("9999", strTopicID);
 };
@@ -593,7 +644,12 @@ this.dsMessage_onrowposchanged = function(obj:nexacro.NormalDataset,e:nexacro.DS
 
 this.btn00_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
 {
-	this.resetScroll();
+	this.reload();
+};
+
+this.frmStaff1210_ontimer = function(obj:nexacro.Form,e:nexacro.TimerEventInfo)
+{
+	
 };
 ]]></Script>
     <Bind>

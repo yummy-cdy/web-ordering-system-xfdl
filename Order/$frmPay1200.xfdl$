@@ -236,6 +236,8 @@ this.btnSendOrder_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo
 /************************************************************************************************
  * X-Push 처리 영역
  ************************************************************************************************/
+
+/*
 this.XPush00_onsuccess = function(obj:nexacro.XPush,e:nexacro.XPushEventInfo)
 {
 	//trace(this.dsMessage.saveXML());
@@ -252,7 +254,7 @@ this.XPush00_onsuccess = function(obj:nexacro.XPush,e:nexacro.XPushEventInfo)
 			" - e.command : " + e.command + "\n" +
 			" - e.message : " + e.message + "\n" +
 			" - e.returnvalue : " + e.returnvalue);
-*/			
+*//*
 	if(e.message != null) {
 		this.taLog.set_value( "e.message != null\n" + 
 			" - e.message.messagetype: " + e.message.messagetype + "\n" +
@@ -339,6 +341,7 @@ this.XPush00_onsuccess = function(obj:nexacro.XPush,e:nexacro.XPushEventInfo)
 // -1004 - 미수신 메시지 정보요청을 실패했습니다.
 // -1072 - 디바이스 등록(RGST)시 중복된 경우 발생. registerDevice 기등록 정상오류
 // -1092 - registerTopic 기등록 정상오류 
+/*
 this.XPush00_onerror = function(obj:nexacro.XPush,e:nexacro.XPushErrorEventInfo)
 {
 //	this.taLog.set_value("");        
@@ -399,6 +402,8 @@ this.XPush00_onkeepalive = function(obj:nexacro.XPush,e:nexacro.XPushKeepAliveEv
 {
 		this.taLog.set_value("KEEP");      
 };
+*/
+
 
 this.fn_push_callback = function(Row, ChangeColumn, AllColumns, Type, ActionType, MessageId) 
 {
