@@ -356,25 +356,21 @@ this.fn_setProgressBar = function(status)
 	
 	this.set_enableevent(false);
 	
-    if(nStatus == "1") nPos = 0;
+    if(nStatus == "1") nPos = 33;
     else if(nStatus == "2") {
-		nPos = 33;
+		nPos = 66;
 		this.divText.form.staTitle.text = userName+" 님의 주문을 준비 중이에요";
 	}
     else if(nStatus == "4") {
-		nPos = 66;
+		nPos = 99;
 		this.divText.form.staTitle.text = userName+" 님, 메뉴가 모두 준비되었어요";
 		this.divText.form.staDesc.text = "픽업대에서 메뉴를 픽업해 주세요";
 	}
     else if(nStatus == "8") {
-		nPos = 99;
 		this.fvApp.gdsAuth.setColumn(0, "IS_IN_ORDER", null);
 	}
 
     this.divText.form.pgbOrderStatus.set_pos(nPos);
-// 	this.resetScroll();
-//     this.divText.form.pgbOrderStatus.set_pos(nPos);
-//     this.divText.form.resetScroll();
 	this.set_enableevent(true); 
     this.divText.form.resetScroll();
     
