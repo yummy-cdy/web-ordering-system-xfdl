@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="frmPay1201" width="550" height="450" titletext="New Form">
+    <Layouts>
+      <Layout height="450" mobileorientation="landscape" width="550">
+        <Static id="staTitle" taborder="0" text="결제 수단" left="75" top="0" width="400" height="80" font="normal 600 16pt/normal &quot;KopubWorld&quot;"/>
+        <Div id="divPay" taborder="1" left="75" top="80" width="400" height="220">
+          <Layouts>
+            <Layout>
+              <Button id="btn00" taborder="0" text="국민" left="32" top="36" width="100" height="70" background="white" border="1px solid black" borderRadius="10px 10px 10px 10px" font="normal 500 11pt/normal &quot;KopubWorld&quot;" onclick="divPay_btn00_onclick" onkillfocus="divPay_btn00_onkillfocus"/>
+              <Button id="btn00_01" taborder="1" text="비씨" top="36" width="100" height="70" background="white" border="1px solid black" borderRadius="10px 10px 10px 10px" right="48" font="normal 500 11pt/normal &quot;KopubWorld&quot;" onclick="divPay_btn00_onclick" onkillfocus="divPay_btn00_onkillfocus"/>
+              <Button id="btn00_00" taborder="2" text="신한" left="142" top="36" width="100" height="70" background="white" border="1px solid black" borderRadius="10px 10px 10px 10px" font="normal 500 11pt/normal &quot;KopubWorld&quot;" onclick="divPay_btn00_onclick" onkillfocus="divPay_btn00_onkillfocus"/>
+              <Button id="btn00_02" taborder="3" text="하나" left="32" top="116" width="100" height="70" background="white" border="1px solid black" borderRadius="10px 10px 10px 10px" font="normal 500 11pt/normal &quot;KopubWorld&quot;" onclick="divPay_btn00_onclick" onkillfocus="divPay_btn00_onkillfocus"/>
+              <Button id="btn00_02_00" taborder="4" text="삼성" left="142" top="116" width="100" height="70" background="white" border="1px solid black" borderRadius="10px 10px 10px 10px" font="normal 500 11pt/normal &quot;KopubWorld&quot;" onclick="divPay_btn00_onclick" onkillfocus="divPay_btn00_onkillfocus"/>
+              <Button id="btn00_02_01" taborder="5" text="현대" left="252" top="116" width="100" height="70" background="white" border="1px solid black" borderRadius="10px 10px 10px 10px" font="normal 500 11pt/normal &quot;KopubWorld&quot;" onclick="divPay_btn00_onclick" onkillfocus="divPay_btn00_onkillfocus"/>
+            </Layout>
+          </Layouts>
+        </Div>
+        <Button id="btnCancel" taborder="2" text="취소" left="271" top="384" width="86" height="43" onclick="btnCancel_onclick" font="13px/normal &quot;KopubWorld&quot;" border="1px solid black" background="white" ondblclick="btnCancel_onclick"/>
+        <Button id="btnConfirm" taborder="3" text="결제" left="175" top="384" width="86" height="43" onclick="btnConfirm_onclick" font="13px/normal &quot;KopubWorld&quot;" background="white" border="1px solid black"/>
+        <Div id="divLoading" taborder="4" left="0" top="505" width="550" height="450" background="white" visible="false">
+          <Layouts>
+            <Layout>
+              <ImageViewer id="imgvLoading" taborder="0" left="25" top="70" width="500" height="292" image="url('imagerc::ko_loading.gif')" visible="true" stretch="fixaspectratio" border="0px none"/>
+            </Layout>
+          </Layouts>
+        </Div>
+      </Layout>
+    </Layouts>
+    <Script type="xscript5.1"><![CDATA[/**
+*  Nexacro Professional Training Couse
+*  @MenuPath    개발가이드 > 표준 및 기본 정의 > 그리드 페이징
+*  @FileName 	SamplePaging.xfdl 
+*  @Creator 	TOBESOFT Education
+*  @CreateDate 	2025/01/03
+*  @Desction    
+************** 소스 수정 이력 ***********************************************
+*  date          		Modifier                Description
+*******************************************************************************
+*  2026/02/02      		 이아인	 	  	       최초 생성 
+*******************************************************************************
+*/
+
+
+
+/************************************************************************************************
+ * FORM 변수 선언 영역
+ ************************************************************************************************/
+
+
+/************************************************************************************************
+ * FORM EVENT 영역(onload, onbeforeclose)
+ ************************************************************************************************/
+/**
+ * @description example: ~하는 부분
+*/
+
+
+/************************************************************************************************
+ * CALLBACK 콜백 처리부분(Transaction, Popup)
+ ************************************************************************************************/
+
+
+/************************************************************************************************
+ * CRUD 및 TRANSACTION 서비스 호출 처리
+ ************************************************************************************************/
+
+
+/************************************************************************************************
+ * 사용자 FUNCTION 영역
+ ************************************************************************************************/
+
+
+/************************************************************************************************
+ * 각 COMPONENT 별 EVENT 영역
+ ************************************************************************************************/
+
+
+this.divPay_btn00_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	obj.background = "lightgray";
+};
+
+this.divPay_btn00_onkillfocus = function(obj:nexacro.Button,e:nexacro.KillFocusEventInfo)
+{
+	obj.background = "white";
+};
+
+this.btnCancel_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	var rtnVal = -1;
+	this.gfnClosePopup(rtnVal);
+};
+
+this.btnConfirm_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	this.divLoading.visible = true;
+	this.divLoading.top = 0;
+	this.fnShowLoading();
+};
+
+this.fnShowLoading = function ()
+{
+	this.resetScroll();
+	var rtnVal = 100;
+
+	this.sleep(1500);
+	this.gfnClosePopup(rtnVal);
+};
+]]></Script>
+  </Form>
+</FDL>
