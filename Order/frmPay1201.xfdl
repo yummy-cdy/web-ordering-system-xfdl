@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <FDL version="2.1">
-  <Form id="frmPay1201" width="550" height="450" titletext="New Form">
+  <Form id="frmPay1201" width="550" height="450" titletext="결제 수단(팝업 화면)">
     <Layouts>
       <Layout height="450" mobileorientation="landscape" width="550">
         <Static id="staTitle" taborder="0" text="결제 수단" left="75" top="0" width="400" height="80" font="normal 600 16pt/normal &quot;KopubWorld&quot;"/>
@@ -16,8 +16,8 @@
             </Layout>
           </Layouts>
         </Div>
-        <Button id="btnCancel" taborder="2" text="취소" left="271" top="384" width="86" height="43" onclick="btnCancel_onclick" font="13px/normal &quot;KopubWorld&quot;" border="1px solid black" background="white" ondblclick="btnCancel_onclick"/>
-        <Button id="btnConfirm" taborder="3" text="결제" left="175" top="384" width="86" height="43" onclick="btnConfirm_onclick" font="13px/normal &quot;KopubWorld&quot;" background="white" border="1px solid black"/>
+        <Button id="btnCancel" taborder="2" text="취소" left="271" top="364" width="86" height="43" onclick="btnCancel_onclick" font="13px/normal &quot;KopubWorld&quot;" border="1px solid black" background="white" ondblclick="btnCancel_onclick" borderRadius="10px 10px 10px 10px"/>
+        <Button id="btnConfirm" taborder="3" text="결제" left="175" top="364" width="86" height="43" onclick="btnConfirm_onclick" font="13px/normal &quot;KopubWorld&quot;" background="white" border="1px solid black" borderRadius="10px 10px 10px 10px"/>
         <Div id="divLoading" taborder="4" left="0" top="505" width="550" height="450" background="white" visible="false">
           <Layouts>
             <Layout>
@@ -96,15 +96,15 @@ this.btnConfirm_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
 {
 	this.divLoading.visible = true;
 	this.divLoading.top = 0;
+	this.resetScroll();
 	this.fnShowLoading();
 };
 
 this.fnShowLoading = function ()
 {
-	this.resetScroll();
 	var rtnVal = 100;
 
-	this.sleep(1500);
+	//this.sleep(1500);
 	this.gfnClosePopup(rtnVal);
 };
 ]]></Script>

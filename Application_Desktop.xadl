@@ -2,7 +2,7 @@
 <ADL version="2.0">
   <Application id="Application_Desktop" screenid="Desktop_screen" licenseurl="NexacroN_client_license.xml">
     <Layout>
-      <MainFrame id="mainframe" showtitlebar="true" showstatusbar="true" left="0" top="0" width="1600" height="900" titletext="FullFrame">
+      <MainFrame id="mainframe" showtitlebar="true" showstatusbar="true" left="0" top="0" width="1600" height="900" titletext="Skybucks">
         <ChildFrame id="WorkFrame" showtitlebar="false" showstatusbar="false" formurl="Base::frmMain1200.xfdl"/>
       </MainFrame>
     </Layout>

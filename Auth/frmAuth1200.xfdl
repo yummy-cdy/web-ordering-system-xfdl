@@ -95,7 +95,7 @@ this.fn_callback = function(svcId, errCd, errMsg)
 				this.parent.parent.divCenter.url = "Base::frmMain1203.xfdl";
 			}
 			else if(userType == "Staff"){
-				this.fvApp.mainframe.WorkFrame.formurl = "Staff::frmStaff1200.xfdl";
+				this.fvApp.mainframe.WorkFrame.formurl = "Staff::frmStaff1210.xfdl";
 			}	
 		}
 		else	this.divLogin.form.staMsg.visible = true;
